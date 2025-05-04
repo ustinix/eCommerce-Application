@@ -2,7 +2,9 @@
 ### SCRUM № 16, 19
 
 Description: 
+
 [scrum 16](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/eCommerce-Application/Sprints/Sprint1/RSS-ECOMM-1_13.md)
+
 [scrum 19](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/eCommerce-Application/Sprints/Sprint1/RSS-ECOMM-1_16.md)
 
 Screenshot (optional):
