@@ -1,4 +1,4 @@
-# The eCommerce application is an online athletic shoe store.
+# The eCommerce single page application is an online athletic shoe store.
 
 ## Technology stack: Vue 3 + TypeScript + Vite + Vitest + Pinia .
 
