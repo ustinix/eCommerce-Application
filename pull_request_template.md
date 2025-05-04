@@ -1,14 +1,19 @@
 ## Sprint № 1
-### SCRUM № 5
+### SCRUM № 16, 19
 
-Description: [Issue RSS-ECOMM-1_21: Create a pull request template](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/eCommerce-Application/Sprints/Sprint1/RSS-ECOMM-1_21.md)
+Description: 
+[scrum 16](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/eCommerce-Application/Sprints/Sprint1/RSS-ECOMM-1_13.md)
+[scrum 19](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/eCommerce-Application/Sprints/Sprint1/RSS-ECOMM-1_16.md)
 
 Screenshot (optional):
 
 Deploy (optional): [Example](www.google.com)
 
-Done 01.05.2025 / deadline 06.05.2025
+Done 04.05.2025 / deadline 06.05.2025
 
-Points: 5 / 5
+Points: 
+16 - 10 / 10
+19 - 5 / 5
+Sum: 15
 
 The person responsible for tasks: @ustinix
