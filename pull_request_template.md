@@ -14,8 +14,11 @@ Deploy (optional): [Example](www.google.com)
 Done 04.05.2025 / deadline 06.05.2025
 
 Points: 
+
 16 - 10 / 10
+
 19 - 5 / 5
+
 Sum: 15
 
 The person responsible for tasks: @ustinix
