@@ -24,6 +24,7 @@ export default tseslint.config([
       noInlineConfig: true,
       reportUnusedDisableDirectives: true,
     },
+    ignorePatterns: ["commitlint.config.cjs"],
     rules: {
       'unicorn/better-regex': 'warn',
       'no-console': 'warn',
