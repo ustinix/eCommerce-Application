@@ -52,6 +52,9 @@ export default tseslint.config([
       ],
 
       '@typescript-eslint/consistent-type-assertions': ['warn', { assertionStyle: 'never' }],
+      '@typescript-eslint/consistent-type-definitions': 'off',
+      '@typescript-eslint/array-type': 'off',
+      'unicorn/prefer-event-target': 'off',
       '@typescript-eslint/consistent-type-imports': 'warn',
       '@typescript-eslint/explicit-function-return-type': 'warn',
       '@typescript-eslint/no-unsafe-argument': 'warn',
