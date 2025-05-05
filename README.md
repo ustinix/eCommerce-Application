@@ -1,5 +1,24 @@
-# Vue 3 + TypeScript + Vite
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+# The eCommerce single page application is an online athletic shoe store.
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+## Technology stack: Vue 3 + TypeScript + Vite + Vitest + Pinia .
+
+### Clone this repository: https://github.com/ustinix/eCommerce-Application
+
+### To install all dependencies use npm install
+
+### If you are working in VS Code you may find the following extensions useful:
+
+1. Vue - Official v2.2.10
+2. Vitest v1.18.0.
+
+### Scripts:
+
+1. npm run dev - start the project in development mode,
+2. npm run build - project build start,
+3. npm run preview - start project preview,
+4. npm run lint - start checking files with --ext extension .js,.jsx,.ts,.tsx by eslint,,
+5. npm run format - start checking by prettier,
+6. npm run test - start vitest tests,
+7. npm run prepare - start husky
+
