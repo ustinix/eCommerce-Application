@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-const email = ref('');
-const password = ref('');
-const errorEmail = ref('');
-const errorPassword = ref('');
-const showPassword = ref(false);
+const email = ref<string>('');
+const password = ref<string>('');
+const errorEmail = ref<string>('');
+const errorPassword = ref<string>('');
+const showPassword = ref<boolean>(false);
 
-const togglePassword = () => {
+const togglePassword = ():void => {
   showPassword.value = !showPassword.value;
 };
 function login(event: Event): void {
