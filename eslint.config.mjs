@@ -5,7 +5,7 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import { globalIgnores } from 'eslint/config';
 
 export default tseslint.config([
-  globalIgnores(['commitlint.config.mjs', 'eslint.config.mjs']),
+  globalIgnores(['eslint.config.mjs', "commitlint.config.cjs", "./src/vue.d.ts","./src/vite-env.d.ts", "vite.config.ts"]),
   eslint.configs.recommended,
   tseslint.configs.recommendedTypeChecked,
   tseslint.configs.stylisticTypeChecked,
@@ -23,8 +23,7 @@ export default tseslint.config([
     linterOptions: {
       noInlineConfig: true,
       reportUnusedDisableDirectives: true,
-    },
-    ignorePatterns: ["commitlint.config.cjs"],
+    },    
     rules: {
       'unicorn/better-regex': 'warn',
       'no-console': 'warn',
