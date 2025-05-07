@@ -7,8 +7,7 @@
   </div>
 </template>
 
-<style scoped>
-@import '../../assets/styles/variables.scss';
+<style lang="scss" scoped>
 .main-page {
   margin: 0 auto;
   padding: 20px;

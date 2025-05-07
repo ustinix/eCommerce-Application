@@ -5,11 +5,18 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import { globalIgnores } from 'eslint/config';
 
 export default tseslint.config([
-  globalIgnores(['eslint.config.mjs', "commitlint.config.cjs", "./src/vue.d.ts","./src/vite-env.d.ts", "vite.config.ts"]),
+  globalIgnores([
+    'eslint.config.mjs',
+    'commitlint.config.cjs',
+    './src/vue.d.ts',
+    './src/vite-env.d.ts',
+    'vite.config.ts',
+  ]),
   eslint.configs.recommended,
   tseslint.configs.recommendedTypeChecked,
   tseslint.configs.stylisticTypeChecked,
-
+  ...eslintPluginVue.configs['flat/recommended'],
+  ...eslintPluginVue.configs['flat/recommended-typescript'],
   eslintPluginUnicorn.configs.recommended,
   eslintPluginPrettierRecommended,
 
@@ -18,12 +25,13 @@ export default tseslint.config([
       parserOptions: {
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
+        extraFileExtensions: ['.vue'],
       },
     },
     linterOptions: {
       noInlineConfig: true,
       reportUnusedDisableDirectives: true,
-    },    
+    },
     rules: {
       'unicorn/better-regex': 'warn',
       'no-console': 'warn',
@@ -50,7 +58,22 @@ export default tseslint.config([
           next: ['export', 'const', 'let'],
         },
       ],
-
+      'vue/multi-word-component-names': 'off',
+      'vue/no-v-html': 'off',
+      'vue/require-default-prop': 'off',
+      'vue/require-prop-types': 'off',
+      'vue/component-tags-order': [
+        'error',
+        {
+          order: ['script', 'template', 'style'],
+        },
+      ],
+      'vue/block-order': [
+        'error',
+        {
+          order: ['template', 'script', 'style'],
+        },
+      ],
       '@typescript-eslint/consistent-type-assertions': ['warn', { assertionStyle: 'never' }],
       '@typescript-eslint/consistent-type-definitions': 'off',
       '@typescript-eslint/array-type': 'off',
