@@ -16,13 +16,14 @@ import Logo from '../ui/logo.vue';
     <DividerLine />
     <nav class="nav">
       <RouterLink to="/">Main page</RouterLink>
+      <RouterLink to="/login">Login</RouterLink>
       <RouterLink to="/register">Registration</RouterLink>
     </nav>
   </div>
 </template>
 
 <style lang="scss" scoped>
-@import '../../assets/styles/variables.scss';
+@use '../../assets/styles/variables.scss' as v;
 
 .header {
   padding: 2rem;
@@ -43,7 +44,7 @@ import Logo from '../ui/logo.vue';
 
       h2 {
         margin: 0;
-        color: $color-red;
+        color: v.$color-red;
       }
     }
   }
@@ -55,7 +56,7 @@ import Logo from '../ui/logo.vue';
     padding: 1rem;
 
     a {
-      color: $color-black;
+      color: v.$color-black;
       text-decoration: none;
 
       &:hover {
@@ -64,7 +65,7 @@ import Logo from '../ui/logo.vue';
 
       &.router-link-active {
         font-weight: bold;
-        color: $color-red;
+        color: v.$color-red;
       }
     }
   }
