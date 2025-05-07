@@ -15,8 +15,7 @@ function login(event: Event): void {
 }
 </script>
 
-<template>
-  <!-- header !-->
+<template>  
   <div class="hero overlay">
     <h2 class="hero_title">My Account</h2>
   </div>
