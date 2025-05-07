@@ -8,10 +8,11 @@
 </template>
 
 <style scoped>
+@import '../../assets/styles/variables.scss';
 .main-page {
-  max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   text-align: center;
+  background-color: #e7e8e9;
 }
 </style>
