@@ -6,7 +6,7 @@ const errorEmail = ref<string>('');
 const errorPassword = ref<string>('');
 const showPassword = ref<boolean>(false);
 
-const togglePassword = ():void => {
+const togglePassword = (): void => {
   showPassword.value = !showPassword.value;
 };
 function login(event: Event): void {
@@ -15,7 +15,7 @@ function login(event: Event): void {
 }
 </script>
 
-<template>  
+<template>
   <div class="hero overlay">
     <h2 class="hero_title">My Account</h2>
   </div>

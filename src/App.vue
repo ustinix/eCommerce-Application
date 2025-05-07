@@ -1,8 +1,13 @@
 <script setup lang="ts">
-import LoginPage from './pages/loginPage/LoginPage.vue'
+import { RouterView } from 'vue-router';
+import Header from './components/layout/Header.vue';
 </script>
 
 <template>
+  <Header />
+  <main>
+    <RouterView />
+  </main>
 </template>
 
 <style scoped></style>
