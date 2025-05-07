@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+.hero {
+  background: url('../../assets/images/hero.png') no-repeat center center;
+  background-size: auto 100%;
+  width: 100%;
+  height: 229px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero_title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 50px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  color: #ffffff;
+  text-align: center;
+}
+.login_form {
+  display: flex;
+  flex-direction: column;
+  justify-content: baseline;
+  width: 450px;
+  margin: 70px auto;
+}
+.login_input,
+.password_wrapper {
+  height: 40px;
+  padding: 2px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: border-color 0.3s ease;
+  &:focus {
+    border-color: #f22735;
+  }
+}
+.login_label {
+  text-align: left;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.primary_color {
+  color: #f22735;
+}
+.login_error {
+  height: 30px;
+  padding: 2px;
+  margin: 0;
+  opacity: 0;
+}
+.visible {
+  opacity: 1;
+}
+.login_button {
+  background-color: #f22735;
+  color: #ffffff;
+  text-transform: uppercase;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  &:hover{
+    background-color: #e64752;
+    border: none;
+  }
+}
+.password_wrapper {
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+.toggle-button {
+  background: url('../../assets/images/eye.svg') no-repeat center center;
+  width: 20px;
+  &:hover,
+  &:active,
+  &:focus {
+    border: none;
+    outline: none;
+  }
+}
+.password_input {
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  height: 40px;
+  padding: 2px;
+  flex: 1;
+}
+.password_wrapper:has(.password_input:focus) {
+  border-color: #f22735;
+}
