@@ -39,27 +39,21 @@ h1 {
   line-height: 1.1;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
+button {  
   padding: 0.6em 1.2em;
-  cursor: pointer;
-  transition: border-color 0.25s;
+  cursor: pointer;  
   background-color: v.$color-red;
   color: v.$color-white;
   text-transform: uppercase;
   font-family: Roboto, sans-serif;
   font-weight: 700;
   font-size: 12px;
+  border: none;
+  outline: none;
 }
 
 button:hover {
   border-color: #646cff;
-}
-
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
 .card {

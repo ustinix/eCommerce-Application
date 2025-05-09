@@ -1,0 +1,44 @@
+@use './variables.scss' as v;
+.form_input {
+    height: 40px;
+    padding: 3px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: border-color 0.3s ease;
+    &:focus {
+      border-color: v.$color-red;
+    }
+  }
+  .form_label {
+    text-align: left;
+    font-family: v.$font;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  .form_button {
+    background-color:v.$color-red;
+    color: v.$color-white;
+    text-transform: uppercase;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    &:hover{
+      background-color: v.$color-hover;
+      border: none;
+    }
+    &:disabled{
+      cursor:not-allowed ;
+      background-color: v.$color-grey;
+    }
+  }
+  .form_error {
+    height: 30px;
+    padding: 3px 0;
+    margin: 0;
+    opacity: 0;
+    font-size: 9px;
+    color: v.$color-red;
+  }
+  .visible {
+    opacity: 1;
+  }
