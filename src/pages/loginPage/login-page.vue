@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+
 const email = ref<string>('');
 const password = ref<string>('');
 const errorEmail = ref<string>('');
@@ -9,6 +10,7 @@ const showPassword = ref<boolean>(false);
 const togglePassword = (): void => {
   showPassword.value = !showPassword.value;
 };
+
 function login(event: Event): void {
   event.preventDefault();
   console.log('login');

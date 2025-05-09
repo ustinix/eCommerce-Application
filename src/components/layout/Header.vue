@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DividerLine from '../ui/dividerLine.vue';
+import DividerLine from '../ui/divider-line.vue';
 import Logo from '../ui/logo.vue';
 </script>
 
