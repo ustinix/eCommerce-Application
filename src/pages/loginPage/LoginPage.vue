@@ -2,11 +2,18 @@
 import { ref } from 'vue';
 import PasswordInput from '../../components/layout/PasswordInput.vue';
 import EmailInput from '../../components/layout/EmailInput.vue';
+
 const email = ref<string>('');
+const emailError = ref<string>('');
 const password = ref<string>('');
+const passwordError = ref<string>('');
+
 function login(event: Event): void {
   event.preventDefault();
   console.log('login', email.value, password.value);
+}
+function isButtonDisabled(){
+    return (password.value !=='' && passwordError.value==='') &&  (email.value !=='' && emailError.value==='')
 }
 </script>
 
@@ -16,9 +23,9 @@ function login(event: Event): void {
   </div>
   <form class="login_form">
   
-    <EmailInput v-model="email"  />
-    <PasswordInput v-model="password" />
-    <button type="submit" @click="login" class="form_button">LOG IN</button>
+    <EmailInput v-model="email" v-model:error="emailError" />
+    <PasswordInput v-model="password"  v-model:error="passwordError"/>
+    <button type="submit" @click="login" class="form_button" :disabled="!isButtonDisabled()" >LOG IN</button>
   </form>
 </template>
 <style lang="scss" scoped>

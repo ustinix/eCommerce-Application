@@ -1,25 +1,22 @@
 <script setup lang="ts">
-import { ref, defineEmits, defineProps, watch } from 'vue';
+import { ref} from 'vue';
 
-const props = defineProps<{ modelValue: string }>();
-const emit = defineEmits<{ (e: 'update:modelValue', value: string): void }>();
+const modelValue = defineModel<string>()
+const errorPassword  = defineModel<string>('error')
 
 const showPassword = ref<boolean>(false);
-const errorPassword = ref<string>('');
 const togglePassword = (): void => {
   showPassword.value = !showPassword.value;
 };
 function validatePassword(event: Event) {
   const value = event.target.value.trim();
-  emit('update:modelValue', value);
+  modelValue.value = value
   const errorMessage = 'Password must contain at least 8 characters, uppercase and lowercase letter, number and special character'
   if (value.length < 8 || !/[A-Z]/.test(value) || !/[a-z]/.test(value) ||!/[0-9]/.test(value)|| !/[!@#$%^&*]/.test(value)) {
     errorPassword.value = errorMessage;
   } else {
     errorPassword.value = '';
   }
- 
-
 }
 </script>
 
@@ -28,7 +25,7 @@ function validatePassword(event: Event) {
   <div class="password_wrapper">
     <input
       :type="showPassword ? 'text' : 'password'"
-      :value="props.modelValue"
+      :value="modelValue"
       placeholder="Password"
       class="password_input"
       @input="validatePassword"

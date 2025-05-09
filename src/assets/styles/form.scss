@@ -26,6 +26,10 @@
       background-color: v.$color-hover;
       border: none;
     }
+    &:disabled{
+      cursor:not-allowed ;
+      background-color: v.$color-grey;
+    }
   }
   .form_error {
     height: 30px;
