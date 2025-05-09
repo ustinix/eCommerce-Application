@@ -26,7 +26,7 @@ import Logo from '../ui/logo.vue';
 @use '../../assets/styles/variables.scss' as v;
 
 .header {
-  padding: 2rem;
+  padding-top: 2rem;
   max-width: 100%;
   display: flex;
   flex-direction: column;
