@@ -12,8 +12,13 @@ function login(event: Event): void {
   event.preventDefault();
   console.log('login', email.value, password.value);
 }
-function isButtonDisabled(){
-    return (password.value !=='' && passwordError.value==='') &&  (email.value !=='' && emailError.value==='')
+function isButtonDisabled() {
+  return (
+    password.value !== '' &&
+    passwordError.value === '' &&
+    email.value !== '' &&
+    emailError.value === ''
+  );
 }
 </script>
 
@@ -22,10 +27,11 @@ function isButtonDisabled(){
     <h2 class="hero_title">My Account</h2>
   </div>
   <form class="login_form">
-  
     <EmailInput v-model="email" v-model:error="emailError" />
-    <PasswordInput v-model="password"  v-model:error="passwordError"/>
-    <button type="submit" @click="login" class="form_button" :disabled="!isButtonDisabled()" >LOG IN</button>
+    <PasswordInput v-model="password" v-model:error="passwordError" />
+    <button type="submit" @click="login" class="form_button" :disabled="!isButtonDisabled()">
+      LOG IN
+    </button>
   </form>
 </template>
 <style lang="scss" scoped>
