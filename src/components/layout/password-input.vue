@@ -27,17 +27,6 @@ function validatePassword(event: Event): void {
     !/[!@#$%^&*]/.test(value)
       ? (errorPassword.value = errorMessage)
       : '';
-  /* if (
-    value.length < 8 ||
-    !/[A-Z]/.test(value) ||
-    !/[a-z]/.test(value) ||
-    !/[0-9]/.test(value) ||
-    !/[!@#$%^&*]/.test(value)
-  ) {
-    errorPassword.value = errorMessage;
-  } else {
-    errorPassword.value = '';
-  }*/
 }
 </script>
 

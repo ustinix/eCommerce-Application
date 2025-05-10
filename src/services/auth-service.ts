@@ -5,8 +5,11 @@ import {
 } from '@commercetools/sdk-client-v2';
 
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { type useAuthStore } from '../stores/auth';
+import { type ApiError } from '../types/api-error';
 
 const projectKey = 'rss-ecom';
+//const authStore = useAuthStore();
 
 const client = createClient({
   middlewares: [
@@ -27,9 +30,13 @@ const client = createClient({
 
 export const apiRoot = createApiBuilderFromCtpClient(client).withProjectKey({ projectKey });
 
-export const loginCustomer = async (email: string, password: string): Promise<void> => {
+export const loginCustomer = async (
+  email: string,
+  password: string,
+  authStore: ReturnType<typeof useAuthStore>,
+): Promise<void> => {
   try {
-    const response = await apiRoot
+    await apiRoot
       .login()
       .post({
         body: {
@@ -39,8 +46,19 @@ export const loginCustomer = async (email: string, password: string): Promise<vo
       })
       .execute();
 
-    console.log(response.body);
-  } catch (error) {
-    console.error('Login failed:', error);
+    authStore.setUser(email, password);
+    authStore.setAuth(true);
+  } catch (error: unknown) {
+    const defaultError = 'Server authentication error';
+    const errorMessage = isCorrectError(error) ? error.message : defaultError;
+
+    authStore.setError(errorMessage);
   }
 };
+function isCorrectError(error: unknown): error is ApiError {
+  if (typeof error !== 'object' || error === null) return false;
+
+  if ('message' in error && typeof error.message === 'string') return true;
+
+  return false;
+}

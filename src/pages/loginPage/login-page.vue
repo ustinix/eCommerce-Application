@@ -3,6 +3,9 @@ import { ref } from 'vue';
 import PasswordInput from '../../components/layout/password-input.vue';
 import EmailInput from '../../components/layout/email-input.vue';
 import { loginCustomer } from '../../services/auth-service.ts';
+import { useAuthStore } from '../../stores/auth';
+
+const authStore = useAuthStore();
 
 const email = ref<string>('');
 const emailError = ref<string>('');
@@ -11,8 +14,8 @@ const passwordError = ref<string>('');
 
 async function login(event: Event): void {
   event.preventDefault();
-  console.log('login', email.value, password.value);
-  await loginCustomer(email.value, password.value);
+  authStore.setError(null);
+  await loginCustomer(email.value, password.value, authStore);
 }
 function isButtonDisabled(): boolean {
   return (
@@ -34,6 +37,7 @@ function isButtonDisabled(): boolean {
     <button type="submit" @click="login" class="form_button" :disabled="!isButtonDisabled()">
       LOG IN
     </button>
+    <p v-if="authStore.errorAuth" class="server_error">{{ authStore.errorAuth }}</p>
   </form>
 </template>
 <style lang="scss" scoped>
@@ -76,5 +80,10 @@ function isButtonDisabled(): boolean {
 }
 .visible {
   opacity: 1;
+}
+.server_error {
+  text-align: center;
+  color: v.$color-red;
+  font-size: 14px;
 }
 </style>
