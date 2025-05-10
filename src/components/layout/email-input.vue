@@ -19,7 +19,6 @@ function validateEmail(event: Event): void {
 }
 function isEmail(email: string): boolean {
   const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
   return regex.test(email);
 }
 </script>

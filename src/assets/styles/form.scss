@@ -1,4 +1,5 @@
 @use './variables.scss' as v;
+
 .form_input {
   height: 40px;
   padding: 3px;
@@ -9,12 +10,14 @@
     border-color: v.$color-red;
   }
 }
+
 .form_label {
   text-align: left;
   font-family: v.$font;
   font-size: 14px;
   margin-bottom: 8px;
 }
+
 .form_button {
   background-color: v.$color-red;
   color: v.$color-white;
@@ -31,6 +34,7 @@
     background-color: v.$color-grey;
   }
 }
+
 .form_error {
   height: 30px;
   padding: 3px 0;
@@ -39,9 +43,11 @@
   font-size: 9px;
   color: v.$color-red;
 }
+
 .visible {
   opacity: 1;
 }
 .primary_color {
   color: v.$color-red;
 }
+

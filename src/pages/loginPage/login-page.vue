@@ -12,7 +12,7 @@ const emailError = ref<string>('');
 const password = ref<string>('');
 const passwordError = ref<string>('');
 
-async function login(event: Event): void {
+async function login(event: Event): Promise<void> {
   event.preventDefault();
   authStore.setError(null);
   await loginCustomer(email.value, password.value, authStore);
