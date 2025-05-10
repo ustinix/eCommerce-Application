@@ -1,18 +1,22 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import EmailInput from '../../components/layout/EmailInput.vue';
+import PasswordInput from '../../components/layout/PasswordInput.vue';
 
 const router = useRouter();
 
-const frstName = ref('');
-const lastName = ref('');
-const email = ref('');
-const password = ref('');
-const date = ref('');
-const street = ref('');
-const city = ref('');
-const country = ref('');
-const code = ref('');
+const frstName = ref<string>('');
+const lastName = ref<string>('');
+const email = ref<string>('');
+const emailError = ref<string>('');
+const password = ref<string>('');
+const passwordError = ref<string>('');
+const date = ref<string>('');
+const street = ref<string>('');
+const city = ref<string>('');
+const country = ref<string>('');
+const code = ref<string>('');
 
 function handleSubmit(): void {
   console.log(`Регистрация с email: ${email.value}`);
@@ -32,10 +36,8 @@ function toLoginPage(): void {
         <input v-model="frstName" type="text" placeholder="First Name" required />
         <label class="login_label">Last Name <span class="primary_color">*</span> </label>
         <input v-model="lastName" type="text" placeholder="Last Name" required />
-        <label class="login_label">Email address <span class="primary_color">*</span> </label>
-        <input v-model="email" type="email" placeholder="Email" required />
-        <label class="login_label">Password <span class="primary_color">*</span> </label>
-        <input v-model="password" type="password" placeholder="Password" required />
+        <EmailInput v-model="email" v-model:error="emailError" />
+        <PasswordInput v-model="password" v-model:error="passwordError" />
         <label class="login_label">Date of birth <span class="primary_color">*</span> </label>
         <input v-model="date" type="date" required />
       </form>
@@ -72,6 +74,7 @@ function toLoginPage(): void {
 
 <style lang="scss" scoped>
 @use '../../assets/styles/variables.scss' as v;
+@use '../../assets/styles/form.scss';
 
 .registration-page {
   max-width: 1100px;
@@ -129,10 +132,16 @@ function toLoginPage(): void {
   }
 }
 input {
-  display: block;
-  width: 100%;
   margin: 10px 0;
-  padding: 8px;
+  height: 40px;
+  padding: 3px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    border-color: v.$color-red;
+  }
 }
 
 button {

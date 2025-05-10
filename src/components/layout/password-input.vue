@@ -1,18 +1,26 @@
 <script setup lang="ts">
-import { ref} from 'vue';
+import { ref } from 'vue';
 
-const modelValue = defineModel<string>()
-const errorPassword  = defineModel<string>('error')
+const modelValue = defineModel<string>();
+const errorPassword = defineModel<string>('error');
 
 const showPassword = ref<boolean>(false);
 const togglePassword = (): void => {
   showPassword.value = !showPassword.value;
 };
 function validatePassword(event: Event) {
+  if (!(event.target instanceof HTMLInputElement)) return;
   const value = event.target.value.trim();
-  modelValue.value = value
-  const errorMessage = 'Password must contain at least 8 characters, uppercase and lowercase letter, number and special character'
-  if (value.length < 8 || !/[A-Z]/.test(value) || !/[a-z]/.test(value) ||!/[0-9]/.test(value)|| !/[!@#$%^&*]/.test(value)) {
+  modelValue.value = value;
+  const errorMessage =
+    'Password must contain at least 8 characters, uppercase and lowercase letter, number and special character';
+  if (
+    value.length < 8 ||
+    !/[A-Z]/.test(value) ||
+    !/[a-z]/.test(value) ||
+    !/[0-9]/.test(value) ||
+    !/[!@#$%^&*]/.test(value)
+  ) {
     errorPassword.value = errorMessage;
   } else {
     errorPassword.value = '';
@@ -30,14 +38,18 @@ function validatePassword(event: Event) {
       class="password_input"
       @input="validatePassword"
     />
-    <button type="button" :class="showPassword ? 'toggle-button  toggle-button_close':'toggle-button'" @click="togglePassword"></button>
+    <button
+      type="button"
+      :class="showPassword ? 'toggle-button  toggle-button_close' : 'toggle-button'"
+      @click="togglePassword"
+    ></button>
   </div>
   <p class="form_error" :class="{ visible: !!errorPassword }">{{ errorPassword }}</p>
 </template>
 
 <style scoped lang="scss">
 @use '../../assets/styles/variables.scss' as v;
-@use '../../assets/styles/form.scss' ;
+@use '../../assets/styles/form.scss';
 .password_wrapper {
   height: 40px;
   border: 1px solid #ccc;
@@ -51,7 +63,7 @@ function validatePassword(event: Event) {
 .toggle-button {
   background: url('../../assets/images/eye.svg') no-repeat center center;
   width: 20px;
-  margin-right: 13px; 
+  margin-right: 13px;
   border: none;
   cursor: pointer;
   &_close {
