@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import PasswordInput from '../../components/layout/PasswordInput.vue';
-import EmailInput from '../../components/layout/EmailInput.vue';
+import EmailInput from '../../components/layout/email-input.vue';
+import PasswordInput from '../../components/layout/password-input.vue';
 
 const email = ref<string>('');
 const emailError = ref<string>('');
 const password = ref<string>('');
 const passwordError = ref<string>('');
 
-async function login(event: Event): void {
+async function login(event: Event): Promise<void> {
   event.preventDefault();
   console.log('login', email.value, password.value);
 }
