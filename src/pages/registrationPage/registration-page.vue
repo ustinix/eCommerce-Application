@@ -8,7 +8,6 @@ import Surname from '../../components/layout/surname-input.vue';
 import Date from '../../components/layout/date-input.vue';
 import AddressForm from '../../components/layout/address-form.vue';
 import PostalCode from '../../components/layout/postal-code.vue';
-import { useAuthStore } from '../../stores/auth';
 
 const router = useRouter();
 
