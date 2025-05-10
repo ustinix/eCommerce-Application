@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import PasswordInput from '../../components/layout/PasswordInput.vue';
-import EmailInput from '../../components/layout/EmailInput.vue';
+import PasswordInput from '../../components/layout/password-input.vue';
+import EmailInput from '../../components/layout/email-input.vue';
+import { loginCustomer } from '../../services/auth-service.ts';
 
 const email = ref<string>('');
 const emailError = ref<string>('');
@@ -11,6 +12,7 @@ const passwordError = ref<string>('');
 async function login(event: Event): void {
   event.preventDefault();
   console.log('login', email.value, password.value);
+  await loginCustomer(email.value, password.value);
 }
 function isButtonDisabled(): boolean {
   return (

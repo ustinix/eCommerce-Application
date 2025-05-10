@@ -20,8 +20,27 @@ const client = createClient({
     }),
     createHttpClient({
       host: 'https://api.us-central1.gcp.commercetools.com',
+      fetch: globalThis.fetch,
     }),
   ],
 });
 
 export const apiRoot = createApiBuilderFromCtpClient(client).withProjectKey({ projectKey });
+
+export const loginCustomer = async (email: string, password: string): Promise<void> => {
+  try {
+    const response = await apiRoot
+      .login()
+      .post({
+        body: {
+          email,
+          password,
+        },
+      })
+      .execute();
+
+    console.log(response.body);
+  } catch (error) {
+    console.error('Login failed:', error);
+  }
+};
