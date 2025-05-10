@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import PasswordInput from '../../components/layout/PasswordInput.vue';
-import EmailInput from '../../components/layout/EmailInput.vue';
+import EmailInput from '../../components/layout/email-input.vue';
+import PasswordInput from '../../components/layout/password-input.vue';
 
 const email = ref<string>('');
 const emailError = ref<string>('');
