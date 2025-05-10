@@ -8,23 +8,22 @@ const showPassword = ref<boolean>(false);
 const togglePassword = (): void => {
   showPassword.value = !showPassword.value;
 };
-function validatePassword(event: Event) {
+function validatePassword(event: Event): void {
   if (!(event.target instanceof HTMLInputElement)) return;
+
   const value = event.target.value.trim();
   modelValue.value = value;
+
   const errorMessage =
     'Password must contain at least 8 characters, uppercase and lowercase letter, number and special character';
-  if (
+  errorPassword.value =
     value.length < 8 ||
     !/[A-Z]/.test(value) ||
     !/[a-z]/.test(value) ||
-    !/[0-9]/.test(value) ||
-    !/[!@#$%^&*]/.test(value)
-  ) {
-    errorPassword.value = errorMessage;
-  } else {
-    errorPassword.value = '';
-  }
+    !/\d/.test(value) ||
+    !/[!#$%&*@^]/.test(value)
+      ? errorMessage
+      : '';
 }
 </script>
 
