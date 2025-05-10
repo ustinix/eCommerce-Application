@@ -5,11 +5,13 @@ const errorEmail = defineModel<string>('error');
 function validateEmail(event: Event): void {
   if (!(event.target instanceof HTMLInputElement)) return;
   modelValue.value = event.target.value;
-  const value = event.target.value;
-  const valueTrim = event.target.value.trim();
+
+  const value = String(event.target.value);
+  const valueTrim = value.trim();
 
   if (value === valueTrim) {
     const errorMessage = 'Email address must contain an "@" symbol, local part and domain name.';
+
     errorEmail.value = isEmail(value) ? '' : errorMessage;
   } else {
     errorEmail.value = 'Email address must not contain leading or trailing whitespace';

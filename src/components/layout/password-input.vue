@@ -8,10 +8,12 @@ const showPassword = ref<boolean>(false);
 const togglePassword = (): void => {
   showPassword.value = !showPassword.value;
 };
-function validatePassword(event: Event): void {
-  if (!(event.target instanceof HTMLInputElement)) return;
 
-  const value = event.target.value.trim();
+function validatePassword(event: Event): void {
+  if ((!event.target) instanceof HTMLInputElement) return;
+
+  const value = String(event.target.value.trim());
+
   modelValue.value = value;
 
   const errorMessage =
