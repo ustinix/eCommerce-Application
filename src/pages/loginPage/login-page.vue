@@ -8,11 +8,11 @@ const emailError = ref<string>('');
 const password = ref<string>('');
 const passwordError = ref<string>('');
 
-function login(event: Event): void {
+async function login(event: Event): void {
   event.preventDefault();
   console.log('login', email.value, password.value);
 }
-function isButtonDisabled() {
+function isButtonDisabled(): boolean {
   return (
     password.value !== '' &&
     passwordError.value === '' &&
