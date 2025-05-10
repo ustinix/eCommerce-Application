@@ -27,12 +27,6 @@ function validatePassword(event: Event): void {
     !/[!@#$%^&*]/.test(value)
       ? (errorPassword.value = errorMessage)
       : '';
-  ) {
-    errorPassword.value = errorMessage;
-  } else {
-    errorPassword.value = '';
-  }
-
 }
 </script>
 
