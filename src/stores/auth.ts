@@ -12,7 +12,7 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = { email, password };
   };
 
-  const setError = (error: string): void => {
+  const setError = (error: string | null): void => {
     errorAuth.value = error;
   };
   const setAuth = (value: boolean): void => {

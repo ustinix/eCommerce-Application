@@ -1,37 +1,39 @@
 <script setup lang="ts">
 const modelValue = defineModel<string>();
-const errorName = defineModel<string>('error');
+const errorSurname = defineModel<string>('error');
 
 function validateName(event: Event): void {
   if (!(event.target instanceof HTMLInputElement)) return;
   modelValue.value = event.target.value;
+
   const value = event.target.value;
+
   const valueTrim = event.target.value.trim();
 
   if (value === valueTrim) {
     const errorMessage =
-      'The name must contain from 2 to 20 Latin letters, and a hyphen is allowed.';
-    errorName.value = isName(value) ? '' : errorMessage;
+      'The surname must contain from 2 to 20 Latin letters, and a hyphen is allowed.';
+    errorSurname.value = isSuname(value) ? '' : errorMessage;
   } else {
-    errorName.value = 'Name must not contain leading or trailing whitespace';
+    errorSurname.value = 'Name must not contain leading or trailing whitespace';
   }
 }
-function isName(name: string): boolean {
+function isSuname(surname: string): boolean {
   const regex = /^(?=(.*[A-Za-z]){2})[A-Za-z-]{2,20}$/;
-  return regex.test(name);
+  return regex.test(surname);
 }
 </script>
 <template>
-  <label class="form_label">First name <span class="primary_color">*</span> </label>
+  <label class="form_label">Surname<span class="primary_color">*</span> </label>
   <input
     class="form_input"
     :value="modelValue"
     type="text"
-    placeholder="First name"
+    placeholder="Surname"
     @input="validateName"
     required
   />
-  <p class="form_error" :class="{ visible: !!errorName }">{{ errorName }}</p>
+  <p class="form_error" :class="{ visible: !!errorSurname }">{{ errorSurname }}</p>
 </template>
 <style scoped lang="scss">
 @use '../../assets/styles/form.scss';
