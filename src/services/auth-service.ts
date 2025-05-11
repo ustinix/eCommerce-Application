@@ -8,9 +8,6 @@ import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { type useAuthStore } from '../stores/auth';
 import { type ApiError } from '../types/api-error';
 
-const clientSecret = import.meta.env.VITE_CTP_CLIENT_SECRET;
-const clientId = import.meta.env.VITE_CTP_CLIENT_ID;
-
 const projectKey = 'rss-ecom';
 //const authStore = useAuthStore();
 
@@ -20,8 +17,8 @@ const client = createClient({
       host: 'https://auth.us-central1.gcp.commercetools.com',
       projectKey,
       credentials: {
-        clientId: clientId,
-        clientSecret: clientSecret,
+        clientId: import.meta.env.VITE_CTP_CLIENT_ID,
+        clientSecret: import.meta.env.VITE_CTP_CLIENT_SECRET,
       },
     }),
     createHttpClient({
