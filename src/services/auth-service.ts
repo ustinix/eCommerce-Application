@@ -2,9 +2,10 @@ import {
   createAuthForClientCredentialsFlow,
   createHttpClient,
   createClient,
+  createAuthForAnonymousSessionFlow,
 } from '@commercetools/sdk-client-v2';
 
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import { createApiBuilderFromCtpClient, CustomerSignInResult } from '@commercetools/platform-sdk';
 import { type useAuthStore } from '../stores/auth';
 import { type ApiError } from '../types/api-error';
 
@@ -62,3 +63,51 @@ function isCorrectError(error: unknown): error is ApiError {
 
   return false;
 }
+
+export const createCustomer = async (
+  email: string,
+  password: string,
+  authStore: ReturnType<typeof useAuthStore>,
+): Promise<CustomerSignInResult> => {
+  try {
+    const anonymousAuthClient = createClient({
+      middlewares: [
+        createAuthForAnonymousSessionFlow({
+          host: 'https://auth.us-central1.gcp.commercetools.com',
+          projectKey,
+          credentials: {
+            clientId: import.meta.env.VITE_CTP_CLIENT_ID,
+            clientSecret: import.meta.env.VITE_CTP_CLIENT_SECRET,
+          },
+        }),
+        createHttpClient({
+          host: 'https://api.us-central1.gcp.commercetools.com',
+          fetch: globalThis.fetch,
+        }),
+      ],
+    });
+
+    const apiRoot = createApiBuilderFromCtpClient(anonymousAuthClient).withProjectKey({
+      projectKey,
+    });
+
+    const response = await apiRoot
+      .customers()
+      .post({
+        body: {
+          email,
+          password,
+        },
+      })
+      .execute();
+
+    authStore.setUser(email, password);
+    authStore.setAuth(true);
+    return response.body;
+  } catch (error: unknown) {
+    const defaultError = 'Server create customer error';
+    const errorMessage = isCorrectError(error) ? error.message : defaultError;
+    authStore.setError(errorMessage);
+    throw error;
+  }
+};
