@@ -159,7 +159,8 @@ function toLoginPage(): void {
     flex-wrap: nowrap;
 
     h3 {
-      padding-bottom: 1vh;
+      margin: 0;
+      padding: 0 0 1vh 0;
     }
 
     .chkBoxWrapper {

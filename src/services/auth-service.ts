@@ -17,8 +17,8 @@ const client = createClient({
       host: 'https://auth.us-central1.gcp.commercetools.com',
       projectKey,
       credentials: {
-        clientId: 'FqSKjeOeoeNCXw5RuOOeE4nd',
-        clientSecret: 'CZORaCmSncHmB5R_2c67ZXa-V6Kg7msA',
+        clientId: import.meta.env.VITE_CTP_CLIENT_ID,
+        clientSecret: import.meta.env.VITE_CTP_CLIENT_SECRET,
       },
     }),
     createHttpClient({
