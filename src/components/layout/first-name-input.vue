@@ -10,14 +10,14 @@ function validateName(event: Event): void {
 
   if (value === valueTrim) {
     const errorMessage =
-      'The name must contain from 2 to 20 Latin letters, and a hyphen is allowed.';
+      'The name must contain at least one character and no special characters or numbers.';
     errorName.value = isName(value) ? '' : errorMessage;
   } else {
     errorName.value = 'Name must not contain leading or trailing whitespace';
   }
 }
 function isName(name: string): boolean {
-  const regex = /^(?=(.*[A-Za-z]){2})[A-Za-z-]{2,20}$/;
+  const regex = /^[A-Za-zЁА-яё]+$/;
   return regex.test(name);
 }
 </script>

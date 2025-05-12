@@ -120,9 +120,29 @@ async function registration(event: Event): Promise<void> {
       </form>
       <form class="shipping">
         <h3>Shipping address:</h3>
-        <AddressForm label="Country" placeholder="Country" v-model="shippingAddress.country" />
-        <AddressForm label="City" placeholder="City" v-model="shippingAddress.city" />
-        <AddressForm label="Street" placeholder="Street" v-model="shippingAddress.street" />
+        <AddressForm
+          label="Country"
+          placeholder="Country"
+          v-model="shippingAddress.country"
+          fieldType="country"
+          :selectedCountry="shippingAddress.country"
+          :disabled="false"
+        />
+        <AddressForm
+          label="City"
+          placeholder="City"
+          v-model="shippingAddress.city"
+          fieldType="city"
+          :selectedCountry="shippingAddress.country"
+          :disabled="!shippingAddress.country"
+        />
+        <AddressForm
+          label="Street"
+          placeholder="Street"
+          v-model="shippingAddress.street"
+          fieldType="street"
+          :disabled="false"
+        />
         <PostalCode v-model="shippingAddress.code" v-model:error="errors.shipCode" />
         <div class="chkBoxWrapper">
           <a class="chkBoxText">Use the same adress for billing</a>
@@ -135,9 +155,29 @@ async function registration(event: Event): Promise<void> {
       </form>
       <form class="billing">
         <h3>Billing address:</h3>
-        <AddressForm label="Country" placeholder="Country" v-model="billingAddress.country" />
-        <AddressForm label="City" placeholder="City" v-model="billingAddress.city" />
-        <AddressForm label="Street" placeholder="Street" v-model="billingAddress.street" />
+        <AddressForm
+          label="Country"
+          placeholder="Country"
+          v-model="billingAddress.country"
+          fieldType="country"
+          :selectedCountry="billingAddress.country"
+          :disabled="false"
+        />
+        <AddressForm
+          label="City"
+          placeholder="City"
+          v-model="billingAddress.city"
+          fieldType="city"
+          :selectedCountry="billingAddress.country"
+          :disabled="!billingAddress.country"
+        />
+        <AddressForm
+          label="Street"
+          placeholder="Street"
+          v-model="billingAddress.street"
+          fieldType="street"
+          :disabled="false"
+        />
         <PostalCode v-model="billingAddress.code" v-model:error="errors.bilCode" />
         <div class="chkBoxWrapper">
           <a class="chkBoxText">Set as default billing address</a>

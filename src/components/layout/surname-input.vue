@@ -12,14 +12,14 @@ function validateName(event: Event): void {
 
   if (value === valueTrim) {
     const errorMessage =
-      'The surname must contain from 2 to 20 Latin letters, and a hyphen is allowed.';
+      'The surname must contain at least one character and no special characters or numbers..';
     errorSurname.value = isSuname(value) ? '' : errorMessage;
   } else {
     errorSurname.value = 'Name must not contain leading or trailing whitespace';
   }
 }
 function isSuname(surname: string): boolean {
-  const regex = /^(?=(.*[A-Za-z]){2})[A-Za-z-]{2,20}$/;
+  const regex = /^[A-Za-zЁА-яё]+$/;
   return regex.test(surname);
 }
 </script>

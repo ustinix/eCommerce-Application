@@ -9,11 +9,11 @@ function validateCode(event: Event): void {
   const value = event.target.value;
 
   const errorMessage =
-    'The code must be from 3 to 10 characters, numbers, letters, hyphens and spaces are allowed.';
+    'The code must follow the format for the country (e.g., 12345 or A1B 2C3 for the U.S. and Canada, respectively).';
   errorCode.value = isECode(value) ? '' : errorMessage;
 }
 function isECode(email: string): boolean {
-  const regex = /^[\d A-Za-z-]{3,10}$/;
+  const regex = /^(?:\d{5}|[A-Za-z]\d[A-Za-z] \d[A-Za-z]\d)$/;
   return regex.test(email);
 }
 </script>
