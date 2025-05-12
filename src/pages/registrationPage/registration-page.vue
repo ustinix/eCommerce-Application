@@ -8,6 +8,11 @@ import Surname from '../../components/layout/surname-input.vue';
 import Date from '../../components/layout/date-input.vue';
 import AddressForm from '../../components/layout/address-form.vue';
 import PostalCode from '../../components/layout/postal-code.vue';
+import { useAuthStore } from '../../stores/auth';
+import { createCustomer } from '../../services/auth-service';
+import { CustomerSignInResult } from '@commercetools/platform-sdk';
+
+const authStore = useAuthStore();
 
 const router = useRouter();
 
@@ -46,6 +51,10 @@ const errors = ref({
   bilCode: '',
 });
 
+const isSubmitting = ref(false);
+
+const createdCustomer = ref<CustomerSignInResult | null>(null);
+
 function addSameAddress(): void {
   billingAddress.value = useSameAddress.value
     ? JSON.parse(JSON.stringify(shippingAddress.value))
@@ -80,8 +89,21 @@ function isButtonDisabled(): boolean {
   return !(allFieldsFilled && noErrors);
 }
 
-function toLoginPage(): void {
-  router.push('/login');
+async function registration(event: Event): Promise<void> {
+  event.preventDefault();
+  authStore.setError(null);
+  createdCustomer.value = null;
+  isSubmitting.value = true;
+  try {
+    const result = await createCustomer(userData.value.email, userData.value.password, authStore);
+    createdCustomer.value = result;
+    console.log('User created:', createdCustomer.value);
+    // router.push('/login');
+  } catch (error) {
+    console.error('Registration failed:', error);
+  } finally {
+    isSubmitting.value = false;
+  }
 }
 </script>
 
@@ -98,9 +120,29 @@ function toLoginPage(): void {
       </form>
       <form class="shipping">
         <h3>Shipping address:</h3>
-        <AddressForm label="Country" placeholder="Country" v-model="shippingAddress.country" />
-        <AddressForm label="City" placeholder="City" v-model="shippingAddress.city" />
-        <AddressForm label="Street" placeholder="Street" v-model="shippingAddress.street" />
+        <AddressForm
+          label="Country"
+          placeholder="Country"
+          v-model="shippingAddress.country"
+          fieldType="country"
+          :selectedCountry="shippingAddress.country"
+          :disabled="false"
+        />
+        <AddressForm
+          label="City"
+          placeholder="City"
+          v-model="shippingAddress.city"
+          fieldType="city"
+          :selectedCountry="shippingAddress.country"
+          :disabled="!shippingAddress.country"
+        />
+        <AddressForm
+          label="Street"
+          placeholder="Street"
+          v-model="shippingAddress.street"
+          fieldType="street"
+          :disabled="false"
+        />
         <PostalCode v-model="shippingAddress.code" v-model:error="errors.shipCode" />
         <div class="chkBoxWrapper">
           <a class="chkBoxText">Use the same adress for billing</a>
@@ -113,9 +155,29 @@ function toLoginPage(): void {
       </form>
       <form class="billing">
         <h3>Billing address:</h3>
-        <AddressForm label="Country" placeholder="Country" v-model="billingAddress.country" />
-        <AddressForm label="City" placeholder="City" v-model="billingAddress.city" />
-        <AddressForm label="Street" placeholder="Street" v-model="billingAddress.street" />
+        <AddressForm
+          label="Country"
+          placeholder="Country"
+          v-model="billingAddress.country"
+          fieldType="country"
+          :selectedCountry="billingAddress.country"
+          :disabled="false"
+        />
+        <AddressForm
+          label="City"
+          placeholder="City"
+          v-model="billingAddress.city"
+          fieldType="city"
+          :selectedCountry="billingAddress.country"
+          :disabled="!billingAddress.country"
+        />
+        <AddressForm
+          label="Street"
+          placeholder="Street"
+          v-model="billingAddress.street"
+          fieldType="street"
+          :disabled="false"
+        />
         <PostalCode v-model="billingAddress.code" v-model:error="errors.bilCode" />
         <div class="chkBoxWrapper">
           <a class="chkBoxText">Set as default billing address</a>
@@ -123,9 +185,20 @@ function toLoginPage(): void {
         </div>
       </form>
     </div>
-    <button type="submit" @click="toLoginPage" class="button" :disabled="!isButtonDisabled()">
-      REGISTER
+    <button
+      v-if="!createdCustomer"
+      type="submit"
+      @click="registration"
+      class="button"
+      :disabled="!isButtonDisabled()"
+    >
+      {{ isSubmitting ? 'Processing...' : 'REGISTER' }}
     </button>
+    <p v-if="authStore.errorAuth" class="server_error">{{ authStore.errorAuth }}</p>
+    <div v-if="createdCustomer" class="success-message">
+      <p>User created successfully!</p>
+      <button @click="router.push('/login')" class="button">Go to Login</button>
+    </div>
   </div>
 </template>
 
@@ -186,5 +259,30 @@ button {
   width: 50%;
   margin: 10px 0;
   padding: 8px;
+}
+.success-message {
+  width: 50%;
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f0fff0;
+  border: 1px solid #a0d8a0;
+  border-radius: 4px;
+  text-align: center;
+
+  p {
+    margin: 5px 0;
+  }
+
+  .button {
+    width: 100%;
+    margin-top: 10px;
+    background-color: #f22735;
+    color: white;
+  }
+}
+
+.server_error {
+  color: #ff0000;
+  margin-top: 10px;
 }
 </style>
