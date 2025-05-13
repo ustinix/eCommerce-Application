@@ -5,6 +5,7 @@ import EmailInput from '../../components/layout/email-input.vue';
 import { loginCustomer } from '../../services/auth-service.ts';
 import { useAuthStore } from '../../stores/auth';
 import router from '../../router/router.ts';
+import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
 
 const authStore = useAuthStore();
 
@@ -23,9 +24,10 @@ async function login(event: Event): Promise<void> {
   await loginCustomer(email.value, password.value, loginValid, loginFailed);
 }
 
-function loginValid(): void {
+function loginValid(apiRoot: ByProjectKeyRequestBuilder): void {
   authStore.setUser(email, password);
   authStore.setAuth(true);
+  authStore.setApiRoot(apiRoot);
   router.push('/');
 }
 function loginFailed(errorMessage: string): void {

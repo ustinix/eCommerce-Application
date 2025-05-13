@@ -2,7 +2,7 @@ import { createHttpClient, createClient } from '@commercetools/sdk-client-v2';
 import { createAuthForPasswordFlow } from '@commercetools/sdk-client-v2';
 
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-
+import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
 import { type ApiError } from '../types/api-error';
 
 const projectKey = 'rss-ecom';
@@ -10,7 +10,7 @@ const projectKey = 'rss-ecom';
 export const loginCustomer = async (
   email: string,
   password: string,
-  loginValid: () => void,
+  loginValid: (apiRoot: ByProjectKeyRequestBuilder) => void,
   loginFailed: (error: string) => void,
 ): Promise<void> => {
   try {
@@ -37,7 +37,7 @@ export const loginCustomer = async (
     const apiRoot = createApiBuilderFromCtpClient(passwordClient).withProjectKey({ projectKey });
 
     await apiRoot.me().get().execute();
-    loginValid();
+    loginValid(apiRoot);
   } catch (error: unknown) {
     const defaultError = 'Server authentication error';
     const errorMessage = isCorrectError(error) ? error.message : defaultError;
