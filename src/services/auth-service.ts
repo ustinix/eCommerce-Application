@@ -5,7 +5,9 @@ import {
 } from '@commercetools/sdk-client-v2';
 
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+
 import { type ApiError } from '../types/api-error';
+import { getAuthToken } from './get-token';
 
 const projectKey = 'rss-ecom';
 
@@ -35,7 +37,7 @@ export const loginCustomer = async (
   loginFailed: (error: string) => void,
 ): Promise<void> => {
   try {
-    await apiRoot
+    const response = await apiRoot
       .login()
       .post({
         body: {
@@ -44,6 +46,12 @@ export const loginCustomer = async (
         },
       })
       .execute();
+
+    console.log('response', response);
+
+    const result = await getAuthToken(email, password);
+
+    console.log('result', result);
     loginValid();
   } catch (error: unknown) {
     const defaultError = 'Server authentication error';
