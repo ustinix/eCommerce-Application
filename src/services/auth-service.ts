@@ -5,9 +5,11 @@ import {
   createAuthForAnonymousSessionFlow,
 } from '@commercetools/sdk-client-v2';
 
-import { createApiBuilderFromCtpClient, CustomerSignInResult } from '@commercetools/platform-sdk';
+import type { CustomerSignInResult } from '@commercetools/platform-sdk';
+import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { type useAuthStore } from '../stores/auth';
 import { type ApiError } from '../types/api-error';
+import { type Address } from '../types/address';
 
 const projectKey = 'rss-ecom';
 //const authStore = useAuthStore();
@@ -65,9 +67,14 @@ function isCorrectError(error: unknown): error is ApiError {
 }
 
 export const createCustomer = async (
+  firstName: string,
+  lastName: string,
   email: string,
   password: string,
+  addresses: Address[],
   authStore: ReturnType<typeof useAuthStore>,
+  defaultShippingAddress?: number,
+  defaultBillingAddress?: number,
 ): Promise<CustomerSignInResult> => {
   try {
     const anonymousAuthClient = createClient({
@@ -91,20 +98,43 @@ export const createCustomer = async (
       projectKey,
     });
 
+    const requestBody: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      password: string;
+      addresses: Address[];
+      defaultShippingAddress?: number;
+      defaultBillingAddress?: number;
+    } = {
+      firstName,
+      lastName,
+      email,
+      password,
+      addresses,
+    };
+
+    if (defaultShippingAddress !== undefined) {
+      requestBody.defaultShippingAddress = defaultShippingAddress;
+    }
+
+    if (defaultBillingAddress !== undefined) {
+      requestBody.defaultBillingAddress = defaultBillingAddress;
+    }
+
     const response = await apiRoot
       .customers()
       .post({
-        body: {
-          email,
-          password,
-        },
+        body: requestBody,
       })
       .execute();
 
     authStore.setUser(email, password);
     authStore.setAuth(true);
+    console.log('Created Customer Response:', response.body);
     return response.body;
   } catch (error: unknown) {
+    console.error('Registration failed:', error);
     const defaultError = 'Server create customer error';
     const errorMessage = isCorrectError(error) ? error.message : defaultError;
     authStore.setError(errorMessage);
