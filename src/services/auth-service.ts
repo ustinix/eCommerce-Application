@@ -5,11 +5,9 @@ import {
 } from '@commercetools/sdk-client-v2';
 
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import { type useAuthStore } from '../stores/auth';
 import { type ApiError } from '../types/api-error';
 
 const projectKey = 'rss-ecom';
-//const authStore = useAuthStore();
 
 const client = createClient({
   middlewares: [
@@ -17,8 +15,8 @@ const client = createClient({
       host: 'https://auth.us-central1.gcp.commercetools.com',
       projectKey,
       credentials: {
-        clientId: 'FqSKjeOeoeNCXw5RuOOeE4nd',
-        clientSecret: 'CZORaCmSncHmB5R_2c67ZXa-V6Kg7msA',
+        clientId: import.meta.env.VITE_CTP_CLIENT_ID,
+        clientSecret: import.meta.env.VITE_CTP_CLIENT_SECRET,
       },
     }),
     createHttpClient({
@@ -33,7 +31,8 @@ export const apiRoot = createApiBuilderFromCtpClient(client).withProjectKey({ pr
 export const loginCustomer = async (
   email: string,
   password: string,
-  authStore: ReturnType<typeof useAuthStore>,
+  loginValid: () => void,
+  loginFailed: (error: string) => void,
 ): Promise<void> => {
   try {
     await apiRoot
@@ -45,14 +44,12 @@ export const loginCustomer = async (
         },
       })
       .execute();
-
-    authStore.setUser(email, password);
-    authStore.setAuth(true);
+    loginValid();
   } catch (error: unknown) {
     const defaultError = 'Server authentication error';
     const errorMessage = isCorrectError(error) ? error.message : defaultError;
 
-    authStore.setError(errorMessage);
+    loginFailed(errorMessage);
   }
 };
 function isCorrectError(error: unknown): error is ApiError {

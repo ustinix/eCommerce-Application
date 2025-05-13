@@ -1,9 +1,13 @@
 <script setup lang="ts">
+import { useAuthStore } from '../../stores/auth';
+
+const authStore = useAuthStore();
 const modelValue = defineModel<string>();
 const errorEmail = defineModel<string>('error');
 
 function validateEmail(event: Event): void {
   if ((!event.target) instanceof HTMLInputElement) return;
+  authStore.setError(null);
   modelValue.value = event.target.value;
 
   const value = String(event.target.value);

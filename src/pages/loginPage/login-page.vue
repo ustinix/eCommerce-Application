@@ -4,8 +4,13 @@ import PasswordInput from '../../components/layout/password-input.vue';
 import EmailInput from '../../components/layout/email-input.vue';
 import { loginCustomer } from '../../services/auth-service.ts';
 import { useAuthStore } from '../../stores/auth';
+import router from '../../router/router.ts';
 
 const authStore = useAuthStore();
+
+if (authStore.isAuthenticated) {
+  router.push('/');
+}
 
 const email = ref<string>('');
 const emailError = ref<string>('');
@@ -15,7 +20,16 @@ const passwordError = ref<string>('');
 async function login(event: Event): Promise<void> {
   event.preventDefault();
   authStore.setError(null);
-  await loginCustomer(email.value, password.value, authStore);
+  await loginCustomer(email.value, password.value, loginValid, loginFailed);
+}
+
+function loginValid(): void {
+  authStore.setUser(email, password);
+  authStore.setAuth(true);
+  router.push('/');
+}
+function loginFailed(errorMessage: string): void {
+  authStore.setError(errorMessage);
 }
 function isButtonDisabled(): boolean {
   return (

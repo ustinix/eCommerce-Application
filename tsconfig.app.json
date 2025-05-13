@@ -5,14 +5,14 @@
     "module": "ESNext",
     "lib": ["ES2021", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
-    "moduleResolution": "bundler",
+    "moduleResolution":  "bundler",
     "isolatedModules": true,
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    "types": ["vite/client"],
+    "types": ["vite/client", "vue-router"],
     "paths": {
       "@/*": ["./src/*"]
     }
