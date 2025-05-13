@@ -71,6 +71,7 @@ export const createCustomer = async (
   lastName: string,
   email: string,
   password: string,
+  dateOfBirth: string,
   addresses: Address[],
   authStore: ReturnType<typeof useAuthStore>,
   defaultShippingAddress?: number,
@@ -103,6 +104,7 @@ export const createCustomer = async (
       lastName: string;
       email: string;
       password: string;
+      dateOfBirth: string;
       addresses: Address[];
       defaultShippingAddress?: number;
       defaultBillingAddress?: number;
@@ -111,6 +113,7 @@ export const createCustomer = async (
       lastName,
       email,
       password,
+      dateOfBirth,
       addresses,
     };
 

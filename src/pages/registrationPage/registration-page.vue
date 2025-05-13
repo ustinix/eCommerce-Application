@@ -134,6 +134,7 @@ async function registration(event: Event): Promise<void> {
       userData.value.surname,
       userData.value.email,
       userData.value.password,
+      userData.value.date,
       addresses,
       authStore,
       defaultShippingAddress,
