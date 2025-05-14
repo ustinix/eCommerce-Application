@@ -9,7 +9,7 @@ import Date from '../../components/layout/date-input.vue';
 import AddressForm from '../../components/layout/address-form.vue';
 import PostalCode from '../../components/layout/postal-code.vue';
 import { useAuthStore } from '../../stores/auth';
-import { createCustomer } from '../../services/auth-service';
+import { createCustomer } from '../../services/register-service';
 import type { CustomerSignInResult } from '@commercetools/platform-sdk';
 import { type Address } from '../../types/address';
 import { countryCityList } from '../../assets/constants';
