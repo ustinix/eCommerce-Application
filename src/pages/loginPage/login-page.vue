@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import PasswordInput from '../../components/layout/password-input.vue';
 import EmailInput from '../../components/layout/email-input.vue';
-import { loginCustomer } from '../../services/register-service';
+import { loginCustomer } from '../../services/auth-service';
 import { useAuthStore } from '../../stores/auth';
 
 const authStore = useAuthStore();
