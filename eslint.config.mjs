@@ -3,6 +3,8 @@ import tseslint from 'typescript-eslint';
 import eslintPluginUnicorn from 'eslint-plugin-unicorn';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import vueParser from 'vue-eslint-parser';
+import vue from 'eslint-plugin-vue';
+import vuetify from 'eslint-plugin-vuetify';
 
 const commonRules = {
   'unicorn/better-regex': 'warn',
@@ -15,7 +17,6 @@ const commonRules = {
   'prettier/prettier': 'error',
   'padding-line-between-statements': 'off',
   '@typescript-eslint/consistent-type-assertions': ['warn', { assertionStyle: 'never' }],
-  '@typescript-eslint/consistent-type-definitions': 'off',
   '@typescript-eslint/array-type': 'off',
   'unicorn/prefer-event-target': 'off',
   '@typescript-eslint/consistent-type-imports': 'warn',
@@ -66,6 +67,8 @@ export default tseslint.config(
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
   ...tseslint.configs.stylistic,
+  ...vue.configs['flat/base'],
+  ...vuetify.configs['flat/base'],
   eslintPluginUnicorn.configs.recommended,
   eslintPluginPrettierRecommended,
 
@@ -93,6 +96,7 @@ export default tseslint.config(
       'vue/no-v-html': 'off',
       'vue/require-default-prop': 'off',
       'vue/require-prop-types': 'off',
+      'vuetify/no-deprecated-classes': 'warn',
     },
   },
   {
@@ -106,7 +110,13 @@ export default tseslint.config(
     },
     rules: commonRules,
   },
-
+  {
+    files: ['**/*.test.ts'],
+    rules: {
+      'no-console': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
+  },
   {
     files: ['**/*.{js,jsx}'],
     rules: commonRules,
