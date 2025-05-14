@@ -1,6 +1,7 @@
 @use './variables.scss' as v;
 
 .form_input {
+  color: #727174;
   height: 40px;
   padding: 3px;
   border: 1px solid #ccc;
@@ -9,6 +10,10 @@
   &:focus {
     border-color: v.$color-red;
   }
+}
+
+.date {
+  padding-right: 16px;
 }
 
 .form_label {

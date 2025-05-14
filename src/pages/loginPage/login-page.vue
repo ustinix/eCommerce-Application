@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import PasswordInput from '../../components/layout/password-input.vue';
 import EmailInput from '../../components/layout/email-input.vue';
-import { loginCustomer } from '../../services/auth-service.ts';
+import { loginCustomer } from '../../services/auth-service';
 import { useAuthStore } from '../../stores/auth';
 import router from '../../router/router.ts';
 import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
