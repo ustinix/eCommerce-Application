@@ -8,6 +8,7 @@ const errorEmail = defineModel<string>('error');
 function validateEmail(event: Event): void {
   if ((!event.target) instanceof HTMLInputElement) return;
   authStore.setError(null);
+
   modelValue.value = event.target.value;
 
   const value = String(event.target.value);
@@ -22,8 +23,7 @@ function validateEmail(event: Event): void {
   }
 }
 function isEmail(email: string): boolean {
-  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
+  const regex = /^[\w%+.-]+@[\d.A-Za-z-]+\.[A-Za-z]{2,}$/;
   return regex.test(email);
 }
 </script>

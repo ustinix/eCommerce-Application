@@ -21,14 +21,13 @@ function validatePassword(event: Event): void {
 
   const errorMessage =
     'Password must contain at least 8 characters, uppercase and lowercase letter, number and special character';
-
   errorPassword.value =
     value.length < 8 ||
     !/[A-Z]/.test(value) ||
     !/[a-z]/.test(value) ||
-    !/[0-9]/.test(value) ||
-    !/[!@#$%^&*]/.test(value)
-      ? (errorPassword.value = errorMessage)
+    !/\d/.test(value) ||
+    !/[!#$%&*@^]/.test(value)
+      ? errorMessage
       : '';
 }
 </script>
