@@ -4,6 +4,7 @@ import { createAuthForPasswordFlow } from '@commercetools/sdk-client-v2';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
 import { type ApiError } from '../types/api-error';
+import { createAuthMiddlewareForAnonymousSessionFlow } from '@commercetools/sdk-middleware-auth';
 
 const projectKey = 'rss-ecom';
 
@@ -52,3 +53,27 @@ function isCorrectError(error: unknown): error is ApiError {
 
   return false;
 }
+// logOut
+
+const anonymousClient = createClient({
+  middlewares: [
+    createAuthMiddlewareForAnonymousSessionFlow({
+      host: 'https://auth.us-central1.gcp.commercetools.com',
+      projectKey,
+      credentials: {
+        clientId: import.meta.env.VITE_CTP_CLIENT_ID,
+        clientSecret: import.meta.env.VITE_CTP_CLIENT_SECRET,
+      },
+      scopes: [`manage_project:${projectKey}`],
+      fetch,
+    }),
+    createHttpClient({
+      host: 'https://api.us-central1.gcp.commercetools.com',
+      fetch,
+    }),
+  ],
+});
+
+export const anonymApiRoot = createApiBuilderFromCtpClient(anonymousClient).withProjectKey({
+  projectKey,
+});

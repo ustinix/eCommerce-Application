@@ -2,11 +2,13 @@
 import DividerLine from '../ui/divider-line.vue';
 import Logo from '../ui/logo.vue';
 import { useAuthStore } from '../../stores/auth';
+import { anonymApiRoot } from '../../services/auth-service.ts';
 
 const authStore = useAuthStore();
 
 function logout(): void {
-  console.log('уйди');
+  authStore.setAuth(false);
+  authStore.setApiRoot(anonymApiRoot);
 }
 </script>
 
