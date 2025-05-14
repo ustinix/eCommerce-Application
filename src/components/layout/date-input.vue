@@ -40,7 +40,7 @@ function isAgeEnough(dateString: string, minAge: number): boolean {
 </script>
 <template>
   <label class="form_label">Date of birth<span class="primary_color">*</span> </label>
-  <input class="form_input" :value="modelValue" type="date" @input="validateDate" required />
+  <input class="form_input date" :value="modelValue" type="date" @input="validateDate" required />
   <p class="form_error" :class="{ visible: !!errorDate }">{{ errorDate }}</p>
 </template>
 <style scoped lang="scss">

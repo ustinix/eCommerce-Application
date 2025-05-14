@@ -9,8 +9,10 @@ import Date from '../../components/layout/date-input.vue';
 import AddressForm from '../../components/layout/address-form.vue';
 import PostalCode from '../../components/layout/postal-code.vue';
 import { useAuthStore } from '../../stores/auth';
-import { createCustomer } from '../../services/auth-service';
-import { CustomerSignInResult } from '@commercetools/platform-sdk';
+import { createCustomer } from '../../services/register-service';
+import type { CustomerSignInResult } from '@commercetools/platform-sdk';
+import { type Address } from '../../types/address';
+import { countryCityList } from '../../assets/constants';
 
 const authStore = useAuthStore();
 
@@ -86,7 +88,7 @@ function isButtonDisabled(): boolean {
 
   const noErrors = Object.values(errors.value).every(error => error === '');
 
-  return !(allFieldsFilled && noErrors);
+  return !allFieldsFilled || !noErrors;
 }
 
 async function registration(event: Event): Promise<void> {
@@ -95,12 +97,54 @@ async function registration(event: Event): Promise<void> {
   createdCustomer.value = null;
   isSubmitting.value = true;
   try {
-    const result = await createCustomer(userData.value.email, userData.value.password, authStore);
+    console.log('Form Data:', userData.value, shippingAddress.value, billingAddress.value);
+    const addresses: Address[] = [];
+    const shippingCountry = shippingAddress.value.country;
+    const shippingCountryCode = countryCityList[shippingCountry]?.isoCode || shippingCountry;
+    const shippingAddressIndex = addresses.length;
+    addresses.push({
+      country: shippingCountryCode,
+      city: shippingAddress.value.city,
+      streetName: shippingAddress.value.street,
+      postalCode: shippingAddress.value.code,
+    });
+    let billingAddressIndex: number | undefined;
+    if (useSameAddress.value) {
+      billingAddressIndex = shippingAddressIndex;
+    } else {
+      const billingCountry = billingAddress.value.country;
+      const billingCountryCode = countryCityList[billingCountry]?.isoCode || billingCountry;
+      billingAddressIndex = addresses.length;
+      addresses.push({
+        country: billingCountryCode,
+        city: billingAddress.value.city,
+        streetName: billingAddress.value.street,
+        postalCode: billingAddress.value.code,
+      });
+    }
+    const defaultShippingAddress = defaultAddress.value ? shippingAddressIndex : undefined;
+    const defaultBillingAddress = defaultAddress.value
+      ? useSameAddress.value
+        ? shippingAddressIndex
+        : billingAddressIndex
+      : undefined;
+
+    const result = await createCustomer(
+      userData.value.firstName,
+      userData.value.surname,
+      userData.value.email,
+      userData.value.password,
+      userData.value.date,
+      addresses,
+      authStore,
+      defaultShippingAddress,
+      defaultBillingAddress,
+    );
     createdCustomer.value = result;
     console.log('User created:', createdCustomer.value);
-    // router.push('/login');
   } catch (error) {
     console.error('Registration failed:', error);
+    authStore.setError('Registration failed. Please try again.');
   } finally {
     isSubmitting.value = false;
   }
@@ -190,7 +234,7 @@ async function registration(event: Event): Promise<void> {
       type="submit"
       @click="registration"
       class="button"
-      :disabled="!isButtonDisabled()"
+      :disabled="isButtonDisabled()"
     >
       {{ isSubmitting ? 'Processing...' : 'REGISTER' }}
     </button>
@@ -233,7 +277,7 @@ async function registration(event: Event): Promise<void> {
 
     h3 {
       margin: 0;
-      padding: 0 0 1vh 0;
+      padding: 0 0 3vh 0;
     }
 
     .chkBoxWrapper {
@@ -284,5 +328,13 @@ button {
 .server_error {
   color: #ff0000;
   margin-top: 10px;
+}
+
+@media (max-width: 900px) {
+  .registration-page {
+    .forms {
+      flex-direction: column;
+    }
+  }
 }
 </style>

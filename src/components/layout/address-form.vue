@@ -25,7 +25,7 @@ const isDropdownOpen = ref(false);
 const countries = computed(() => Object.keys(countryCityList));
 const cities = computed(() => {
   if (!props.selectedCountry || !isCountry(props.selectedCountry)) return [];
-  return countryCityList[props.selectedCountry];
+  return countryCityList[props.selectedCountry].cities;
 });
 
 function validate(value: string): void {
@@ -49,9 +49,9 @@ function validate(value: string): void {
       } else if (!value) {
         error.value = 'City cannot be empty';
       } else if (isValidCity(props.selectedCountry, value)) {
-        error.value = 'Invalid city for selected country';
-      } else {
         error.value = '';
+      } else {
+        error.value = 'Invalid city for selected country';
       }
       break;
     }
@@ -76,7 +76,7 @@ function isCountry(value: string): boolean {
 }
 
 function isValidCity(country: string, city: string): boolean {
-  return isCountry(country) && countryCityList[country].includes(city);
+  return isCountry(country) && countryCityList[country].cities.includes(city);
 }
 function selectOption(value: string): void {
   validate(value);
