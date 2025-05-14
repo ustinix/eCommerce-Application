@@ -148,9 +148,6 @@ function toggleDropdown(): void {
   }
 
   .dropdown-select {
-    font-family: 'Roboto', sans-serif;
-    font-weight: 700;
-    font-size: 12px;
     padding: 0.5rem;
     border: 1px solid #ccc;
     background-color: white;

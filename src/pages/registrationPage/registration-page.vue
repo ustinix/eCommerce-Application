@@ -144,7 +144,9 @@ async function registration(event: Event): Promise<void> {
     console.log('User created:', createdCustomer.value);
   } catch (error) {
     console.error('Registration failed:', error);
-    authStore.setError('Registration failed. Please try again.');
+    if (!authStore.errorAuth) {
+      authStore.setError('Registration failed. Please try again.');
+    }
   } finally {
     isSubmitting.value = false;
   }
@@ -233,7 +235,7 @@ async function registration(event: Event): Promise<void> {
       v-if="!createdCustomer"
       type="submit"
       @click="registration"
-      class="button"
+      class="button form_button"
       :disabled="isButtonDisabled()"
     >
       {{ isSubmitting ? 'Processing...' : 'REGISTER' }}
@@ -298,7 +300,9 @@ async function registration(event: Event): Promise<void> {
   }
 }
 
-button {
+.button {
+  background-color: v.$color-red;
+  color: #fff;
   display: block;
   width: 50%;
   margin: 10px 0;
