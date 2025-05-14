@@ -11,8 +11,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
-    "types": ["vite/client"],
+    "types": ["vite/client", "vuetify"],
     "paths": {
       "@/*": ["./src/*"]
     }
