@@ -59,6 +59,8 @@ export default tseslint.config(
       './src/vue.d.ts',
       './src/vite-env.d.ts',
       'vite.config.ts',
+      '**/dist/**',
+      '**/node_modules/**',
     ],
   },
   eslint.configs.recommended,
@@ -102,6 +104,7 @@ export default tseslint.config(
         tsconfigRootDir: import.meta.dirname,
       },
     },
+    rules: commonRules,
   },
 
   {
