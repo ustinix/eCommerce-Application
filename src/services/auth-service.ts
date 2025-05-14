@@ -1,7 +1,6 @@
 import { createHttpClient, createClient } from '@commercetools/sdk-client-v2';
 import { createAuthForPasswordFlow } from '@commercetools/sdk-client-v2';
 
-
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
 import { type ApiError } from '../types/api-error';
