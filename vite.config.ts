@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import vuetify from 'vite-plugin-vuetify';
 
 export default defineConfig({
   plugins: [
@@ -9,5 +10,6 @@ export default defineConfig({
         propsDestructure: true,
       },
     }),
+    vuetify({ autoImport: true }),
   ],
 });
