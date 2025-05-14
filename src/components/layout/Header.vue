@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import DividerLine from '../ui/divider-line.vue';
 import Logo from '../ui/logo.vue';
+import { useAuthStore } from '../../stores/auth';
+
+const authStore = useAuthStore();
+
+function logout(): void {
+  console.log('уйди');
+}
 </script>
 
 <template>
@@ -16,8 +23,9 @@ import Logo from '../ui/logo.vue';
     <DividerLine />
     <nav class="nav">
       <RouterLink to="/">Main page</RouterLink>
-      <RouterLink to="/login">Login</RouterLink>
-      <RouterLink to="/register">Registration</RouterLink>
+      <RouterLink to="/login" v-if="!authStore.isAuthenticated">Login</RouterLink>
+      <RouterLink to="/register" v-if="!authStore.isAuthenticated">Registration</RouterLink>
+      <button @click="logout" v-if="authStore.isAuthenticated" class="header_button">Logout</button>
     </nav>
   </div>
 </template>
