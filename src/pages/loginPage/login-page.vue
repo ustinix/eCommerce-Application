@@ -76,6 +76,9 @@ function isButtonDisabled(): boolean {
   letter-spacing: 0%;
   color: v.$color-white;
   text-align: center;
+  @media (max-width: 500px) {
+    font-size: 25px;
+  }
 }
 .login_form {
   display: flex;
@@ -83,6 +86,10 @@ function isButtonDisabled(): boolean {
   justify-content: baseline;
   width: 450px;
   margin: 70px auto;
+  @media (max-width: 500px) {
+    width: 90%;
+    margin: 20px auto;
+  }
 }
 
 .primary_color {
