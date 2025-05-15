@@ -5,7 +5,7 @@ import * as directives from 'vuetify/directives';
 import '@mdi/font/css/materialdesignicons.css';
 import { createApp } from 'vue';
 // import { createPinia } from 'pinia';
-import App from './app.vue';
+import App from './App.vue';
 import './style.scss';
 import router from './router/router';
 import pinia from './stores/pinia';

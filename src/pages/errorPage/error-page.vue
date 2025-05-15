@@ -17,10 +17,21 @@ function toMainPage(): void {
 </template>
 
 <style lang="scss" scoped>
+@use '../../assets/styles/variables.scss' as v;
 .error-page {
   margin: 0 auto;
   padding: 20px;
-  text-align: center;
-  background-color: #e7e8e9;
+  display: flex;
+  flex-direction: column;
+  gap: 3vh;
+  align-items: center;
+  .button {
+    background-color: v.$color-red;
+    color: #fff;
+    display: block;
+    width: 20%;
+    margin: 10px 0;
+    padding: 8px;
+  }
 }
 </style>
