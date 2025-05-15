@@ -6,7 +6,9 @@ import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
 import { type ApiError } from '../types/api-error';
 import { createAuthMiddlewareForAnonymousSessionFlow } from '@commercetools/sdk-middleware-auth';
 
-const projectKey = 'rss-ecom';
+const projectKey = import.meta.env.VITE_CTP_CLIENT_PROJECT_KEY;
+const AUTH_URL = import.meta.env.VITE_CTP_AUTH_URL;
+const API_URL = import.meta.env.VITE_CTP_API_URL;
 
 export const loginCustomer = async (
   email: string,
@@ -18,7 +20,7 @@ export const loginCustomer = async (
     const passwordClient = createClient({
       middlewares: [
         createAuthForPasswordFlow({
-          host: 'https://auth.us-central1.gcp.commercetools.com',
+          host: AUTH_URL,
           projectKey,
           credentials: {
             clientId: import.meta.env.VITE_CTP_CLIENT_ID,
@@ -30,7 +32,7 @@ export const loginCustomer = async (
           },
         }),
         createHttpClient({
-          host: 'https://api.us-central1.gcp.commercetools.com',
+          host: API_URL,
           fetch: globalThis.fetch,
         }),
       ],
@@ -58,7 +60,7 @@ function isCorrectError(error: unknown): error is ApiError {
 const anonymousClient = createClient({
   middlewares: [
     createAuthMiddlewareForAnonymousSessionFlow({
-      host: 'https://auth.us-central1.gcp.commercetools.com',
+      host: AUTH_URL,
       projectKey,
       credentials: {
         clientId: import.meta.env.VITE_CTP_CLIENT_ID,
@@ -68,7 +70,7 @@ const anonymousClient = createClient({
       fetch,
     }),
     createHttpClient({
-      host: 'https://api.us-central1.gcp.commercetools.com',
+      host: API_URL,
       fetch,
     }),
   ],
