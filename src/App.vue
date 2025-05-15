@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
-import Header from './components/layout/Header.vue';
+import Header from './components/layout/header.vue';
 import Footer from './components/layout/footer.vue';
 </script>
 
@@ -19,9 +19,5 @@ import Footer from './components/layout/footer.vue';
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-}
-
-main {
-  flex: 20;
 }
 </style>

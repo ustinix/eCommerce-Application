@@ -69,7 +69,6 @@ function logout(): void {
 
 .header {
   padding-top: 2rem;
-  max-width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -81,18 +80,16 @@ function logout(): void {
     align-items: center;
 
     .icons {
-      width: 10vw;
       display: flex;
       justify-content: center;
       align-items: end;
-      gap: 3vw;
+      gap: 15px;
     }
     .tools {
-      width: 10vw;
       display: flex;
       justify-content: center;
       align-items: end;
-      gap: 3vw;
+      gap: 15px;
     }
 
     .app-logo {
@@ -135,7 +132,7 @@ function logout(): void {
     &-title {
       padding-bottom: 1rem;
       flex-direction: column;
-      gap: 2vh;
+      gap: 2vw;
     }
     .icons {
       display: none;

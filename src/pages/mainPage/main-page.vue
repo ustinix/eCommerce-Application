@@ -21,7 +21,6 @@
 <style lang="scss" scoped>
 .main-page {
   margin: 0 auto;
-  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 2vh;
