@@ -18,6 +18,10 @@ const authStore = useAuthStore();
 
 const router = useRouter();
 
+if (authStore.isAuthenticated) {
+  router.push('/');
+}
+
 const userData = ref({
   firstName: '',
   surname: '',
