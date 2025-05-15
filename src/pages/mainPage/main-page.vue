@@ -57,7 +57,7 @@
           display: block;
         }
         .button {
-          width: 15vw;
+          width: 150px;
         }
       }
       img {
