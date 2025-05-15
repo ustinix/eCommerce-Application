@@ -33,7 +33,7 @@
 
 <style lang="scss" scoped>
 .app-logo {
-  min-width: 5vw;
+  width: 40px;
   .logo-container {
     position: relative;
     width: 35px;
