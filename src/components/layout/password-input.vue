@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useAuthStore } from '../../stores/auth';
 
+const authStore = useAuthStore();
 const modelValue = defineModel<string>();
 const errorPassword = defineModel<string>('error');
 
@@ -11,6 +13,7 @@ const togglePassword = (): void => {
 
 function validatePassword(event: Event): void {
   if ((!event.target) instanceof HTMLInputElement) return;
+  authStore.setError(null);
 
   const value = String(event.target.value.trim());
 
