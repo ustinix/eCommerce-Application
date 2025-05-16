@@ -8,9 +8,10 @@
     "src/**/*.jsx",
     "src/**/*.d.ts",
     "src/**/*.mjs",
-    "src/**/*.cjs"
+    "src/**/*.cjs",
+    "tests/*.spec.ts"
   ],
-  "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"],
+  "exclude": ["node_modules", "dist", "coverage"],
   "compilerOptions": {
     "types": ["vue"]
   }

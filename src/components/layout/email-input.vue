@@ -6,7 +6,7 @@ const modelValue = defineModel<string>();
 const errorEmail = defineModel<string>('error');
 
 function validateEmail(event: Event): void {
-  if ((!event.target) instanceof HTMLInputElement) return;
+  if (!(event.target instanceof HTMLInputElement)) return;
   authStore.setError(null);
 
   modelValue.value = event.target.value;

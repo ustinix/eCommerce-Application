@@ -4,7 +4,6 @@ import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import '@mdi/font/css/materialdesignicons.css';
 import { createApp } from 'vue';
-// import { createPinia } from 'pinia';
 import App from './app.vue';
 import './style.scss';
 import router from './router/router';
@@ -22,8 +21,6 @@ appContainer.id = 'app';
 document.body.append(appContainer);
 
 const app = createApp(App).use(router);
-
-// const pinia = createPinia();
 
 app.use(pinia);
 app.use(vuetify);

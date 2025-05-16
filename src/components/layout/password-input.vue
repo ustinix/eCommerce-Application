@@ -12,7 +12,7 @@ const togglePassword = (): void => {
 };
 
 function validatePassword(event: Event): void {
-  if ((!event.target) instanceof HTMLInputElement) return;
+  if (!(event.target instanceof HTMLInputElement)) return;
   authStore.setError(null);
 
   const value = String(event.target.value.trim());
