@@ -5,6 +5,7 @@ import { mount } from '@vue/test-utils';
 import EmailInput from '../src/components/layout/email-input.vue';
 
 let wrapper: ReturnType<typeof mount>;
+
 vi.mock('../src/stores/auth', () => ({
   useAuthStore: (): { setError: Mock } => ({
     setError: vi.fn(),
