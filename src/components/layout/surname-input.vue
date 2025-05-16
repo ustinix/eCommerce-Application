@@ -12,10 +12,10 @@ function validateName(event: Event): void {
 
   if (value === valueTrim) {
     const errorMessage =
-      'The surname must contain at least one character and no special characters or numbers..';
+      'The surname must contain at least one character and no special characters or numbers.';
     errorSurname.value = isSuname(value) ? '' : errorMessage;
   } else {
-    errorSurname.value = 'Name must not contain leading or trailing whitespace';
+    errorSurname.value = 'Surname must not contain leading or trailing whitespace.';
   }
 }
 function isSuname(surname: string): boolean {
