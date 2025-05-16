@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/consistent-type-assertions */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { Mock } from 'vitest';
 import { mount } from '@vue/test-utils';
@@ -28,32 +27,32 @@ describe('PasswordInput.vue', () => {
   it('valid password — no error', async () => {
     const input = wrapper.get('input');
     await input.setValue('Password123@');
-    const events = wrapper.emitted() as Record<string, unknown[][]>;
-    expect(events['update:error']?.[0][0]).toBeUndefined();
+    const events = wrapper.emitted('update:error');
+    expect(events?.[0]?.[0]).toBeUndefined();
   });
 
   it('Password cannot be shorter than 8 characters', async () => {
     const input = wrapper.get('input');
     await input.setValue('aA@1');
-    const events = wrapper.emitted() as Record<string, unknown[][]>;
-    expect(events['update:error']?.[0][0]).toBe(errorMessage);
+    const events = wrapper.emitted('update:error');
+    expect(events?.[0]?.[0]).toBe(errorMessage);
   });
   it('Password must contain a special character', async () => {
     const input = wrapper.get('input');
     await input.setValue('aA1234567');
-    const events = wrapper.emitted() as Record<string, unknown[][]>;
-    expect(events['update:error']?.[0][0]).toBe(errorMessage);
+    const events = wrapper.emitted('update:error');
+    expect(events?.[0]?.[0]).toBe(errorMessage);
   });
   it('Password must contain a capital letter', async () => {
     const input = wrapper.get('input');
     await input.setValue('a@1234567');
-    const events = wrapper.emitted() as Record<string, unknown[][]>;
-    expect(events['update:error']?.[0][0]).toBe(errorMessage);
+    const events = wrapper.emitted('update:error');
+    expect(events?.[0]?.[0]).toBe(errorMessage);
   });
   it('Password must contain a number', async () => {
     const input = wrapper.get('input');
     await input.setValue('a@Asdfrtght');
-    const events = wrapper.emitted() as Record<string, unknown[][]>;
-    expect(events['update:error']?.[0][0]).toBe(errorMessage);
+    const events = wrapper.emitted('update:error');
+    expect(events?.[0]?.[0]).toBe(errorMessage);
   });
 });
