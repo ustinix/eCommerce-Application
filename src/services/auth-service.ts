@@ -65,28 +65,3 @@ function isCorrectError(error: unknown): error is ApiError {
 
   return false;
 }
-// logOut
-/*
-const anonymousClient = createClient({
-  middlewares: [
-    createAuthMiddlewareForAnonymousSessionFlow({
-      host: AUTH_URL,
-      projectKey,
-      credentials: {
-        clientId: import.meta.env.VITE_CTP_CLIENT_ID,
-        clientSecret: import.meta.env.VITE_CTP_CLIENT_SECRET,
-      },
-      scopes: [`manage_project:${projectKey}`],
-      fetch,
-    }),
-    createHttpClient({
-      host: API_URL,
-      fetch,
-    }),
-  ],
-});
-
-export const anonymApiRoot = createApiBuilderFromCtpClient(anonymousClient).withProjectKey({
-  projectKey,
-});
-*/
