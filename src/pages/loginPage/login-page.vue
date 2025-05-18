@@ -53,6 +53,7 @@ function isButtonDisabled(): boolean {
     <button type="submit" @click="login" class="form_button" :disabled="!isButtonDisabled()">
       LOG IN
     </button>
+    <p>Do not have an account? <RouterLink to="/register">Sign Up</RouterLink></p>
     <p v-if="authStore.errorAuth" class="server_error">{{ authStore.errorAuth }}</p>
   </form>
 </template>
