@@ -25,7 +25,7 @@ async function login(event: Event): Promise<void> {
 }
 
 function loginValid(apiRoot: ByProjectKeyRequestBuilder): void {
-  authStore.setUser(email.value, password.value);
+  authStore.setUser(email.value);
   authStore.setAuth(true);
   authStore.setApiRoot(apiRoot);
   router.push('/');

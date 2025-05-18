@@ -2,10 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { Mock } from 'vitest';
 import { mount } from '@vue/test-utils';
 import Header from '../src/components/layout/header.vue';
-//import { useAuthStore } from '@/stores/auth';
 import { RouterLinkStub } from '@vue/test-utils';
 
-// let wrapper: ReturnType<typeof mount>;
 let isAuthenticated = false;
 const setAuthMock = vi.fn();
 
