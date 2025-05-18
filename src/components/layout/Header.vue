@@ -2,12 +2,14 @@
 import DividerLine from '../ui/divider-line.vue';
 import Logo from '../ui/logo.vue';
 import { useAuthStore } from '../../stores/auth';
-import { anonymApiRoot } from '../../services/auth-service';
+import { createAnonymClient } from '../../services/anonym-client';
 
 const authStore = useAuthStore();
 
 function logout(): void {
   authStore.setAuth(false);
+  authStore.setUser(null);
+  const anonymApiRoot = createAnonymClient();
   authStore.setApiRoot(anonymApiRoot);
 }
 </script>
