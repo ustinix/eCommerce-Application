@@ -62,6 +62,7 @@ export default tseslint.config(
       'vite.config.ts',
       '**/dist/**',
       '**/node_modules/**',
+      'coverage/',
     ],
   },
   eslint.configs.recommended,
@@ -77,7 +78,7 @@ export default tseslint.config(
     languageOptions: {
       parser: vueParser,
       parserOptions: {
-        parser: '@typescript-eslint/parser',
+        parser: tseslint.parser,
         project: './tsconfig.eslint.json',
         extraFileExtensions: ['.vue'],
         tsconfigRootDir: import.meta.dirname,

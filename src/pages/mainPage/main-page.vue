@@ -12,7 +12,9 @@
           </p>
           <button class="button">View All Items</button>
         </div>
-        <img src="../../assets/images/black-white.png" alt="snikers" />
+        <div class="image-container">
+          <img src="../../assets/images/black-white.png" alt="snikers" />
+        </div>
       </div>
     </div>
   </div>
@@ -59,9 +61,18 @@
           width: 150px;
         }
       }
-      img {
-        max-width: 50%;
-        flex: 50%;
+      .image-container {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+          width: 100%;
+          height: auto;
+          max-width: 500px; /* Максимальный размер изображения */
+          object-fit: contain;
+        }
       }
     }
   }
@@ -79,6 +90,28 @@
           }
           p {
             font-size: 12px;
+          }
+          .image-container {
+            width: 100%;
+            padding: 0 1rem;
+
+            img {
+              max-width: 80%;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .main-page {
+    .content {
+      .advert {
+        .image-container {
+          img {
+            max-width: 100%;
           }
         }
       }

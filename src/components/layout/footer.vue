@@ -65,6 +65,10 @@ const rs = {
   width: 40px;
   height: 40px;
   transition: all 0.3s ease;
+  .rs-icon {
+    width: 40px;
+    height: 40px;
+  }
 
   &:hover {
     transform: translateY(-2px);
@@ -72,11 +76,14 @@ const rs = {
     color: #d9202f;
   }
 }
-
-.custom-icon {
-  padding-left: 10px;
-  width: 50px;
-  height: 40px;
-  object-fit: contain;
+@media (max-width: 600px) {
+  .rs-icon-link {
+    width: 36px;
+    height: 36px;
+    .rs-icon {
+      width: 22px;
+      height: 22px;
+    }
+  }
 }
 </style>
