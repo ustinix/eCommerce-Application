@@ -276,7 +276,7 @@ async function registration(event: Event): Promise<void> {
   }
 
   form {
-    width: 30vh;
+    width: 25vw;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -342,6 +342,9 @@ async function registration(event: Event): Promise<void> {
   .registration-page {
     .forms {
       flex-direction: column;
+    }
+    form {
+      width: 80vw;
     }
   }
 }
