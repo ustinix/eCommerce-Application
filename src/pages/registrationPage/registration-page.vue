@@ -102,7 +102,6 @@ async function registration(event: Event): Promise<void> {
   createdCustomer.value = null;
   isSubmitting.value = true;
   try {
-    console.log('Form Data:', userData.value, shippingAddress.value, billingAddress.value);
     const addresses: Address[] = [];
     const shippingCountry = shippingAddress.value.country;
     const shippingCountryCode = countryCityList[shippingCountry]?.isoCode || shippingCountry;
@@ -146,7 +145,6 @@ async function registration(event: Event): Promise<void> {
       defaultBillingAddress,
     );
     createdCustomer.value = result;
-    console.log('User created:', createdCustomer.value);
     await loginCustomer(
       userData.value.email,
       userData.value.password,
