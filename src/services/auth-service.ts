@@ -4,7 +4,8 @@ import type { TokenCache } from '@commercetools/sdk-client-v2';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
 import { type ApiError } from '../types/api-error';
-// import { createAuthMiddlewareForAnonymousSessionFlow } from '@commercetools/sdk-middleware-auth';
+import { encodeToken, decodeToken } from '../utils/token-decoder';
+import { isToken } from '../utils/is-token';
 
 const projectKey = import.meta.env.VITE_CTP_CLIENT_PROJECT_KEY;
 const AUTH_URL = import.meta.env.VITE_CTP_AUTH_URL;
@@ -13,9 +14,17 @@ const API_URL = import.meta.env.VITE_CTP_API_URL;
 const tokenCache: TokenCache = {
   get: () => {
     const stored = localStorage.getItem('authToken');
-    return stored ? JSON.parse(stored) : null;
+    if (stored) {
+      const token = JSON.parse(stored);
+      token.refreshToken = isToken(token) ? decodeToken(token.refreshToken) : '';
+      return token;
+    }
+
+    return null;
   },
   set: token => {
+    if (!isToken(token)) return;
+    token.refreshToken = encodeToken(token.refreshToken);
     localStorage.setItem('authToken', JSON.stringify(token));
   },
 };

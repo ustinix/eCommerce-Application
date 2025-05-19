@@ -4,6 +4,7 @@ import { type User } from '../types/user';
 import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
 import { createExistingTokenClient } from '../services/token-client';
 import { isToken } from '../utils/is-token';
+import { decodeToken } from '../utils/token-decoder';
 
 export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = ref<boolean>(false);
@@ -19,7 +20,10 @@ export const useAuthStore = defineStore('auth', () => {
   const saveToken = localStorage.getItem('authToken');
   if (saveToken) {
     const existingToken = JSON.parse(saveToken);
-    currentApiRoot.value = isToken(existingToken) ? createExistingTokenClient(existingToken) : null;
+    if (isToken(existingToken)) {
+      existingToken.refreshToken = decodeToken(existingToken.refreshToken);
+      currentApiRoot.value = createExistingTokenClient(existingToken);
+    }
   }
   watch(
     [isAuthenticated, user],
