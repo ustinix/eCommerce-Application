@@ -12,7 +12,7 @@ function toMainPage(): void {
   <div class="error-page">
     <h1>404 page</h1>
     <p>This page not found.</p>
-    <button type="submit" @click="toMainPage" class="button">Back to main page</button>
+    <button type="submit" @click="toMainPage" class="button">Back to home page</button>
   </div>
 </template>
 
