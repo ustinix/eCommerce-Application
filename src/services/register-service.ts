@@ -93,12 +93,7 @@ export const createCustomer = async (
   } catch (error: unknown) {
     console.error('Registration failed:', error);
     const defaultError = 'Server create customer error';
-    const emailError = 'This email already exists. Please use a different email or log in';
-    const errorMessage = isCorrectError(error)
-      ? error.message.includes('There is already an existing customer with the provided email.')
-        ? emailError
-        : error.message
-      : defaultError;
+    const errorMessage = isCorrectError(error) ? error.message : defaultError;
     authStore.setError(errorMessage);
     throw error;
   }

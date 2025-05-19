@@ -13,6 +13,7 @@ import { createCustomer } from '../../services/register-service';
 import type { CustomerSignInResult } from '@commercetools/platform-sdk';
 import { type Address } from '../../types/address';
 import { countryCityList } from '../../assets/constants';
+import { loginCustomer } from '../../services/auth-service';
 
 const authStore = useAuthStore();
 
@@ -144,9 +145,34 @@ async function registration(event: Event): Promise<void> {
       defaultBillingAddress,
     );
     createdCustomer.value = result;
-  } catch {
+    await loginCustomer(
+      userData.value.email,
+      userData.value.password,
+      () => {
+        authStore.setUser(userData.value.email);
+        authStore.setAuth(true);
+        router.push('/');
+      },
+      error => {
+        console.error('Unexpected login error:', error);
+        authStore.setError('Auto-login failed. Please log in manually.');
+        router.push('/login');
+      },
+    );
+  } catch (error) {
+    console.error('Registration failed:', error);
     if (!authStore.errorAuth) {
       authStore.setError('Registration failed. Please try again.');
+    }
+
+    if (
+      error instanceof Error &&
+      error.message.includes('There is already an existing customer with the provided email.')
+    ) {
+      authStore.setError('An account with this email already exists. Please log in.');
+      globalThis.setTimeout(() => {
+        router.push('/login');
+      }, 3000);
     }
   } finally {
     isSubmitting.value = false;
@@ -242,10 +268,6 @@ async function registration(event: Event): Promise<void> {
       {{ isSubmitting ? 'Processing...' : 'REGISTER' }}
     </button>
     <p v-if="authStore.errorAuth" class="server_error">{{ authStore.errorAuth }}</p>
-    <div v-if="createdCustomer" class="success-message">
-      <p>User created successfully!</p>
-      <button @click="router.push('/login')" class="button">Go to Login</button>
-    </div>
   </div>
 </template>
 
@@ -308,26 +330,6 @@ async function registration(event: Event): Promise<void> {
   width: 50%;
   margin: 10px 0;
   padding: 8px;
-}
-.success-message {
-  width: 50%;
-  margin-top: 20px;
-  padding: 15px;
-  background-color: #f0fff0;
-  border: 1px solid #a0d8a0;
-  border-radius: 4px;
-  text-align: center;
-
-  p {
-    margin: 5px 0;
-  }
-
-  .button {
-    width: 100%;
-    margin-top: 10px;
-    background-color: #f22735;
-    color: white;
-  }
 }
 
 .server_error {
