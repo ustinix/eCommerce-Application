@@ -2,6 +2,7 @@ import 'vuetify/styles';
 import { createVuetify } from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
+import { theme } from './theme-vuetify';
 import '@mdi/font/css/materialdesignicons.css';
 import { createApp } from 'vue';
 import App from './app.vue';
@@ -14,6 +15,7 @@ const appContainer = document.createElement('div');
 const vuetify = createVuetify({
   components,
   directives,
+  theme,
 });
 
 appContainer.id = 'app';

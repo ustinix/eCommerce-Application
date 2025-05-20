@@ -3,9 +3,9 @@ import { createAuthForPasswordFlow } from '@commercetools/sdk-client-v2';
 import type { TokenCache } from '@commercetools/sdk-client-v2';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
-import { type ApiError } from '../types/api-error';
 import { encodeToken, decodeToken } from '../utils/token-decoder';
 import { isToken } from '../utils/is-token';
+import { isCorrectError } from '../utils/is-error';
 
 const projectKey = import.meta.env.VITE_CTP_CLIENT_PROJECT_KEY;
 const AUTH_URL = import.meta.env.VITE_CTP_AUTH_URL;
@@ -67,10 +67,3 @@ export const loginCustomer = async (
     loginFailed(errorMessage);
   }
 };
-function isCorrectError(error: unknown): error is ApiError {
-  if (typeof error !== 'object' || error === null) return false;
-
-  if ('message' in error && typeof error.message === 'string') return true;
-
-  return false;
-}
