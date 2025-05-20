@@ -12,6 +12,7 @@ export const useAuthStore = defineStore('auth', () => {
   const errorAuth = ref<string | null>(null);
   const currentApiRoot = ref<ByProjectKeyRequestBuilder | null>(null);
   const saved = localStorage.getItem('authStore');
+
   if (saved) {
     const parsed = JSON.parse(saved);
     isAuthenticated.value = parsed.isAuthenticated ?? false;
@@ -51,6 +52,9 @@ export const useAuthStore = defineStore('auth', () => {
   };
   const setApiRoot = (api: ByProjectKeyRequestBuilder | null): void => {
     currentApiRoot.value = api;
+    if (api === null) {
+      localStorage.removeItem('authToken');
+    }
   };
   return {
     isAuthenticated,
