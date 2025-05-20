@@ -1,33 +1,13 @@
 import { createHttpClient, createClient } from '@commercetools/sdk-client-v2';
 import { createAuthForPasswordFlow } from '@commercetools/sdk-client-v2';
-import type { TokenCache } from '@commercetools/sdk-client-v2';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
-import { encodeToken, decodeToken } from '../utils/token-decoder';
-import { isToken } from '../utils/is-token';
+import { tokenCache } from '../utils/token-cache';
 import { isCorrectError } from '../utils/is-error';
 
 const projectKey = import.meta.env.VITE_CTP_CLIENT_PROJECT_KEY;
 const AUTH_URL = import.meta.env.VITE_CTP_AUTH_URL;
 const API_URL = import.meta.env.VITE_CTP_API_URL;
-
-const tokenCache: TokenCache = {
-  get: () => {
-    const stored = localStorage.getItem('authToken');
-    if (stored) {
-      const token = JSON.parse(stored);
-      token.refreshToken = isToken(token) ? decodeToken(token.refreshToken) : '';
-      return token;
-    }
-
-    return null;
-  },
-  set: token => {
-    if (!isToken(token)) return;
-    token.refreshToken = encodeToken(token.refreshToken);
-    localStorage.setItem('authToken', JSON.stringify(token));
-  },
-};
 
 export const loginCustomer = async (
   email: string,

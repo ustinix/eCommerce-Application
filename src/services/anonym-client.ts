@@ -2,10 +2,12 @@ import { createHttpClient, createClient } from '@commercetools/sdk-client-v2';
 import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { createAuthMiddlewareForAnonymousSessionFlow } from '@commercetools/sdk-middleware-auth';
+import { tokenCache } from '../utils/token-cache';
 
 const projectKey = import.meta.env.VITE_CTP_CLIENT_PROJECT_KEY;
 const AUTH_URL = import.meta.env.VITE_CTP_AUTH_URL;
 const API_URL = import.meta.env.VITE_CTP_API_URL;
+
 export function createAnonymClient(): ByProjectKeyRequestBuilder {
   const anonymousClient = createClient({
     middlewares: [
@@ -18,6 +20,7 @@ export function createAnonymClient(): ByProjectKeyRequestBuilder {
         },
         scopes: [`manage_project:${projectKey}`],
         fetch,
+        tokenCache,
       }),
       createHttpClient({
         host: API_URL,

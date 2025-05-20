@@ -9,6 +9,7 @@ const authStore = useAuthStore();
 function logout(): void {
   authStore.setAuth(false);
   authStore.setUser(null);
+  authStore.setApiRoot(null);
   const anonymApiRoot = createAnonymClient();
   authStore.setApiRoot(anonymApiRoot);
 }
