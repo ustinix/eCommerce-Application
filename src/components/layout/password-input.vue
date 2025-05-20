@@ -2,6 +2,8 @@
 import { ref } from 'vue';
 import { useAuthStore } from '../../stores/auth';
 
+const errorMessage =
+  'Password must contain at least 8 characters, uppercase and lowercase letter, number and special character';
 const authStore = useAuthStore();
 const modelValue = defineModel<string>();
 const errorPassword = defineModel<string>('error');
@@ -19,8 +21,6 @@ function validatePassword(event: Event): void {
 
   modelValue.value = value;
 
-  const errorMessage =
-    'Password must contain at least 8 characters, uppercase and lowercase letter, number and special character';
   errorPassword.value =
     value.length < 8 ||
     !/[A-Z]/.test(value) ||
