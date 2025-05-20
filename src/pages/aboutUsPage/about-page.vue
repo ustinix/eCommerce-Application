@@ -1,9 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const titlePage = 'About page';
+const textPage = 'about';
+</script>
 
 <template>
   <div class="about-page">
-    <h1>About page</h1>
-    <p>about</p>
+    <h1>{{ titlePage }}</h1>
+    <p>{{ textPage }}</p>
   </div>
 </template>
 

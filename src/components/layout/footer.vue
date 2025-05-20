@@ -1,5 +1,5 @@
 <template>
-  <v-footer class="text-center d-flex flex-column ga-2 py-4" color="">
+  <v-footer class="text-center d-flex flex-column ga-2 py-4">
     <v-divider class="my-2" thickness="2" width="250"></v-divider>
     <div class="d-flex ga-3">
       <v-btn
@@ -19,19 +19,24 @@
 
     <v-divider class="my-2" thickness="2" width="50"></v-divider>
 
-    <div class="text-caption font-weight-regular opacity-60">
-      The application is written as part of the RS School training course.
-    </div>
+    <div class="text-caption font-weight-regular opacity-60">{{ FooterText }}</div>
 
     <v-divider></v-divider>
 
-    <div>{{ new Date().getFullYear() }} — <strong>Ecommerce-app</strong></div>
+    <div>
+      {{ getDate() }} — <strong>{{ AppNames.AppName }}</strong>
+    </div>
   </v-footer>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import rsIcon from '../../assets/images/rs_school_js.svg';
-const socialLinks = [
+import { AppNames } from '../../assets/constants';
+import { FooterText } from '../../assets/constants';
+import { getDate } from '../../utils/get-date';
+import { SocialLink } from '../../types/social-links';
+import { RS } from '../../types/social-links';
+const socialLinks: SocialLink[] = [
   {
     icon: 'mdi-github',
     url: 'https://github.com/ustinix',
@@ -43,7 +48,8 @@ const socialLinks = [
     title: 'Olga GitHub',
   },
 ];
-const rs = {
+
+const rs: RS = {
   url: 'https://rs.school/courses/javascript-ru',
   title: 'RS School',
 };

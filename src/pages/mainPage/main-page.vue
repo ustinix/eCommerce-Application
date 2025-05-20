@@ -1,16 +1,19 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const advertMainTitleFirst = 'Fantastic Features That';
+const advertMainTitleSecond = 'Makes You Look Cool';
+const advertMainText =
+  'Phasellus risus turpis, pretium sit amet magna non, molestie ultricies enim. Nullam pulvinar felis at metus.';
+const advertBtnText = 'View All Items';
+</script>
 
 <template>
   <div class="main-page">
     <div class="content">
       <div class="advert">
         <div class="text">
-          <h2>Fantastic Features That <span></span>Makes You Look Cool</h2>
-          <p>
-            Phasellus risus turpis, pretium sit amet magna non, molestie ultricies enim. Nullam
-            pulvinar felis at metus.
-          </p>
-          <button class="button">View All Items</button>
+          <h2>{{ advertMainTitleFirst }} <span></span>{{ advertMainTitleSecond }}</h2>
+          <p>{{ advertMainText }}</p>
+          <button class="button">{{ advertBtnText }}</button>
         </div>
         <div class="image-container">
           <img src="../../assets/images/black-white.png" alt="snikers" />

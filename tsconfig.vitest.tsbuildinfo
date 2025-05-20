@@ -1,0 +1,1 @@
+{"root":["./tests/address-form.spec.ts","./tests/date-input.spec.ts","./tests/email-input.spec.ts","./tests/first-name-input.spec.ts","./tests/header.spec.ts","./tests/password-input.spec.ts","./tests/postal-code-input.spec.ts","./tests/surname-input.spec.ts"],"errors":true,"version":"5.7.3"}

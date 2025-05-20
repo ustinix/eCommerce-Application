@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { nextTick, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import EmailInput from '../../components/layout/email-input.vue';
 import PasswordInput from '../../components/layout/password-input.vue';
@@ -14,6 +14,8 @@ import type { CustomerSignInResult } from '@commercetools/platform-sdk';
 import { type Address } from '../../types/address';
 import { countryCityList } from '../../assets/constants';
 import { loginCustomer } from '../../services/auth-service';
+import type { UserData } from '../../types/user-data';
+import { Errors } from '../../assets/constants';
 
 const authStore = useAuthStore();
 
@@ -23,7 +25,7 @@ if (authStore.isAuthenticated) {
   router.push('/');
 }
 
-const userData = ref({
+const userData = ref<UserData>({
   firstName: '',
   surname: '',
   email: '',
@@ -31,22 +33,22 @@ const userData = ref({
   date: '',
 });
 
-const shippingAddress = ref({
+const shippingAddress = ref<Address>({
   country: '',
   city: '',
   street: '',
   code: '',
 });
 
-const billingAddress = ref({
+const billingAddress = ref<Address>({
   country: '',
   city: '',
   street: '',
   code: '',
 });
 
-const useSameAddress = ref(false);
-const defaultAddress = ref(false);
+const useSameAddress = ref<boolean>(false);
+const defaultAddress = ref<boolean>(false);
 
 const errors = ref({
   firstName: '',
@@ -58,42 +60,64 @@ const errors = ref({
   bilCode: '',
 });
 
-const isSubmitting = ref(false);
+const isSubmitting = ref<boolean>(false);
 
 const createdCustomer = ref<CustomerSignInResult | null>(null);
 
+const setSameAddress = 'Use the same address for billing';
+const checkDefaultAddress = 'Set as default shipping address';
+
 function addSameAddress(): void {
-  billingAddress.value = useSameAddress.value
-    ? JSON.parse(JSON.stringify(shippingAddress.value))
-    : { country: '', city: '', street: '', code: '' };
+  if (useSameAddress.value) {
+    billingAddress.value.country = shippingAddress.value.country;
+    nextTick(() => {
+      billingAddress.value = {
+        ...shippingAddress.value,
+        country: billingAddress.value.country,
+      };
+    });
+  } else {
+    billingAddress.value = { country: '', city: '', street: '', code: '' };
+  }
 }
 
+watch(
+  [useSameAddress, shippingAddress],
+  ([sameAddress, shippingAddr]) => {
+    if (sameAddress) {
+      billingAddress.value.country = shippingAddr.country;
+      nextTick(() => {
+        billingAddress.value.city = shippingAddr.city;
+        billingAddress.value.street = shippingAddr.street;
+        billingAddress.value.code = shippingAddr.code;
+      });
+    }
+  },
+  { deep: true, immediate: true },
+);
+
 function isButtonDisabled(): boolean {
+  const { firstName, surname, email, password, date } = userData.value;
+  const { country: sCountry, city: sCity, street: sStreet, code: sCode } = shippingAddress.value;
+
   const requiredFields = [
-    userData.value.firstName,
-    userData.value.surname,
-    userData.value.email,
-    userData.value.password,
-    userData.value.date,
-    shippingAddress.value.country,
-    shippingAddress.value.city,
-    shippingAddress.value.street,
-    shippingAddress.value.code,
-    ...(useSameAddress.value
-      ? []
-      : [
-          billingAddress.value.country,
-          billingAddress.value.city,
-          billingAddress.value.street,
-          billingAddress.value.code,
-        ]),
+    firstName,
+    surname,
+    email,
+    password,
+    date,
+    sCountry,
+    sCity,
+    sStreet,
+    sCode,
   ];
 
-  const allFieldsFilled = requiredFields.every(field => field.trim() !== '');
+  if (!useSameAddress.value) {
+    const { country: bCountry, city: bCity, street: bStreet, code: bCode } = billingAddress.value;
+    requiredFields.push(bCountry, bCity, bStreet, bCode);
+  }
 
-  const noErrors = Object.values(errors.value).every(error => error === '');
-
-  return !allFieldsFilled || !noErrors;
+  return requiredFields.some(field => !field?.trim());
 }
 
 async function registration(event: Event): Promise<void> {
@@ -101,38 +125,12 @@ async function registration(event: Event): Promise<void> {
   authStore.setError(null);
   createdCustomer.value = null;
   isSubmitting.value = true;
+
   try {
-    console.log('Form Data:', userData.value, shippingAddress.value, billingAddress.value);
-    const addresses: Address[] = [];
-    const shippingCountry = shippingAddress.value.country;
-    const shippingCountryCode = countryCityList[shippingCountry]?.isoCode || shippingCountry;
-    const shippingAddressIndex = addresses.length;
-    addresses.push({
-      country: shippingCountryCode,
-      city: shippingAddress.value.city,
-      streetName: shippingAddress.value.street,
-      postalCode: shippingAddress.value.code,
-    });
-    let billingAddressIndex: number | undefined;
-    if (useSameAddress.value) {
-      billingAddressIndex = shippingAddressIndex;
-    } else {
-      const billingCountry = billingAddress.value.country;
-      const billingCountryCode = countryCityList[billingCountry]?.isoCode || billingCountry;
-      billingAddressIndex = addresses.length;
-      addresses.push({
-        country: billingCountryCode,
-        city: billingAddress.value.city,
-        streetName: billingAddress.value.street,
-        postalCode: billingAddress.value.code,
-      });
+    const addresses = [createAddress(shippingAddress.value)];
+    if (!useSameAddress.value) {
+      addresses.push(createAddress(billingAddress.value));
     }
-    const defaultShippingAddress = defaultAddress.value ? shippingAddressIndex : undefined;
-    const defaultBillingAddress = defaultAddress.value
-      ? useSameAddress.value
-        ? shippingAddressIndex
-        : billingAddressIndex
-      : undefined;
 
     const result = await createCustomer(
       userData.value.firstName,
@@ -142,11 +140,35 @@ async function registration(event: Event): Promise<void> {
       userData.value.date,
       addresses,
       authStore,
-      defaultShippingAddress,
-      defaultBillingAddress,
+      defaultAddress.value ? 0 : undefined,
+      getDefaultBillingAddress(defaultAddress.value, useSameAddress.value),
     );
+
     createdCustomer.value = result;
-    console.log('User created:', createdCustomer.value);
+    await handleAutoLogin();
+  } catch (error) {
+    handleRegistrationError(error);
+  } finally {
+    isSubmitting.value = false;
+  }
+}
+
+function createAddress(address: typeof shippingAddress.value): Address {
+  const countryCode = countryCityList[address.country]?.isoCode || address.country;
+  return {
+    country: countryCode,
+    city: address.city,
+    street: address.street,
+    code: address.code,
+  };
+}
+
+function getDefaultBillingAddress(isDefault: boolean, isSameAddress: boolean): number | undefined {
+  return isDefault ? (isSameAddress ? 0 : 1) : undefined;
+}
+
+async function handleAutoLogin(): Promise<void> {
+  try {
     await loginCustomer(
       userData.value.email,
       userData.value.password,
@@ -155,29 +177,25 @@ async function registration(event: Event): Promise<void> {
         authStore.setAuth(true);
         router.push('/');
       },
-      error => {
-        console.error('Unexpected login error:', error);
-        authStore.setError('Auto-login failed. Please log in manually.');
+      () => {
+        authStore.setError(Errors.AutoLogin);
         router.push('/login');
       },
     );
-  } catch (error) {
-    console.error('Registration failed:', error);
-    if (!authStore.errorAuth) {
-      authStore.setError('Registration failed. Please try again.');
-    }
+  } catch {
+    authStore.setError(Errors.AutoLogin);
+    router.push('/login');
+  }
+}
 
-    if (
-      error instanceof Error &&
-      error.message.includes('There is already an existing customer with the provided email.')
-    ) {
-      authStore.setError('An account with this email already exists. Please log in.');
-      globalThis.setTimeout(() => {
-        router.push('/login');
-      }, 3000);
-    }
-  } finally {
-    isSubmitting.value = false;
+function handleRegistrationError(error: unknown): void {
+  if (authStore.errorAuth) return;
+
+  if (error instanceof Error && error.message.includes('existing customer')) {
+    authStore.setError(Errors.AccountExist);
+    globalThis.setTimeout(() => router.push('/login'), 3000);
+  } else {
+    authStore.setError(Errors.Registration);
   }
 }
 </script>
@@ -220,11 +238,11 @@ async function registration(event: Event): Promise<void> {
         />
         <PostalCode v-model="shippingAddress.code" v-model:error="errors.shipCode" />
         <div class="chkBoxWrapper">
-          <a class="chkBoxText">Use the same adress for billing</a>
+          <a class="chkBoxText">{{ setSameAddress }}</a>
           <input type="checkbox" class="chkBox" v-model="useSameAddress" @change="addSameAddress" />
         </div>
         <div class="chkBoxWrapper">
-          <a class="chkBoxText">Set as default shipping address</a>
+          <a class="chkBoxText">{{ checkDefaultAddress }}</a>
           <input type="checkbox" class="chkBox" v-model="defaultAddress" />
         </div>
       </form>
@@ -235,8 +253,8 @@ async function registration(event: Event): Promise<void> {
           placeholder="Country"
           v-model="billingAddress.country"
           fieldType="country"
-          :selectedCountry="billingAddress.country"
-          :disabled="false"
+          :selectedCountry="useSameAddress ? shippingAddress.country : billingAddress.country"
+          :disabled="useSameAddress"
         />
         <AddressForm
           label="City"
@@ -244,16 +262,20 @@ async function registration(event: Event): Promise<void> {
           v-model="billingAddress.city"
           fieldType="city"
           :selectedCountry="billingAddress.country"
-          :disabled="!billingAddress.country"
+          :disabled="useSameAddress"
         />
         <AddressForm
           label="Street"
           placeholder="Street"
           v-model="billingAddress.street"
           fieldType="street"
-          :disabled="false"
+          :disabled="useSameAddress"
         />
-        <PostalCode v-model="billingAddress.code" v-model:error="errors.bilCode" />
+        <PostalCode
+          v-model="billingAddress.code"
+          v-model:error="errors.bilCode"
+          :disabled="useSameAddress"
+        />
         <div class="chkBoxWrapper">
           <a class="chkBoxText">Set as default billing address</a>
           <input type="checkbox" class="chkBox" v-model="defaultAddress" />
