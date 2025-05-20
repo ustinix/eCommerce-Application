@@ -3,8 +3,19 @@ import DividerLine from '../ui/divider-line.vue';
 import Logo from '../ui/logo.vue';
 import { useAuthStore } from '../../stores/auth';
 import { createAnonymClient } from '../../services/anonym-client';
+import { AppNames } from '../../assets/constants';
+import { Pages } from '../../assets/constants';
+import { computed } from 'vue';
 
 const authStore = useAuthStore();
+
+const navLinks = computed(() => [
+  { to: '/', text: Pages.Home, show: true },
+  { to: '/catalog', text: Pages.Catalog, show: true },
+  { to: '/about', text: Pages.About, show: true },
+  { to: '/login', text: Pages.Login, show: !authStore.isAuthenticated },
+  { to: '/register', text: Pages.Registration, show: !authStore.isAuthenticated },
+]);
 
 function logout(): void {
   authStore.setAuth(false);
@@ -20,10 +31,10 @@ function logout(): void {
     <div class="header-title">
       <div class="icons">
         <a href="https://github.com/ustinix" target="_blank">
-          <img src="../../assets/images/Github-Logo.png" alt="Githab" width="40" height="20" />
+          <img src="../../assets/images/Github-Logo.png" alt="Github" width="40" height="20" />
         </a>
         <a href="https://github.com/AlexOlga" target="_blank">
-          <img src="../../assets/images/Github-Logo.png" alt="Githab" width="40" height="20" />
+          <img src="../../assets/images/Github-Logo.png" alt="Github" width="40" height="20" />
         </a>
         <a href="https://rs.school/js/" target="_blank">
           <img
@@ -36,7 +47,7 @@ function logout(): void {
       </div>
       <div class="app-logo">
         <Logo />
-        <h2>BEST SHOP</h2>
+        <h2>{{ AppNames.Shop }}</h2>
       </div>
       <div class="tools">
         <a href="#" target="_blank">
@@ -57,12 +68,13 @@ function logout(): void {
     </div>
     <DividerLine />
     <nav class="nav">
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/catalog">Catalog</RouterLink>
-      <RouterLink to="/about">About us</RouterLink>
-      <RouterLink to="/login" v-if="!authStore.isAuthenticated">Login</RouterLink>
-      <RouterLink to="/register" v-if="!authStore.isAuthenticated">Registration</RouterLink>
-      <button @click="logout" v-if="authStore.isAuthenticated" class="header_button">Logout</button>
+      <RouterLink v-for="link in navLinks.filter(l => l.show)" :key="link.to" :to="link.to">
+        {{ link.text }}
+      </RouterLink>
+
+      <button v-if="authStore.isAuthenticated" @click="logout" class="header_button">
+        {{ Pages.Logout }}
+      </button>
     </nav>
   </div>
 </template>

@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { countryCityList } from '../../assets/constants';
+import { InputStar } from '../../assets/constants';
+import { DropSign } from '../../assets/constants';
 
 type defineProps = {
   label: string;
@@ -13,7 +15,6 @@ type defineProps = {
 
 const props = withDefaults(defineProps<defineProps>(), {
   fieldType: 'street',
-  disabled: false,
   selectedCountry: '',
 });
 
@@ -24,78 +25,49 @@ const isDropdownOpen = ref(false);
 
 const countries = computed(() => Object.keys(countryCityList));
 const cities = computed(() => {
-  if (!props.selectedCountry || !isCountry(props.selectedCountry)) return [];
+  if (!props.selectedCountry) return [];
   return countryCityList[props.selectedCountry].cities;
 });
 
-function validate(value: string): void {
-  const valueTrim = value.trim();
+const dropdownItems = computed(() => {
+  return props.fieldType === 'country' ? countries.value : cities.value;
+});
 
-  if (value && value !== valueTrim) {
-    error.value = 'This field must not contain leading or trailing whitespace';
-    return;
-  }
-
-  emit('update:modelValue', value);
-
-  switch (props.fieldType) {
-    case 'street': {
-      error.value = value ? '' : 'Street cannot be empty';
-      break;
+watch(
+  () => props.selectedCountry,
+  (newCountry, oldCountry) => {
+    if (newCountry !== oldCountry && props.fieldType === 'city') {
+      emit('update:modelValue', '');
     }
-    case 'city': {
-      if (!props.selectedCountry) {
-        error.value = 'Please select country first';
-      } else if (!value) {
-        error.value = 'City cannot be empty';
-      } else if (isValidCity(props.selectedCountry, value)) {
-        error.value = '';
-      } else {
-        error.value = 'Invalid city for selected country';
-      }
-      break;
-    }
-    case 'country': {
-      if (value) {
-        if (isCountry(value)) {
-          error.value = '';
-          emit('update:selectedCountry', value);
-        } else {
-          error.value = 'Please select a valid country';
-        }
-      } else {
-        error.value = 'Country cannot be empty';
-      }
-      break;
-    }
-  }
-}
+  },
+);
 
-function isCountry(value: string): boolean {
-  return value in countryCityList;
-}
-
-function isValidCity(country: string, city: string): boolean {
-  return isCountry(country) && countryCityList[country].cities.includes(city);
-}
 function selectOption(value: string): void {
-  validate(value);
+  emit('update:modelValue', value);
+  if (props.fieldType === 'country') {
+    emit('update:selectedCountry', value);
+  }
   isDropdownOpen.value = false;
 }
 function toggleDropdown(): void {
   if (props.disabled || (props.fieldType === 'city' && !props.selectedCountry)) return;
   isDropdownOpen.value = !isDropdownOpen.value;
 }
+const inputValue = computed({
+  get: () => props.modelValue,
+  set: value => emit('update:modelValue', value),
+});
 </script>
 <template>
   <div class="wrapper">
-    <label class="form_label">{{ label }} <span class="primary_color">*</span> </label>
+    <label class="form_label"
+      >{{ label }} <span class="primary_color">{{ InputStar }}</span>
+    </label>
     <input
       v-if="fieldType === 'street'"
       class="form_input"
-      :value="modelValue"
+      v-model="inputValue"
       :placeholder="placeholder"
-      @input="validate(($event.target as HTMLInputElement).value)"
       :disabled="disabled"
       required
     />
@@ -105,32 +77,23 @@ function toggleDropdown(): void {
         class="dropdown-select"
         :class="{
           'dropdown-open': isDropdownOpen,
-          'dropdown-disabled': disabled || (fieldType === 'city' && !selectedCountry),
+          'dropdown-disabled': fieldType === 'city' && !selectedCountry,
         }"
         @click="toggleDropdown"
       >
         <span v-if="modelValue">{{ modelValue }}</span>
         <span v-else class="placeholder">{{ placeholder }}</span>
-        <span class="dropdown-arrow">▼</span>
+        <span class="dropdown-arrow">{{ DropSign }}</span>
       </div>
 
       <ul v-if="isDropdownOpen" class="dropdown-options">
         <li
-          v-for="item in fieldType === 'country' ? countries : cities"
+          v-for="item in dropdownItems"
           :key="item"
           @click="selectOption(item)"
           :class="{ selected: item === modelValue }"
         >
           {{ item }}
-        </li>
-        <li
-          v-if="
-            (fieldType === 'country' && countries.length === 0) ||
-            (fieldType === 'city' && cities.length === 0)
-          "
-          class="no-options"
-        >
-          No options available
         </li>
       </ul>
     </div>
@@ -197,14 +160,6 @@ function toggleDropdown(): void {
       &.selected {
         background-color: #e0e0e0;
         font-weight: bold;
-      }
-
-      &.no-options {
-        color: #999;
-        cursor: default;
-        &:hover {
-          background-color: transparent;
-        }
       }
     }
   }

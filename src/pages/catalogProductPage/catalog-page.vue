@@ -1,9 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const titlePage = 'Catalog page';
+const textPage = 'catalog';
+</script>
 
 <template>
   <div class="catalog-page">
-    <h1>Catalog page</h1>
-    <p>catalog</p>
+    <h1>{{ titlePage }}</h1>
+    <p>{{ textPage }}</p>
   </div>
 </template>
 

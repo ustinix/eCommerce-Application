@@ -1,3 +1,29 @@
+export enum AppNames {
+  Shop = 'BEST SHOP',
+  AppName = 'Ecommerce-app',
+}
+
+export enum Pages {
+  Home = 'Home',
+  Catalog = 'Catalog',
+  About = 'About us',
+  Login = 'Login',
+  Registration = 'Registration',
+  Logout = 'Logout',
+}
+
+export enum Errors {
+  Common = 'This field must not contain leading or trailing whitespace',
+  Street = 'Street cannot be empty',
+  AutoLogin = 'Auto-login failed. Please log in manually.',
+  AccountExist = 'An account with this email already exists. Please log in.',
+  Registration = 'Registration failed. Please try again.',
+}
+
+export const InputStar = '*';
+export const DropSign = '▼';
+export const FooterText = 'The application is written as part of the RS School training course.';
+
 type CountryData = {
   isoCode: string;
   cities: string[];
