@@ -1,8 +1,10 @@
 <script setup lang="ts">
 const modelValue = defineModel<string>();
 const errorCode = defineModel<string>('error');
+const disabled = defineModel<boolean>('disabled', { default: false });
 
 function validateCode(event: Event): void {
+  if (disabled.value) return;
   if (!(event.target instanceof HTMLInputElement)) return;
   modelValue.value = event.target.value;
 
@@ -25,9 +27,14 @@ function isECode(email: string): boolean {
     type="text"
     placeholder="Postal code"
     @input="validateCode"
+    :disabled="disabled"
   />
   <p class="form_error" :class="{ visible: !!errorCode }">{{ errorCode }}</p>
 </template>
 <style scoped lang="scss">
 @use '../../assets/styles/form.scss';
+.form_input:disabled {
+  background-color: #f5f5f5;
+  opacity: 0.7;
+}
 </style>

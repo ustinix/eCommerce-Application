@@ -88,10 +88,8 @@ export const createCustomer = async (
 
     authStore.setUser(email);
     authStore.setAuth(true);
-    console.log('Created Customer Response:', response.body);
     return response.body;
   } catch (error: unknown) {
-    console.error('Registration failed:', error);
     const defaultError = 'Server create customer error';
     const errorMessage = isCorrectError(error) ? error.message : defaultError;
     authStore.setError(errorMessage);
