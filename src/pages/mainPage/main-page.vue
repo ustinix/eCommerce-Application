@@ -1,16 +1,17 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const titleText = 'Step Into Style – Shoes That Speak for You';
+const introText =
+  "Discover the perfect pair for every step. Whether you're hitting the gym or the streets, we’ve got the style and comfort you need.";
+</script>
 
 <template>
   <div class="main-page">
     <div class="content">
       <div class="advert">
         <div class="text">
-          <h2>Fantastic Features That <span></span>Makes You Look Cool</h2>
-          <p>
-            Phasellus risus turpis, pretium sit amet magna non, molestie ultricies enim. Nullam
-            pulvinar felis at metus.
-          </p>
-          <button class="button">View All Items</button>
+          <h2>{{ titleText }}</h2>
+          <p>{{ introText }}.</p>
+          <button class="button">SHOP NOW</button>
         </div>
         <div class="image-container">
           <img src="../../assets/images/black-white.png" alt="snikers" />
