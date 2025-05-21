@@ -7,73 +7,52 @@ import { useAuthStore } from '../../stores/auth';
 import { createCustomer } from '../../services/register-service';
 import type { CustomerSignInResult } from '@commercetools/platform-sdk';
 import { type Address } from '../../types/address';
-import { countryCityList, Errors } from '../../assets/constants';
+import {
+  countryCityList,
+  Errors,
+  userData,
+  shippingAddress,
+  billingAddress,
+} from '../../assets/constants';
 import { loginCustomer } from '../../services/auth-service';
-import type { UserData } from '../../types/user-data';
-import { isEmail } from '../../utils/is-email';
-import { isPassword } from '../../utils/is-password';
 import { validateName } from '../../utils/validate-name';
 import { validateSurame } from '../../utils/validate-surname';
 import { usePostalCodeValidation } from '../../utils/validate-postal-code';
 import { validateDate } from '../../utils/validate-date';
+import { validateEmail } from '../../utils/validate-email';
+import { validatePassword } from '../../utils/validate-password';
 
-const labelDate = 'Date';
+const name = ref<string>('');
+const surname = ref<string>('');
+const email = ref<string>('');
+const password = ref<string>('');
 const date = ref<string>('');
+const shippingPostalCode = ref<string>('');
+const billingPostalCode = ref<string>('');
+
+const labelName = 'First Name';
+const labelSurname = 'Surname';
+const labelEmail = 'Email address';
+const labelPassword = 'Password';
+const labelDate = 'Date';
+const labelCode = 'Postal code';
+
+const placeholderName = 'First Name';
+const placeholderSurname = 'Surname';
+const placeholderEmail = 'Enter your email';
+const placeholderPassword = 'Password';
+const placeholderCode = 'Postal code';
 
 const disabled = defineModel<boolean>('disabled', { default: false });
 const { validateCode } = usePostalCodeValidation(disabled);
-const labelCode = 'Postal code';
-const placeholderCode = 'Postal code';
-const shippingPostalCode = ref('');
-const billingPostalCode = ref('');
-
-const labelSurname = 'Surname';
-const placeholderSurname = 'Surname';
-const surname = ref<string>('');
-
-const labelName = 'First Name';
-const placeholderName = 'First Name';
-const name = ref<string>('');
 
 const authStore = useAuthStore();
-
-const labelEmail = 'Email address';
-const placeholderEmail = 'Enter your email';
-const labelPassword = 'Password';
-const placeholderPassword = 'Password';
-
-const email = ref<string>('');
-const emailError = ref<string>('');
-const password = ref<string>('');
-const passwordError = ref<string>('');
 
 const router = useRouter();
 
 if (authStore.isAuthenticated) {
   router.push('/');
 }
-
-const userData = ref<UserData>({
-  firstName: '',
-  surname: '',
-  email: '',
-  password: '',
-  date: '',
-});
-
-const shippingAddress = ref<Address>({
-  country: '',
-  city: '',
-  street: '',
-  code: '',
-});
-
-const billingAddress = ref<Address>({
-  country: '',
-  city: '',
-  street: '',
-  code: '',
-});
 
 const useSameAddress = ref<boolean>(false);
 const defaultAddress = ref<boolean>(false);
@@ -216,23 +195,6 @@ function handleRegistrationError(error: unknown): void {
   } else {
     authStore.setError(Errors.Registration);
   }
-}
-function validateEmail(value: string): string {
-  authStore.setError(null);
-  const errorMessageSpace = 'Email address must not contain leading or trailing whitespace';
-  const errorMessage = 'Email address must contain an "@" symbol, local part and domain name.';
-  const trimmed = value.trim();
-  const result = isEmail(value) ? '' : value === trimmed ? errorMessage : errorMessageSpace;
-  emailError.value = result;
-  return result;
-}
-function validatePassword(value: string): string {
-  authStore.setError(null);
-  const errorMessage =
-    'Password must contain at least 8 characters, uppercase and lowercase letter, number and special character';
-  const result = isPassword(value) ? errorMessage : '';
-  passwordError.value = result;
-  return result;
 }
 </script>
 
