@@ -1,21 +1,50 @@
 <script setup lang="ts">
-import { nextTick, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import EmailInput from '../../components/layout/email-input.vue';
-import PasswordInput from '../../components/layout/password-input.vue';
-import FirstNameInput from '../../components/layout/first-name-input.vue';
-import Surname from '../../components/layout/surname-input.vue';
-import Date from '../../components/layout/date-input.vue';
+import BaseInput from '../../components/layout/base-input.vue';
 import AddressForm from '../../components/layout/address-form.vue';
-import PostalCode from '../../components/layout/postal-code.vue';
 import { useAuthStore } from '../../stores/auth';
 import { createCustomer } from '../../services/register-service';
 import type { CustomerSignInResult } from '@commercetools/platform-sdk';
 import { type Address } from '../../types/address';
-import { countryCityList } from '../../assets/constants';
+import {
+  countryCityList,
+  Errors,
+  userData,
+  shippingAddress,
+  billingAddress,
+} from '../../assets/constants';
 import { loginCustomer } from '../../services/auth-service';
-import type { UserData } from '../../types/user-data';
-import { Errors } from '../../assets/constants';
+import { validateName } from '../../utils/validate-name';
+import { validateSurame } from '../../utils/validate-surname';
+import { usePostalCodeValidation } from '../../utils/validate-postal-code';
+import { validateDate } from '../../utils/validate-date';
+import { validateEmail } from '../../utils/validate-email';
+import { validatePassword } from '../../utils/validate-password';
+
+const name = ref<string>('');
+const surname = ref<string>('');
+const email = ref<string>('');
+const password = ref<string>('');
+const date = ref<string>('');
+const shippingPostalCode = ref<string>('');
+const billingPostalCode = ref<string>('');
+
+const labelName = 'First Name';
+const labelSurname = 'Surname';
+const labelEmail = 'Email address';
+const labelPassword = 'Password';
+const labelDate = 'Date';
+const labelCode = 'Postal code';
+
+const placeholderName = 'First Name';
+const placeholderSurname = 'Surname';
+const placeholderEmail = 'Enter your email';
+const placeholderPassword = 'Password';
+const placeholderCode = 'Postal code';
+
+const disabled = defineModel<boolean>('disabled', { default: false });
+const { validateCode } = usePostalCodeValidation(disabled);
 
 const authStore = useAuthStore();
 
@@ -25,40 +54,8 @@ if (authStore.isAuthenticated) {
   router.push('/');
 }
 
-const userData = ref<UserData>({
-  firstName: '',
-  surname: '',
-  email: '',
-  password: '',
-  date: '',
-});
-
-const shippingAddress = ref<Address>({
-  country: '',
-  city: '',
-  street: '',
-  code: '',
-});
-
-const billingAddress = ref<Address>({
-  country: '',
-  city: '',
-  street: '',
-  code: '',
-});
-
 const useSameAddress = ref<boolean>(false);
 const defaultAddress = ref<boolean>(false);
-
-const errors = ref({
-  firstName: '',
-  surname: '',
-  email: '',
-  password: '',
-  date: '',
-  shipCode: '',
-  bilCode: '',
-});
 
 const isSubmitting = ref<boolean>(false);
 
@@ -69,31 +66,32 @@ const checkDefaultAddress = 'Set as default shipping address';
 
 function addSameAddress(): void {
   if (useSameAddress.value) {
-    billingAddress.value.country = shippingAddress.value.country;
-    nextTick(() => {
-      billingAddress.value = {
-        ...shippingAddress.value,
-        country: billingAddress.value.country,
-      };
-    });
+    billingPostalCode.value = shippingPostalCode.value;
+    billingAddress.value = {
+      country: shippingAddress.value.country,
+      city: shippingAddress.value.city,
+      street: shippingAddress.value.street,
+      code: shippingAddress.value.code,
+    };
   } else {
     billingAddress.value = { country: '', city: '', street: '', code: '' };
   }
 }
 
+watch(useSameAddress, sameAddress => {
+  if (sameAddress) {
+    addSameAddress();
+  }
+});
+
 watch(
-  [useSameAddress, shippingAddress],
-  ([sameAddress, shippingAddr]) => {
-    if (sameAddress) {
-      billingAddress.value.country = shippingAddr.country;
-      nextTick(() => {
-        billingAddress.value.city = shippingAddr.city;
-        billingAddress.value.street = shippingAddr.street;
-        billingAddress.value.code = shippingAddr.code;
-      });
+  shippingAddress,
+  newShipping => {
+    if (useSameAddress.value) {
+      billingAddress.value = { ...newShipping };
     }
   },
-  { deep: true, immediate: true },
+  { deep: true },
 );
 
 function isButtonDisabled(): boolean {
@@ -205,11 +203,45 @@ function handleRegistrationError(error: unknown): void {
     <h1>Registration</h1>
     <div class="forms">
       <form>
-        <FirstNameInput v-model="userData.firstName" v-model:error="errors.firstName" />
-        <Surname v-model="userData.surname" v-model:error="errors.surname" />
-        <EmailInput v-model="userData.email" v-model:error="errors.email" />
-        <PasswordInput v-model="userData.password" v-model:error="errors.password" />
-        <Date v-model="userData.date" v-model:error="errors.date" />
+        <BaseInput
+          v-model="name"
+          :label="labelName"
+          :placeholder="placeholderName"
+          required
+          type="text"
+          :validate="validateName"
+        />
+        <BaseInput
+          v-model="surname"
+          :label="labelSurname"
+          :placeholder="placeholderSurname"
+          required
+          type="text"
+          :validate="validateSurame"
+        />
+        <BaseInput
+          v-model="email"
+          :label="labelEmail"
+          :placeholder="placeholderEmail"
+          required
+          type="email"
+          :validate="validateEmail"
+        />
+        <BaseInput
+          v-model="password"
+          :label="labelPassword"
+          :placeholder="placeholderPassword"
+          required
+          type="password"
+          :validate="validatePassword"
+        />
+        <BaseInput
+          v-model="date"
+          :label="labelDate"
+          required
+          type="date"
+          :validate="validateDate"
+        />
       </form>
       <form class="shipping">
         <h3>Shipping address:</h3>
@@ -236,7 +268,15 @@ function handleRegistrationError(error: unknown): void {
           fieldType="street"
           :disabled="false"
         />
-        <PostalCode v-model="shippingAddress.code" v-model:error="errors.shipCode" />
+        <BaseInput
+          v-model="shippingPostalCode"
+          :label="labelCode"
+          :placeholder="placeholderCode"
+          required
+          type="text"
+          :validate="validateCode"
+          :readonly="disabled"
+        />
         <div class="chkBoxWrapper">
           <a class="chkBoxText">{{ setSameAddress }}</a>
           <input type="checkbox" class="chkBox" v-model="useSameAddress" @change="addSameAddress" />
@@ -271,10 +311,14 @@ function handleRegistrationError(error: unknown): void {
           fieldType="street"
           :disabled="useSameAddress"
         />
-        <PostalCode
-          v-model="billingAddress.code"
-          v-model:error="errors.bilCode"
-          :disabled="useSameAddress"
+        <BaseInput
+          v-model="billingPostalCode"
+          :label="labelCode"
+          :placeholder="placeholderCode"
+          required
+          type="text"
+          :validate="validateCode"
+          :readonly="disabled"
         />
         <div class="chkBoxWrapper">
           <a class="chkBoxText">Set as default billing address</a>

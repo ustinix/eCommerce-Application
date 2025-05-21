@@ -1,3 +1,29 @@
+import { ref } from 'vue';
+import type { UserData } from '../types/user-data';
+import { type Address } from '../types/address';
+
+export const userData = ref<UserData>({
+  firstName: '',
+  surname: '',
+  email: '',
+  password: '',
+  date: '',
+});
+
+export const shippingAddress = ref<Address>({
+  country: '',
+  city: '',
+  street: '',
+  code: '',
+});
+
+export const billingAddress = ref<Address>({
+  country: '',
+  city: '',
+  street: '',
+  code: '',
+});
+
 export enum AppNames {
   Shop = 'BEST SHOP',
   AppName = 'Ecommerce-app',

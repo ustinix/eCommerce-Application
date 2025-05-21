@@ -38,6 +38,9 @@ const passwordToggleIcon = computed(() => {
   if (props.type !== 'password') return;
   return showPassword.value ? 'mdi-eye-off' : 'mdi-eye';
 });
+
+const isDateType = computed(() => props.type === 'date');
+
 </script>
 <template>
   <div class="form_field">
@@ -56,6 +59,7 @@ const passwordToggleIcon = computed(() => {
       :hide-details="false"
       density="compact"
       class="form_input"
+      :class="{ 'date-input': isDateType }"
       :append-inner-icon="passwordToggleIcon"
       @click:append-inner="showPassword = !showPassword"
     />
@@ -79,5 +83,13 @@ const passwordToggleIcon = computed(() => {
 }
 .primary_color {
   color: v.$color-red;
+}
+.date-input {
+  position: relative;
+  color: #727174;
+  :deep(input[type='date']::-webkit-calendar-picker-indicator) {
+    position: absolute;
+    right: 12px;
+  }
 }
 </style>

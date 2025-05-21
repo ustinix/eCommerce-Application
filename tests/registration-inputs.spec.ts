@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
-import SurnameInput from '../src/components/layout/surname-input.vue';
+import RegistrationPage from '../src/pages/registrationPage.vue';
 
 let wrapper: ReturnType<typeof mount>;
 
-describe('FirstNameInput', () => {
+describe(' RegistrationPage SurnameInput', () => {
   beforeEach(() => {
-    wrapper = mount(SurnameInput, {
+    wrapper = mount(RegistrationPage, {
       props: {
         modelValue: '',
         error: '',
@@ -20,8 +20,8 @@ describe('FirstNameInput', () => {
     });
   });
 
-  it('name contains number', async () => {
-    const input = wrapper.find('input');
+  it('surname contains number', async () => {
+    const input = wrapper.find('[data-test="surname-input"] input');
     await input.setValue('Smitt1');
 
     const emitted = wrapper.emitted('update:error');
@@ -30,8 +30,8 @@ describe('FirstNameInput', () => {
     );
   });
 
-  it('name contains special characters', async () => {
-    const input = wrapper.find('input');
+  it('surname contains special characters', async () => {
+    const input = wrapper.find('[data-test="surname-input"] input');
     await input.setValue('Smitt@');
 
     const emitted = wrapper.emitted('update:error');
@@ -41,7 +41,7 @@ describe('FirstNameInput', () => {
   });
 
   it('name contains space', async () => {
-    const input = wrapper.find('input');
+    const input = wrapper.find('[data-test="surname-input"] input');
     await input.setValue(' Smitt ');
 
     const emitted = wrapper.emitted('update:error');
