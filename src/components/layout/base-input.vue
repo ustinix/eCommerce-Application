@@ -38,7 +38,9 @@ const passwordToggleIcon = computed(() => {
   if (props.type !== 'password') return;
   return showPassword.value ? 'mdi-eye-off' : 'mdi-eye';
 });
+
 const isDateType = computed(() => props.type === 'date');
+
 </script>
 <template>
   <div class="form_field">

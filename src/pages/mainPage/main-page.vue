@@ -1,9 +1,8 @@
 <script setup lang="ts">
-const advertMainTitleFirst = 'Fantastic Features That';
-const advertMainTitleSecond = 'Makes You Look Cool';
-const advertMainText =
-  'Phasellus risus turpis, pretium sit amet magna non, molestie ultricies enim. Nullam pulvinar felis at metus.';
-const advertBtnText = 'View All Items';
+const titleText = 'Step Into Style – Shoes That Speak for You';
+const introText =
+  'Discover the perfect pair for every step. Whether you're hitting the gym or the streets, we’ve got the style and comfort you need.';
+  const advertBtnText = 'SHOP NOW';
 </script>
 
 <template>
@@ -11,9 +10,9 @@ const advertBtnText = 'View All Items';
     <div class="content">
       <div class="advert">
         <div class="text">
-          <h2>{{ advertMainTitleFirst }} <span></span>{{ advertMainTitleSecond }}</h2>
-          <p>{{ advertMainText }}</p>
-          <button class="button">{{ advertBtnText }}</button>
+          <h2>{{ titleText }}</h2>
+          <p>{{ introText }}</p>
+         <button class="button">{{ advertBtnText }}</button>
         </div>
         <div class="image-container">
           <img src="../../assets/images/black-white.png" alt="snikers" />
