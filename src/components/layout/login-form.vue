@@ -12,6 +12,9 @@ const labelEmail = 'Email address';
 const placeholderEmail = 'Enter your email';
 const labelPassword = 'Password';
 const placeholderPassword = 'Password';
+const textSumbmitButton = 'LOG IN';
+const linkText = 'Sign Up';
+const text = 'Do not have an account?';
 
 const authStore = useAuthStore();
 
@@ -82,9 +85,11 @@ function validatePassword(value: string): string {
       :validate="validatePassword"
     />
     <button type="submit" @click="login" class="form_button" :disabled="!isButtonDisabled()">
-      LOG IN
+      {{ textSumbmitButton }}
     </button>
-    <p>Do not have an account? <RouterLink to="/register">Sign Up</RouterLink></p>
+    <p>
+      {{ text }} <RouterLink to="/register">{{ linkText }}</RouterLink>
+    </p>
     <p v-if="authStore.errorAuth" class="server_error">{{ authStore.errorAuth }}</p>
   </form>
 </template>
