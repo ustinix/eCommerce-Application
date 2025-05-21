@@ -22,12 +22,23 @@ watch(inputValue, value => {
   emit('update:modelValue', value);
   errorMessage.value = props.validate ? props.validate(value) : '';
 });
+watch(
+  () => props.modelValue,
+  value => {
+    inputValue.value = value;
+  },
+);
 const inputType = computed(() => {
   if (props.type === 'password') {
     return showPassword.value ? 'text' : 'password';
   }
   return props.type || 'text';
 });
+const passwordToggleIcon = computed(() => {
+  if (props.type !== 'password') return;
+  return showPassword.value ? 'mdi-eye-off' : 'mdi-eye';
+});
+const isDateType = computed(() => props.type === 'date');
 </script>
 <template>
   <div class="form_field">
@@ -46,9 +57,8 @@ const inputType = computed(() => {
       :hide-details="false"
       density="compact"
       class="form_input"
-      :append-inner-icon="
-        props.type === 'password' ? (showPassword ? 'mdi-eye-off' : 'mdi-eye') : undefined
-      "
+      :class="{ 'date-input': isDateType }"
+      :append-inner-icon="passwordToggleIcon"
       @click:append-inner="showPassword = !showPassword"
     />
   </div>
@@ -71,5 +81,13 @@ const inputType = computed(() => {
 }
 .primary_color {
   color: v.$color-red;
+}
+.date-input {
+  position: relative;
+  color: #727174;
+  :deep(input[type='date']::-webkit-calendar-picker-indicator) {
+    position: absolute;
+    right: 12px;
+  }
 }
 </style>

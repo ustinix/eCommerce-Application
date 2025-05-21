@@ -3,6 +3,8 @@ import { computed, ref, watch } from 'vue';
 import { countryCityList } from '../../assets/constants';
 import { InputStar } from '../../assets/constants';
 import { DropSign } from '../../assets/constants';
+import BaseInput from './base-input.vue';
+import validateStreet from '../../utils/validate-street';
 
 type defineProps = {
   label: string;
@@ -53,51 +55,57 @@ function toggleDropdown(): void {
   if (props.disabled || (props.fieldType === 'city' && !props.selectedCountry)) return;
   isDropdownOpen.value = !isDropdownOpen.value;
 }
-const inputValue = computed({
-  get: () => props.modelValue,
-  set: value => emit('update:modelValue', value),
-});
+function handleStreetInput(value: string): void {
+  emit('update:modelValue', value);
+  error.value = validateStreet(value);
+}
 </script>
 <template>
   <div class="wrapper">
-    <label class="form_label"
-      >{{ label }} <span class="primary_color">{{ InputStar }}</span>
-    </label>
-    <input
+    <template v-if="fieldType !== 'street'">
+      <label class="form_label">
+        {{ label }} <span class="required-star">{{ InputStar }}</span>
+      </label>
+
+      <div class="dropdown-container">
+        <div
+          class="dropdown-select"
+          :class="{
+            'dropdown-open': isDropdownOpen,
+            'dropdown-disabled': props.disabled || (fieldType === 'city' && !selectedCountry),
+          }"
+          @click="toggleDropdown"
+        >
+          <span v-if="modelValue">{{ modelValue }}</span>
+          <span v-else class="placeholder">{{ placeholder }}</span>
+          <span class="dropdown-arrow">{{ DropSign }}</span>
+        </div>
+
+        <ul v-if="isDropdownOpen" class="dropdown-options">
+          <li
+            v-for="item in dropdownItems"
+            :key="item"
+            @click="selectOption(item)"
+            :class="{ selected: item === modelValue }"
+          >
+            {{ item }}
+          </li>
+        </ul>
+      </div>
+    </template>
+
+    <BaseInput
       v-if="fieldType === 'street'"
-      class="form_input"
-      v-model="inputValue"
+      :model-value="modelValue"
+      :label="label"
       :placeholder="placeholder"
       :disabled="disabled"
+      :validate="validateStreet"
       required
+      @update:model-value="handleStreetInput"
     />
 
-    <div v-else class="dropdown-container">
-      <div
-        class="dropdown-select"
-        :class="{
-          'dropdown-open': isDropdownOpen,
-          'dropdown-disabled': fieldType === 'city' && !selectedCountry,
-        }"
-        @click="toggleDropdown"
-      >
-        <span v-if="modelValue">{{ modelValue }}</span>
-        <span v-else class="placeholder">{{ placeholder }}</span>
-        <span class="dropdown-arrow">{{ DropSign }}</span>
-      </div>
-
-      <ul v-if="isDropdownOpen" class="dropdown-options">
-        <li
-          v-for="item in dropdownItems"
-          :key="item"
-          @click="selectOption(item)"
-          :class="{ selected: item === modelValue }"
-        >
-          {{ item }}
-        </li>
-      </ul>
-    </div>
-    <p class="form_error" :class="{ visible: !!error }">{{ error }}</p>
+    <p v-if="error" class="form_error">{{ error }}</p>
   </div>
 </template>
 <style scoped lang="scss">
@@ -106,13 +114,16 @@ const inputValue = computed({
   display: flex;
   flex-direction: column;
   .dropdown-container {
+    margin-bottom: 30px;
     position: relative;
     width: 100%;
+    border-radius: 5px;
   }
 
   .dropdown-select {
     padding: 0.5rem;
     border: 1px solid #ccc;
+    border-radius: 5px;
     background-color: white;
     cursor: pointer;
     display: flex;
@@ -144,6 +155,7 @@ const inputValue = computed({
     margin: 0;
     padding: 0;
     border: 1px solid #ccc;
+    border-radius: 5px;
     border-top: none;
     background-color: white;
     z-index: 100;
