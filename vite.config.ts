@@ -19,5 +19,14 @@ export default defineConfig({
       deps: {
       inline: ['vuetify'],
   },
-}
+   coverage: {
+      exclude: [
+        '**/*.cjs',
+        '**/*.mjs',
+        'node_modules/',
+        'dist/',
+        '**/*.d.ts',
+       ],
+    },
+  },
 });
