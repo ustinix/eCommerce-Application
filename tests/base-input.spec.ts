@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
 import { createVuetify } from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
@@ -62,7 +62,7 @@ describe('BaseInput.vue', () => {
     expect(input.attributes('type')).toBe('password');
 
     await icon.trigger('click');
-    await wrapper.vm.$nextTick();
+    await flushPromises();
     expect(input.attributes('type')).toBe('text');
   });
   it('applies class to type date', () => {

@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const titlePage = '404 page';
 const textPage = 'This page not found.';
-const btnText = 'Back to home page';
+const buttonText = 'Back to home page';
 
 function toMainPage(): void {
   router.push('/');
@@ -15,7 +15,7 @@ function toMainPage(): void {
   <div class="error-page">
     <h1>{{ titlePage }}</h1>
     <p>{{ textPage }}</p>
-    <button type="submit" @click="toMainPage" class="button">{{ btnText }}</button>
+    <button type="submit" @click="toMainPage" class="button">{{ buttonText }}</button>
   </div>
 </template>
 
