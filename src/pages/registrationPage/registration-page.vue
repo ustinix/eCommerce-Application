@@ -23,14 +23,6 @@ import { validateEmail } from '../../utils/validate-email';
 import { validatePassword } from '../../utils/validate-password';
 import { SetAddress, Labels, Placeholders } from '../../assets/constants';
 
-const name = ref<string>('');
-const surname = ref<string>('');
-const email = ref<string>('');
-const password = ref<string>('');
-const date = ref<string>('');
-const shippingPostalCode = ref<string>('');
-const billingPostalCode = ref<string>('');
-
 const disabled = defineModel<boolean>('disabled', { default: false });
 const { validateCode } = usePostalCodeValidation(disabled);
 
@@ -50,17 +42,14 @@ const isSubmitting = ref<boolean>(false);
 const createdCustomer = ref<CustomerSignInResult | null>(null);
 
 function addSameAddress(): void {
-  if (useSameAddress.value) {
-    billingPostalCode.value = shippingPostalCode.value;
-    billingAddress.value = {
-      country: shippingAddress.value.country,
-      city: shippingAddress.value.city,
-      street: shippingAddress.value.street,
-      code: shippingAddress.value.code,
-    };
-  } else {
-    billingAddress.value = { country: '', city: '', street: '', code: '' };
-  }
+  billingAddress.value = useSameAddress.value
+    ? {
+        country: shippingAddress.value.country,
+        city: shippingAddress.value.city,
+        street: shippingAddress.value.street,
+        code: shippingAddress.value.code,
+      }
+    : { country: '', city: '', street: '', code: '' };
 }
 
 watch(useSameAddress, sameAddress => {
@@ -190,7 +179,7 @@ function handleRegistrationError(error: unknown): void {
       <form>
         <BaseInput
           data-test="name-input"
-          v-model="name"
+          v-model="userData.firstName"
           :label="Labels.labelName"
           :placeholder="Placeholders.placeholderName"
           required
@@ -199,7 +188,7 @@ function handleRegistrationError(error: unknown): void {
         />
         <BaseInput
           data-test="surname-input"
-          v-model="surname"
+          v-model="userData.surname"
           :label="Labels.labelSurname"
           :placeholder="Placeholders.placeholderSurname"
           required
@@ -207,7 +196,7 @@ function handleRegistrationError(error: unknown): void {
           :validate="validateSurame"
         />
         <BaseInput
-          v-model="email"
+          v-model="userData.email"
           :label="Labels.labelEmail"
           :placeholder="Placeholders.placeholderEmail"
           required
@@ -215,7 +204,7 @@ function handleRegistrationError(error: unknown): void {
           :validate="validateEmail"
         />
         <BaseInput
-          v-model="password"
+          v-model="userData.password"
           :label="Labels.labelPassword"
           :placeholder="Placeholders.placeholderPassword"
           required
@@ -224,7 +213,7 @@ function handleRegistrationError(error: unknown): void {
         />
         <BaseInput
           data-test="date-input"
-          v-model="date"
+          v-model="userData.date"
           :label="Labels.labelDate"
           required
           type="date"
@@ -258,7 +247,7 @@ function handleRegistrationError(error: unknown): void {
         />
         <BaseInput
           data-test="PostalCode-input"
-          v-model="shippingPostalCode"
+          v-model="shippingAddress.code"
           :label="Labels.labelCode"
           :placeholder="Placeholders.placeholderCode"
           required
@@ -302,7 +291,7 @@ function handleRegistrationError(error: unknown): void {
         />
         <BaseInput
           data-test="billingPostalCode-input"
-          v-model="billingPostalCode"
+          v-model="billingAddress.code"
           :label="Labels.labelCode"
           :placeholder="Placeholders.placeholderCode"
           required

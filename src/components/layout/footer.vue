@@ -34,8 +34,8 @@ import rsIcon from '../../assets/images/rs_school_js.svg';
 import { AppNames } from '../../assets/constants';
 import { FooterText } from '../../assets/constants';
 import { getDate } from '../../utils/get-date';
-import { SocialLink } from '../../types/social-links';
-import { RS } from '../../types/social-links';
+import type { SocialLink } from '../../types/social-links';
+import type { RS } from '../../types/social-links';
 enum SocialLinksTitles {
   Ksenia = 'Ksenia GitHub',
   Olga = 'Olga GitHub',
