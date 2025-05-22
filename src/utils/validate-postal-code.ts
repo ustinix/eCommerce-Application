@@ -1,4 +1,5 @@
 import { ref, type Ref } from 'vue';
+import { Errors } from '../../src/assets/constants';
 
 type PostalCodeValidation = {
   codeError: Ref<string>;
@@ -7,7 +8,7 @@ type PostalCodeValidation = {
 
 const validatePostalCode = (value: string): string => {
   const regex = /^(?:\d{5,6}|[A-Za-z]\d[A-Za-z] \d[A-Za-z]\d)$/;
-  return regex.test(value) ? '' : 'Invalid postal code format';
+  return regex.test(value) ? '' : Errors.PostalCodeFormat;
 };
 
 export function usePostalCodeValidation(disabledReference: Ref<boolean>): PostalCodeValidation {

@@ -110,6 +110,7 @@ function handleStreetInput(value: string): void {
 </template>
 <style scoped lang="scss">
 @use '../../assets/styles/form.scss';
+@use '../../assets/styles/variables.scss' as v;
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -122,16 +123,16 @@ function handleStreetInput(value: string): void {
 
   .dropdown-select {
     padding: 0.5rem;
-    border: 1px solid #ccc;
+    border: 1px solid v.$color-border;
     border-radius: 5px;
-    background-color: white;
+    background-color: v.$color-white;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     .placeholder {
-      color: #999;
+      color: v.$color-placeholder;
     }
 
     .dropdown-arrow {
@@ -140,7 +141,7 @@ function handleStreetInput(value: string): void {
   }
 
   .dropdown-disabled {
-    background-color: #f5f5f5;
+    background-color: v.$color-disabled;
     cursor: not-allowed;
     opacity: 0.7;
   }
@@ -154,10 +155,10 @@ function handleStreetInput(value: string): void {
     overflow-y: auto;
     margin: 0;
     padding: 0;
-    border: 1px solid #ccc;
+    border: 1px solid v.$color-border;
     border-radius: 5px;
     border-top: none;
-    background-color: white;
+    background-color: v.$color-white;
     z-index: 100;
     list-style: none;
 
@@ -166,11 +167,11 @@ function handleStreetInput(value: string): void {
       cursor: pointer;
 
       &:hover {
-        background-color: #f0f0f0;
+        background-color: v.$color-lightgray;
       }
 
       &.selected {
-        background-color: #e0e0e0;
+        background-color: v.$color-selected;
         font-weight: bold;
       }
     }

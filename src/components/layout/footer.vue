@@ -34,34 +34,40 @@ import rsIcon from '../../assets/images/rs_school_js.svg';
 import { AppNames } from '../../assets/constants';
 import { FooterText } from '../../assets/constants';
 import { getDate } from '../../utils/get-date';
-import type { SocialLink } from '../../types/social-links';
-import type { RS } from '../../types/social-links';
+import { SocialLink } from '../../types/social-links';
+import { RS } from '../../types/social-links';
+enum SocialLinksTitles {
+  Ksenia = 'Ksenia GitHub',
+  Olga = 'Olga GitHub',
+  RS = 'RS School',
+}
 const socialLinks: SocialLink[] = [
   {
     icon: 'mdi-github',
     url: 'https://github.com/ustinix',
-    title: 'Ksenia GitHub',
+    title: SocialLinksTitles.Ksenia,
   },
   {
     icon: 'mdi-github',
     url: 'https://github.com/AlexOlga',
-    title: 'Olga GitHub',
+    title: SocialLinksTitles.Olga,
   },
 ];
 
 const rs: RS = {
   url: 'https://rs.school/courses/javascript-ru',
-  title: 'RS School',
+  title: SocialLinksTitles.RS,
 };
 </script>
 <style lang="scss" scoped>
+@use '../../assets/styles/variables.scss' as v;
 .v-btn {
   transition: all 0.3s ease;
 
   &:hover {
     transform: translateY(-2px);
     opacity: 0.8;
-    color: #d9202f;
+    color: v.$color-hover;
   }
 }
 .rs-icon-link {
@@ -79,7 +85,7 @@ const rs: RS = {
   &:hover {
     transform: translateY(-2px);
     opacity: 0.8;
-    color: #d9202f;
+    color: v.$color-hover;
   }
 }
 @media (max-width: 600px) {

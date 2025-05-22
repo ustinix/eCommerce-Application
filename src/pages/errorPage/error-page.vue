@@ -30,7 +30,7 @@ function toMainPage(): void {
   align-items: center;
   .button {
     background-color: v.$color-red;
-    color: #fff;
+    color: v.$color-white;
     display: block;
     width: 20%;
     margin: 10px 0;

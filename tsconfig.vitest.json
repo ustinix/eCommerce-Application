@@ -1,8 +1,20 @@
 {
   "extends": "./tsconfig.app.json",
   "include": ["src/**/*.spec.ts", "src/**/*.test.ts", "tests/*.ts"],
-  "exclude": ["coverage"],
+  "exclude": [
+    "coverage",
+    "**/*.config.*",
+    "**/*.cjs",
+    "**/*.mjs",
+    "**/types/**",
+    "eCommerce-Application/src/types/**",
+    "node_modules",
+    "**/commitlint.config.*",
+    "**/eslint*",
+    "**/prettier*"
+  ],
   "compilerOptions": {
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals"],
+    "composite": true
   }
 }
