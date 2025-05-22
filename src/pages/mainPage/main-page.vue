@@ -1,8 +1,8 @@
 <script setup lang="ts">
 const titleText = 'Step Into Style – Shoes That Speak for You';
 const introText =
-  'Discover the perfect pair for every step. Whether you're hitting the gym or the streets, we’ve got the style and comfort you need.';
-  const advertBtnText = 'SHOP NOW';
+  "Discover the perfect pair for every step. Whether you're hitting the gym or the streets, we've got the style and comfort you need.";
+const advertButtonText = 'SHOP NOW';
 </script>
 
 <template>
@@ -12,7 +12,7 @@ const introText =
         <div class="text">
           <h2>{{ titleText }}</h2>
           <p>{{ introText }}</p>
-         <button class="button">{{ advertBtnText }}</button>
+          <button class="button">{{ advertButtonText }}</button>
         </div>
         <div class="image-container">
           <img src="../../assets/images/black-white.png" alt="snikers" />

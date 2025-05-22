@@ -1,0 +1,5 @@
+VITE_CTP_CLIENT_SECRET=CZORaCmSncHmB5R_2c67ZXa-V6Kg7msA
+VITE_CTP_CLIENT_ID=FqSKjeOeoeNCXw5RuOOeE4nd
+VITE_CTP_CLIENT_PROJECT_KEY=rss-ecom
+VITE_CTP_AUTH_URL=https://auth.us-central1.gcp.commercetools.com
+VITE_CTP_API_URL=https://api.us-central1.gcp.commercetools.com

@@ -40,7 +40,6 @@ const passwordToggleIcon = computed(() => {
 });
 
 const isDateType = computed(() => props.type === 'date');
-
 </script>
 <template>
   <div class="form_field">

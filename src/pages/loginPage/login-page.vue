@@ -2,6 +2,7 @@
 import { useAuthStore } from '../../stores/auth';
 import router from '../../router/router';
 import loginForm from '../../components/layout/login-form.vue';
+const title = 'My Account';
 
 const authStore = useAuthStore();
 
@@ -12,7 +13,7 @@ if (authStore.isAuthenticated) {
 
 <template>
   <div class="hero">
-    <h2 class="hero_title">My Account</h2>
+    <h2 class="hero_title">{{ title }}</h2>
   </div>
   <loginForm />
 </template>
