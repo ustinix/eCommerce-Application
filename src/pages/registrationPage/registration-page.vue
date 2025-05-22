@@ -21,6 +21,7 @@ import { usePostalCodeValidation } from '../../utils/validate-postal-code';
 import { validateDate } from '../../utils/validate-date';
 import { validateEmail } from '../../utils/validate-email';
 import { validatePassword } from '../../utils/validate-password';
+import { SetAddress, Labels, Placeholders } from '../../assets/constants';
 
 const name = ref<string>('');
 const surname = ref<string>('');
@@ -29,19 +30,6 @@ const password = ref<string>('');
 const date = ref<string>('');
 const shippingPostalCode = ref<string>('');
 const billingPostalCode = ref<string>('');
-
-const labelName = 'First Name';
-const labelSurname = 'Surname';
-const labelEmail = 'Email address';
-const labelPassword = 'Password';
-const labelDate = 'Date';
-const labelCode = 'Postal code';
-
-const placeholderName = 'First Name';
-const placeholderSurname = 'Surname';
-const placeholderEmail = 'Enter your email';
-const placeholderPassword = 'Password';
-const placeholderCode = 'Postal code';
 
 const disabled = defineModel<boolean>('disabled', { default: false });
 const { validateCode } = usePostalCodeValidation(disabled);
@@ -60,9 +48,6 @@ const defaultAddress = ref<boolean>(false);
 const isSubmitting = ref<boolean>(false);
 
 const createdCustomer = ref<CustomerSignInResult | null>(null);
-
-const setSameAddress = 'Use the same address for billing';
-const checkDefaultAddress = 'Set as default shipping address';
 
 function addSameAddress(): void {
   if (useSameAddress.value) {
@@ -204,40 +189,43 @@ function handleRegistrationError(error: unknown): void {
     <div class="forms">
       <form>
         <BaseInput
+          data-test="name-input"
           v-model="name"
-          :label="labelName"
-          :placeholder="placeholderName"
+          :label="Labels.labelName"
+          :placeholder="Placeholders.placeholderName"
           required
           type="text"
           :validate="validateName"
         />
         <BaseInput
+          data-test="surname-input"
           v-model="surname"
-          :label="labelSurname"
-          :placeholder="placeholderSurname"
+          :label="Labels.labelSurname"
+          :placeholder="Placeholders.placeholderSurname"
           required
           type="text"
           :validate="validateSurame"
         />
         <BaseInput
           v-model="email"
-          :label="labelEmail"
-          :placeholder="placeholderEmail"
+          :label="Labels.labelEmail"
+          :placeholder="Placeholders.placeholderEmail"
           required
           type="email"
           :validate="validateEmail"
         />
         <BaseInput
           v-model="password"
-          :label="labelPassword"
-          :placeholder="placeholderPassword"
+          :label="Labels.labelPassword"
+          :placeholder="Placeholders.placeholderPassword"
           required
           type="password"
           :validate="validatePassword"
         />
         <BaseInput
+          data-test="date-input"
           v-model="date"
-          :label="labelDate"
+          :label="Labels.labelDate"
           required
           type="date"
           :validate="validateDate"
@@ -269,20 +257,21 @@ function handleRegistrationError(error: unknown): void {
           :disabled="false"
         />
         <BaseInput
+          data-test="PostalCode-input"
           v-model="shippingPostalCode"
-          :label="labelCode"
-          :placeholder="placeholderCode"
+          :label="Labels.labelCode"
+          :placeholder="Placeholders.placeholderCode"
           required
           type="text"
           :validate="validateCode"
           :readonly="disabled"
         />
         <div class="chkBoxWrapper">
-          <a class="chkBoxText">{{ setSameAddress }}</a>
+          <a class="chkBoxText">{{ SetAddress.Same }}</a>
           <input type="checkbox" class="chkBox" v-model="useSameAddress" @change="addSameAddress" />
         </div>
         <div class="chkBoxWrapper">
-          <a class="chkBoxText">{{ checkDefaultAddress }}</a>
+          <a class="chkBoxText">{{ SetAddress.DefaultShipping }}</a>
           <input type="checkbox" class="chkBox" v-model="defaultAddress" />
         </div>
       </form>
@@ -312,16 +301,17 @@ function handleRegistrationError(error: unknown): void {
           :disabled="useSameAddress"
         />
         <BaseInput
+          data-test="billingPostalCode-input"
           v-model="billingPostalCode"
-          :label="labelCode"
-          :placeholder="placeholderCode"
+          :label="Labels.labelCode"
+          :placeholder="Placeholders.placeholderCode"
           required
           type="text"
           :validate="validateCode"
           :readonly="disabled"
         />
         <div class="chkBoxWrapper">
-          <a class="chkBoxText">Set as default billing address</a>
+          <a class="chkBoxText">{{ SetAddress.DefaultBilling }}</a>
           <input type="checkbox" class="chkBox" v-model="defaultAddress" />
         </div>
       </form>
@@ -379,7 +369,7 @@ function handleRegistrationError(error: unknown): void {
       justify-content: space-between;
       .chkBoxText {
         font-size: 15px;
-        color: #727174;
+        color: v.$color-grey;
       }
 
       .chkBox {
@@ -393,7 +383,7 @@ function handleRegistrationError(error: unknown): void {
 
 .button {
   background-color: v.$color-red;
-  color: #fff;
+  color: v.$color-white;
   display: block;
   width: 50%;
   margin: 10px 0;
@@ -401,7 +391,7 @@ function handleRegistrationError(error: unknown): void {
 }
 
 .server_error {
-  color: #ff0000;
+  color: v.$color-red;
   margin-top: 10px;
 }
 

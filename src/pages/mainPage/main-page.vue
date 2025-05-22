@@ -23,6 +23,7 @@ const advertButtonText = 'SHOP NOW';
 </template>
 
 <style lang="scss" scoped>
+@use '../../assets/styles/variables.scss' as v;
 .main-page {
   margin: 0 auto;
   display: flex;
@@ -31,7 +32,7 @@ const advertButtonText = 'SHOP NOW';
   text-align: center;
   .content {
     padding: 5vw 10vw;
-    background-color: #e7e8e9;
+    background-color: v.$color-lightgray;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -48,13 +49,13 @@ const advertButtonText = 'SHOP NOW';
         text-align: left;
         h2 {
           font-weight: 900;
-          color: #000;
+          color: v.$color-black;
           font-size: 30px;
         }
         p {
           font-weight: 400;
           font-size: 17px;
-          color: #504e4a;
+          color: v.$color-text;
         }
         span {
           display: block;
@@ -72,7 +73,7 @@ const advertButtonText = 'SHOP NOW';
         img {
           width: 100%;
           height: auto;
-          max-width: 500px; /* Максимальный размер изображения */
+          max-width: 500px;
           object-fit: contain;
         }
       }

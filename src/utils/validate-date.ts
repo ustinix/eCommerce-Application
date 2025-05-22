@@ -1,10 +1,11 @@
 import { ref } from 'vue';
+import { Errors } from '../../src/assets/constants';
 
 const dateError = ref<string>('');
 
 export function validateDate(value: string): string {
-  const errorMessage = 'The date must be in the YYYY-MM-DD format.';
-  const ageError = 'You must be at least 13 years old.';
+  const errorMessage = Errors.DateFormat;
+  const ageError = Errors.AgeError;
   const result = isDate(value) ? (isAgeEnough(value, 13) ? '' : ageError) : errorMessage;
 
   dateError.value = result;

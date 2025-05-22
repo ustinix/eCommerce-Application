@@ -1,6 +1,10 @@
+import { Errors } from '../../src/assets/constants';
 export default function validateStreet(value: string): string {
-  if (!value.trim()) {
-    return 'Street address is required';
+  if (!value || !value.trim()) {
+    return Errors.Street;
+  }
+  if (value !== value.trim()) {
+    return Errors.Common;
   }
   return '';
 }
