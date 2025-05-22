@@ -5,6 +5,7 @@ import LoginForm from '../src/components/layout/login-form.vue';
 import { createVuetify } from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
+import { Errors } from '../src/assets/constants';
 
 vi.mock('../src/stores/auth', () => ({
   useAuthStore: (): { setError: Mock } => ({
@@ -30,9 +31,9 @@ describe('LoginForm.vue', () => {
     const emailInput = wrapper.find('input[type="email"]');
     await emailInput.setValue('invalidemail');
     await wrapper.vm.$nextTick();
-    expect(wrapper.html()).toContain('must contain an "@" symbol');
+    expect(wrapper.html()).toContain(Errors.EmailSymbol);
     await emailInput.setValue('valid@email.ru');
     await wrapper.vm.$nextTick();
-    expect(wrapper.html()).not.toContain('must contain an "@" symbol');
+    expect(wrapper.html()).not.toContain(Errors.EmailSymbol);
   });
 });

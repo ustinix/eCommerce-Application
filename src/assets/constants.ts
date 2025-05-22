@@ -44,6 +44,23 @@ export enum Errors {
   AutoLogin = 'Auto-login failed. Please log in manually.',
   AccountExist = 'An account with this email already exists. Please log in.',
   Registration = 'Registration failed. Please try again.',
+  DateFormat = 'The date must be in the YYYY-MM-DD format.',
+  AgeError = 'You must be at least 13 years old.',
+  NameSpace = 'Name must not contain leading or trailing whitespace',
+  NameFormat = 'The name must contain at least one character and no special characters or numbers.',
+  SurnameSpace = 'Surname must not contain leading or trailing whitespace.',
+  SurnameFormat = 'The surname must contain at least one character and no special characters or numbers.',
+  EmailSpace = 'Email address must not contain leading or trailing whitespace',
+  EmailFormat = 'Email address must contain an "@" symbol, local part and domain name.',
+  EmailSymbol = 'must contain an "@" symbol',
+  PasswordFormat = 'Password must contain at least 8 characters, uppercase and lowercase letter, number and special character',
+  PostalCodeFormat = 'The code must follow the format for the country (e.g., 12345 or A1B 2C3 for the U.S. and Canada, respectively).',
+}
+
+export enum SetAddress {
+  Same = 'Use the same address for billing',
+  DefaultShipping = 'Set as default shipping address',
+  DefaultBilling = 'Set as default billing address',
 }
 
 export const InputStar = '*';

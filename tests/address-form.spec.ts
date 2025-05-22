@@ -1,57 +1,59 @@
-import { describe, it, expect } from 'vitest';
-import { mount } from '@vue/test-utils';
-import AddressFormField from '../src/components/layout/address-form.vue';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { flushPromises, mount } from '@vue/test-utils';
+import AddressForm from '../src/components/layout/address-form.vue';
+import { createVuetify } from 'vuetify';
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
+import { Errors } from '../src/assets/constants';
 
-describe('Street field', () => {
+const vuetify = createVuetify({
+  components,
+  directives,
+});
+
+describe('Address form - street input', () => {
+  let wrapper: ReturnType<typeof mount>;
+
+  beforeEach(() => {
+    wrapper = mount(AddressForm, {
+      global: {
+        plugins: [vuetify],
+      },
+      props: {
+        label: 'Street',
+        placeholder: 'Enter your street',
+        modelValue: '',
+        fieldType: 'street',
+        disabled: false,
+      },
+    });
+  });
   it('empty street', async () => {
-    const wrapper = mount(AddressFormField, {
-      props: {
-        label: 'Street',
-        placeholder: 'Enter street',
-        modelValue: '',
-        fieldType: 'street',
-        disabled: false,
-      },
-    });
-
-    const input = wrapper.find('input');
-    await input.setValue('');
-    expect(wrapper.find('.form_error').text()).toBe('Street cannot be empty');
-    expect(wrapper.find('.form_error.visible').exists()).toBe(true);
+    const baseInput = wrapper.findComponent({ name: 'BaseInput' });
+    await baseInput.setValue('');
+    await flushPromises();
+    expect(wrapper.html()).toContain(Errors.Street);
   });
 
-  it('street with whitespace', async () => {
-    const wrapper = mount(AddressFormField, {
-      props: {
-        label: 'Street',
-        placeholder: 'Enter street',
-        modelValue: '',
-        fieldType: 'street',
-        disabled: false,
-      },
-    });
-
-    const input = wrapper.find('input');
-    await input.setValue('  Main Street  ');
-    expect(wrapper.find('.form_error').text()).toBe(
-      'This field must not contain leading or trailing whitespace',
-    );
-    expect(wrapper.find('.form_error.visible').exists()).toBe(true);
+  it('whitespace-only string', async () => {
+    const baseInput = wrapper.findComponent({ name: 'BaseInput' });
+    await baseInput.setValue('   ');
+    await flushPromises();
+    expect(wrapper.html()).toContain(Errors.Street);
   });
 
-  it('accepts valid street', async () => {
-    const wrapper = mount(AddressFormField, {
-      props: {
-        label: 'Street',
-        placeholder: 'Enter street',
-        modelValue: '',
-        fieldType: 'street',
-        disabled: false,
-      },
-    });
+  it('leading/trailing spaces', async () => {
+    const baseInput = wrapper.findComponent({ name: 'BaseInput' });
+    await baseInput.setValue('  Main Street  ');
+    await flushPromises();
+    expect(wrapper.html()).toContain(Errors.Common);
+  });
 
-    const input = wrapper.find('input');
-    await input.setValue('Main Street');
-    expect(wrapper.find('.form_error.visible').exists()).toBe(false);
+  it('valid street name', async () => {
+    const baseInput = wrapper.findComponent({ name: 'BaseInput' });
+    await baseInput.setValue('Main Street');
+    await flushPromises();
+    expect(wrapper.html()).not.toContain(Errors.Street);
+    expect(wrapper.html()).not.toContain(Errors.Common);
   });
 });

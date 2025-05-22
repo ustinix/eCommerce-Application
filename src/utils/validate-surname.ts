@@ -1,12 +1,12 @@
 import { ref } from 'vue';
+import { Errors } from '../../src/assets/constants';
 
 const surnameError = ref<string>('');
 
 export function validateSurame(value: string): string {
   const valueTrim = value.trim();
-  const errorMessageSpace = 'Surname must not contain leading or trailing whitespace.';
-  const errorMessage =
-    'The surname must contain at least one character and no special characters or numbers.';
+  const errorMessageSpace = Errors.SurnameSpace;
+  const errorMessage = Errors.SurnameFormat;
   const result = isSuname(value) ? '' : value === valueTrim ? errorMessage : errorMessageSpace;
   surnameError.value = result;
   return result;
