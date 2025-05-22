@@ -15,6 +15,9 @@ export default defineConfig({
   ],
   test: {
     environment: 'jsdom',
-    globals: true,
+    globals: true, 
+      deps: {
+      inline: ['vuetify'],
   },
+}
 });
