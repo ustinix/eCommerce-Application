@@ -21,7 +21,7 @@ import { usePostalCodeValidation } from '../../utils/validate-postal-code';
 import { validateDate } from '../../utils/validate-date';
 import { validateEmail } from '../../utils/validate-email';
 import { validatePassword } from '../../utils/validate-password';
-import { SetAddress } from '../../assets/constants';
+import { SetAddress, Labels, Placeholders } from '../../assets/constants';
 
 const name = ref<string>('');
 const surname = ref<string>('');
@@ -30,19 +30,6 @@ const password = ref<string>('');
 const date = ref<string>('');
 const shippingPostalCode = ref<string>('');
 const billingPostalCode = ref<string>('');
-
-const labelName = 'First Name';
-const labelSurname = 'Surname';
-const labelEmail = 'Email address';
-const labelPassword = 'Password';
-const labelDate = 'Date';
-const labelCode = 'Postal code';
-
-const placeholderName = 'First Name';
-const placeholderSurname = 'Surname';
-const placeholderEmail = 'Enter your email';
-const placeholderPassword = 'Password';
-const placeholderCode = 'Postal code';
 
 const disabled = defineModel<boolean>('disabled', { default: false });
 const { validateCode } = usePostalCodeValidation(disabled);
@@ -204,8 +191,8 @@ function handleRegistrationError(error: unknown): void {
         <BaseInput
           data-test="name-input"
           v-model="name"
-          :label="labelName"
-          :placeholder="placeholderName"
+          :label="Labels.labelName"
+          :placeholder="Placeholders.placeholderName"
           required
           type="text"
           :validate="validateName"
@@ -213,24 +200,24 @@ function handleRegistrationError(error: unknown): void {
         <BaseInput
           data-test="surname-input"
           v-model="surname"
-          :label="labelSurname"
-          :placeholder="placeholderSurname"
+          :label="Labels.labelSurname"
+          :placeholder="Placeholders.placeholderSurname"
           required
           type="text"
           :validate="validateSurame"
         />
         <BaseInput
           v-model="email"
-          :label="labelEmail"
-          :placeholder="placeholderEmail"
+          :label="Labels.labelEmail"
+          :placeholder="Placeholders.placeholderEmail"
           required
           type="email"
           :validate="validateEmail"
         />
         <BaseInput
           v-model="password"
-          :label="labelPassword"
-          :placeholder="placeholderPassword"
+          :label="Labels.labelPassword"
+          :placeholder="Placeholders.placeholderPassword"
           required
           type="password"
           :validate="validatePassword"
@@ -238,7 +225,7 @@ function handleRegistrationError(error: unknown): void {
         <BaseInput
           data-test="date-input"
           v-model="date"
-          :label="labelDate"
+          :label="Labels.labelDate"
           required
           type="date"
           :validate="validateDate"
@@ -272,8 +259,8 @@ function handleRegistrationError(error: unknown): void {
         <BaseInput
           data-test="PostalCode-input"
           v-model="shippingPostalCode"
-          :label="labelCode"
-          :placeholder="placeholderCode"
+          :label="Labels.labelCode"
+          :placeholder="Placeholders.placeholderCode"
           required
           type="text"
           :validate="validateCode"
@@ -316,8 +303,8 @@ function handleRegistrationError(error: unknown): void {
         <BaseInput
           data-test="billingPostalCode-input"
           v-model="billingPostalCode"
-          :label="labelCode"
-          :placeholder="placeholderCode"
+          :label="Labels.labelCode"
+          :placeholder="Placeholders.placeholderCode"
           required
           type="text"
           :validate="validateCode"

@@ -63,6 +63,23 @@ export enum SetAddress {
   DefaultBilling = 'Set as default billing address',
 }
 
+export enum Labels {
+  labelName = 'First Name',
+  labelSurname = 'Surname',
+  labelEmail = 'Email address',
+  labelPassword = 'Password',
+  labelDate = 'Date',
+  labelCode = 'Postal code',
+}
+
+export enum Placeholders {
+  placeholderName = 'First Name',
+  placeholderSurname = 'Surname',
+  placeholderEmail = 'Enter your email',
+  placeholderPassword = 'Password',
+  placeholderCode = 'Postal code',
+}
+
 export const InputStar = '*';
 export const DropSign = '▼';
 export const FooterText = 'The application is written as part of the RS School training course.';

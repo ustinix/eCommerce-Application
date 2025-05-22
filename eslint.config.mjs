@@ -98,6 +98,7 @@ export default tseslint.config(
       'vue/require-default-prop': 'off',
       'vue/require-prop-types': 'off',
       'vuetify/no-deprecated-classes': 'warn',
+      'vue/no-undef-properties': 'off',
     },
   },
   {
