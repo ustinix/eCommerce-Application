@@ -8,10 +8,16 @@ let isAuthenticated = false;
 const setAuthMock = vi.fn();
 
 vi.mock('../src/stores/auth', () => ({
-  useAuthStore: (): { isAuthenticated: boolean; setAuth: Mock; setApiRoot: Mock } => ({
+  useAuthStore: (): {
+    isAuthenticated: boolean;
+    setAuth: Mock;
+    setApiRoot: Mock;
+    setUser: Mock;
+  } => ({
     isAuthenticated,
     setAuth: setAuthMock,
     setApiRoot: vi.fn(),
+    setUser: vi.fn(),
   }),
 }));
 beforeEach(() => {
