@@ -1,4 +1,3 @@
-
 # The eCommerce single page application is an online athletic shoe store.
 
 ## Technology stack: Vue 3 + TypeScript + Vite + Vitest + Pinia .
@@ -21,4 +20,3 @@
 5. npm run format - start checking by prettier,
 6. npm run test - start vitest tests,
 7. npm run prepare - start husky
-
