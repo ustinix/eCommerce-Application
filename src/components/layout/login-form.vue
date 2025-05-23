@@ -84,7 +84,13 @@ function validatePassword(value: string): string {
       type="password"
       :validate="validatePassword"
     />
-    <button type="submit" @click="login" class="form_button" :disabled="!isButtonDisabled()">
+    <button
+      type="submit"
+      @click="login"
+      class="form_button"
+      data-test="login-button"
+      :disabled="!isButtonDisabled()"
+    >
       {{ textSumbmitButton }}
     </button>
     <p>

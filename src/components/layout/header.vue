@@ -29,22 +29,6 @@ function logout(): void {
 <template>
   <div class="header">
     <div class="header-title">
-      <div class="icons">
-        <a href="https://github.com/ustinix" target="_blank">
-          <img src="../../assets/images/Github-Logo.png" alt="Github" width="40" height="20" />
-        </a>
-        <a href="https://github.com/AlexOlga" target="_blank">
-          <img src="../../assets/images/Github-Logo.png" alt="Github" width="40" height="20" />
-        </a>
-        <a href="https://rs.school/js/" target="_blank">
-          <img
-            src="../../assets/images/rs_school_js.svg"
-            alt="RS-school course"
-            width="40"
-            height="20"
-          />
-        </a>
-      </div>
       <div class="app-logo">
         <Logo />
         <h2>{{ AppNames.Shop }}</h2>
@@ -53,9 +37,9 @@ function logout(): void {
         <a href="#" target="_blank">
           <img src="../../assets/images/search.png" alt="search" width="15" height="15" />
         </a>
-        <a href="#" target="_blank">
+        <RouterLink to="/user" v-if="authStore.isAuthenticated" title="User profile">
           <img src="../../assets/images/user.png" alt="user" width="15" height="15" />
-        </a>
+        </RouterLink>
         <a href="#" target="_blank">
           <img
             src="../../assets/images/shopping-cart.png"
