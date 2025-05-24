@@ -3,15 +3,6 @@ import {
   ProductPagedQueryResponse,
 } from '@commercetools/platform-sdk';
 import { ClientBuilder } from '@commercetools/sdk-client-v2';
-import { Buffer } from 'buffer';
-
-type BufferPolyfill = {
-  from: (string: string) => Uint8Array;
-};
-
-declare global {
-  type WindowBuffer = typeof Buffer | BufferPolyfill;
-}
 
 const projectKey = 'rss-ecom';
 
