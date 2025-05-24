@@ -85,7 +85,6 @@ export const createCustomer = async (
         body: requestBody,
       })
       .execute();
-
     authStore.setUser(email);
     authStore.setAuth(true);
     return response.body;
