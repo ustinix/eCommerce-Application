@@ -2,6 +2,7 @@
 import { onMounted } from 'vue';
 import { useAuthStore } from '../../stores/auth';
 import router from '../../router/router';
+import { getUserData } from '../../services/user-service';
 
 const title = 'User profile';
 
@@ -11,9 +12,7 @@ if (!authStore.isAuthenticated) {
   router.push('/');
 }
 onMounted(async () => {
-  if (!authStore.currentApiRoot) return;
-  const response = await authStore.currentApiRoot.me().get().execute();
-  console.log(response);
+  await getUserData(authStore);
 });
 </script>
 
