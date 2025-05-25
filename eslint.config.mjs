@@ -37,6 +37,7 @@ const commonRules = {
   'unicorn/no-null': 'off',
   'unicorn/number-literal-case': 'off',
   'unicorn/numeric-separators-style': 'off',
+  'unicorn/prefer-node-protocol': 'off',
   'unicorn/prevent-abbreviations': [
     'error',
     {
