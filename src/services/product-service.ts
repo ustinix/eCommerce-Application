@@ -1,7 +1,5 @@
-import {
-  createApiBuilderFromCtpClient,
-  ProductPagedQueryResponse,
-} from '@commercetools/platform-sdk';
+import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import type { ProductPagedQueryResponse } from '@commercetools/platform-sdk';
 import { ClientBuilder } from '@commercetools/sdk-client-v2';
 
 const projectKey = 'rss-ecom';

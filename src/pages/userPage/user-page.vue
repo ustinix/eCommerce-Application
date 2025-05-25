@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useAuthStore } from '../../stores/auth';
+import { useUserStore } from '../../stores/user';
 import router from '../../router/router';
 import { getUserData } from '../../services/user-service';
-import type { Customer } from '@commercetools/platform-sdk';
 import UserView from '../../components/layout/user-view.vue';
+import UserEdit from '../../components/layout/user-edit.vue';
 
 const enum textPage {
   title = 'User profile',
@@ -19,8 +20,9 @@ const enum textPage {
 }
 
 const authStore = useAuthStore();
+const userStore = useUserStore();
+
 let isEditing = ref(false);
-let profile = ref<Customer | null>(null);
 let errorPage = ref<string | null>(null);
 
 if (!authStore.isAuthenticated) {
@@ -28,8 +30,9 @@ if (!authStore.isAuthenticated) {
 }
 onMounted(async () => {
   try {
-    profile.value = await getUserData(authStore);
-    errorPage.value = profile.value ? null : textPage.errorLoading;
+    const profile = await getUserData(authStore);
+    errorPage.value = profile ? null : textPage.errorLoading;
+    userStore.setUserProfile(profile);
   } catch {
     errorPage.value = textPage.errorLoading;
   }
@@ -44,10 +47,17 @@ const toggleEdit = (): void => {
     <h2 class="hero_title">{{ textPage.title }}</h2>
   </div>
   <p v-if="errorPage" class="error_text">{{ errorPage }}</p>
-  <div class="profile" v-if="profile">
+  <div class="profile" v-else>
     <div v-if="!isEditing">
-      <UserView :profile="profile" v-if="!isEditing" />
+      <UserView v-if="userStore.profile" :profile="userStore.profile" />
       <button class="button" @click="toggleEdit">{{ textPage.editButton }}</button>
+    </div>
+    <div v-if="isEditing">
+      <UserEdit v-if="userStore.profile" :profile="userStore.profile" />
+      <div class="buttons">
+        <button class="button">{{ textPage.saveButton }}</button>
+        <button class="button">{{ textPage.cancelButton }}</button>
+      </div>
     </div>
   </div>
 </template>

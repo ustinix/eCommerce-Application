@@ -4,3 +4,4 @@ export type Address = {
   streetName: string;
   postalCode: string;
 };
+export type AddressWithId = Partial<Address> & { id?: string };
