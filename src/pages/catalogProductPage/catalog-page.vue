@@ -11,13 +11,6 @@ const products = ref<ProductProjection[]>([]);
 const isLoading = ref(true);
 const error = ref<string | null>(null);
 
-const getLocalizedText = (
-  localizedObject: Record<string, string> | undefined,
-  locale = 'en-US',
-): string => {
-  return localizedObject?.[locale] || '';
-};
-
 const loadProducts = async (): Promise<void> => {
   try {
     const response = await productApi.getProducts(100, 0);
@@ -48,9 +41,9 @@ onMounted(() => {
 
       <ul class="product-list">
         <li v-for="product in products" :key="product.id" class="product-item">
-          <h4>{{ getLocalizedText(product.name) }}</h4>
+          <h4>{{ product.name?.['en-US'] }}</h4>
           <p v-if="product.description">
-            {{ getLocalizedText(product.description) }}
+            {{ product.description?.['en-US'] }}
           </p>
         </li>
       </ul>
