@@ -1,26 +1,36 @@
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue';
+import { reactive, computed, ref } from 'vue';
 import type { UserProfile } from '../../types/user-profile';
+import { useUserStore } from '../../stores/user';
+import { useAuthStore } from '../../stores/auth';
 import BaseInput from '../../components/layout/base-input.vue';
 import { Labels, Placeholders } from '../../assets/constants';
 import { validateName } from '../../utils/validate-name';
 import { validateSurame } from '../../utils/validate-surname';
 import { validateDate } from '../../utils/validate-date';
 import { validateEmail } from '../../utils/validate-email';
+import { updateUserProfile } from '../../services/user-service';
+
+const userStore = useUserStore();
+const authStore = useAuthStore();
 
 const { profile, toggle } = defineProps<{
   profile: UserProfile;
   toggle: () => void;
 }>();
-
-const firstName = ref(profile.firstName);
-const lastName = ref(profile.lastName);
-const email = ref(profile.email);
-const dateOfBirth = ref(profile.dateOfBirth);
+const newProfile = reactive({
+  firstName: profile.firstName,
+  lastName: profile.lastName,
+  email: profile.email,
+  dateOfBirth: profile.dateOfBirth,
+});
+const errorUpdate = ref<string>('');
 
 const enum textComponent {
   saveButton = 'Save',
   cancelButton = 'Cancel',
+  updateSuccessMessage = 'Data updated successfully',
+  updateErrorMessage = 'An error occurred while updating',
 }
 const fieldErrors = reactive({
   firstName: '',
@@ -35,9 +45,17 @@ function cancelEdit(event: Event): void {
   event.preventDefault();
   toggle();
 }
-function saveEdit(event: Event): void {
+async function saveEdit(event: Event): Promise<void> {
   event.preventDefault();
-  console.log('save');
+  errorUpdate.value = '';
+  if (userStore.profile === null || authStore.currentApiRoot === null) return;
+  Object.assign(userStore.profile, newProfile);
+  try {
+    updateUserProfile(userStore.profile, authStore);
+    toggle();
+  } catch {
+    errorUpdate.value = textComponent.updateErrorMessage;
+  }
 }
 const isButtonDisabled = computed(() => {
   return Object.values(fieldErrors).some(error => error !== '');
@@ -47,7 +65,7 @@ const isButtonDisabled = computed(() => {
   <form>
     <BaseInput
       data-test="name-input"
-      v-model="firstName"
+      v-model="newProfile.firstName"
       :label="Labels.labelName"
       :placeholder="Placeholders.placeholderName"
       required
@@ -57,7 +75,7 @@ const isButtonDisabled = computed(() => {
     />
     <BaseInput
       data-test="surname-input"
-      v-model="lastName"
+      v-model="newProfile.lastName"
       :label="Labels.labelSurname"
       :placeholder="Placeholders.placeholderSurname"
       required
@@ -66,7 +84,7 @@ const isButtonDisabled = computed(() => {
       @update:error="setFieldError('lastName', $event)"
     />
     <BaseInput
-      v-model="email"
+      v-model="newProfile.email"
       :label="Labels.labelEmail"
       :placeholder="Placeholders.placeholderEmail"
       required
@@ -76,7 +94,7 @@ const isButtonDisabled = computed(() => {
     />
     <BaseInput
       data-test="date-input"
-      v-model="dateOfBirth"
+      v-model="newProfile.dateOfBirth"
       :label="Labels.labelDate"
       required
       type="date"
@@ -90,9 +108,6 @@ const isButtonDisabled = computed(() => {
       <button class="button" @click="cancelEdit">{{ textComponent.cancelButton }}</button>
     </div>
   </form>
+  <p v-if="errorUpdate !== ''">{{ errorUpdate }}</p>
 </template>
-<style lang="scss" scoped>
-.button-save:disabled {
-  background-color: aqua;
-}
-</style>
+<style lang="scss" scoped></style>
