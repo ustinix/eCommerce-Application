@@ -1,6 +1,6 @@
 import {
   createApiBuilderFromCtpClient,
-  ProductPagedQueryResponse,
+  ProductProjectionPagedQueryResponse,
 } from '@commercetools/platform-sdk';
 import { ClientBuilder } from '@commercetools/sdk-client-v2';
 
@@ -15,22 +15,20 @@ const client = new ClientBuilder()
       clientSecret: import.meta.env.VITE_CTP_CLIENT_SECRET,
     },
     scopes: [`view_products:${projectKey}`],
-    fetch: globalThis.fetch.bind(globalThis),
   })
   .withHttpMiddleware({
     host: import.meta.env.VITE_CTP_API_URL,
-    fetch: globalThis.fetch.bind(globalThis),
   })
   .build();
 
 const apiRoot = createApiBuilderFromCtpClient(client);
 
 export default {
-  async getProducts(limit = 20, offset = 0): Promise<ProductPagedQueryResponse> {
+  async getProducts(limit = 100, offset = 0): Promise<ProductProjectionPagedQueryResponse> {
     try {
       const response = await apiRoot
         .withProjectKey({ projectKey })
-        .products()
+        .productProjections()
         .get({
           queryArgs: {
             limit,
