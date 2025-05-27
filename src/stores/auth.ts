@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
-import { type User } from '../types/user';
+// import { type User } from '../types/user';
 import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
 import { createExistingTokenClient } from '../services/token-client';
 import { isToken } from '../utils/is-token';
@@ -8,7 +8,7 @@ import { decodeToken } from '../utils/token-decoder';
 
 export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = ref<boolean>(false);
-  const user = ref<User | null>(null);
+  // const user = ref<User | null>(null);
   const errorAuth = ref<string | null>(null);
   const currentApiRoot = ref<ByProjectKeyRequestBuilder | null>(null);
   const saved = localStorage.getItem('authStore');
@@ -16,7 +16,7 @@ export const useAuthStore = defineStore('auth', () => {
   if (saved) {
     const parsed = JSON.parse(saved);
     isAuthenticated.value = parsed.isAuthenticated ?? false;
-    user.value = parsed.user ?? null;
+    // user.value = parsed.user ?? null;
   }
   const saveToken = localStorage.getItem('authToken');
   if (saveToken) {
@@ -27,23 +27,23 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
   watch(
-    [isAuthenticated, user],
+    [isAuthenticated],
     () => {
       localStorage.setItem(
         'authStore',
         JSON.stringify({
           isAuthenticated: isAuthenticated.value,
-          user: user.value,
+          // user: user.value,
         }),
       );
     },
     { deep: true },
   );
-
+  /*
   const setUser = (data: string | null): void => {
     user.value = data ? { email: data } : null;
   };
-
+*/
   const setError = (error: string | null): void => {
     errorAuth.value = error;
   };
@@ -58,10 +58,10 @@ export const useAuthStore = defineStore('auth', () => {
   };
   return {
     isAuthenticated,
-    user,
+    // user,
     errorAuth,
     currentApiRoot,
-    setUser,
+    // setUser,
     setError,
     setAuth,
     setApiRoot,

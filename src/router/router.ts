@@ -6,6 +6,7 @@ import LoginPage from '../pages/loginPage/login-page.vue';
 import ErrorPage from '../pages/errorPage/error-page.vue';
 import CatalogPage from '../pages/catalogProductPage/catalog-page.vue';
 import AboutPage from '../pages/aboutUsPage/about-page.vue';
+import UserPage from '../pages/userPage/user-page.vue';
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', component: MainPage },
@@ -13,6 +14,7 @@ const routes: Array<RouteRecordRaw> = [
   { path: '/about', component: AboutPage },
   { path: '/login', component: LoginPage },
   { path: '/register', component: RegistrationPage },
+  { path: '/user', component: UserPage },
   { path: '/:pathMatch(.*)*', component: ErrorPage },
 ];
 
