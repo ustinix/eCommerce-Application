@@ -30,7 +30,6 @@ async function login(event: Event): Promise<void> {
 }
 
 function loginValid(apiRoot: ByProjectKeyRequestBuilder): void {
-  authStore.setUser(email.value);
   authStore.setAuth(true);
   authStore.setApiRoot(apiRoot);
   router.push('/');
@@ -84,7 +83,13 @@ function validatePassword(value: string): string {
       type="password"
       :validate="validatePassword"
     />
-    <button type="submit" @click="login" class="form_button" :disabled="!isButtonDisabled()">
+    <button
+      type="submit"
+      @click="login"
+      class="form_button"
+      data-test="login-button"
+      :disabled="!isButtonDisabled()"
+    >
       {{ textSumbmitButton }}
     </button>
     <p>

@@ -1,0 +1,39 @@
+import type { Customer } from '@commercetools/platform-sdk';
+import type { UserProfile } from '../types/user-profile';
+import type { useAuthStore } from '../stores/auth';
+import { mapCustomerToUserProfile } from '../utils/map-user-profile';
+import { crateActionsPersonnel } from '../utils/create-actions';
+import type { MyCustomerUpdateAction } from '@commercetools/platform-sdk';
+
+export async function getUserData(
+  authStore: ReturnType<typeof useAuthStore>,
+): Promise<UserProfile | null> {
+  if (!authStore.currentApiRoot) return null;
+  const response = await authStore.currentApiRoot.me().get().execute();
+  const customer: Customer = response.body;
+  if (!customer) return null;
+  console.log(customer);
+  return mapCustomerToUserProfile(customer);
+}
+
+export async function updateUserProfile(
+  newProfile: UserProfile,
+  authStore: ReturnType<typeof useAuthStore>,
+): Promise<void> {
+  if (authStore.currentApiRoot === null) return;
+  const actions: MyCustomerUpdateAction[] = crateActionsPersonnel(newProfile);
+  const currentProfileResponse = await authStore.currentApiRoot.me().get().execute();
+  const currentProfile = currentProfileResponse.body;
+
+  const response = await authStore.currentApiRoot
+    .me()
+    .post({
+      body: {
+        version: currentProfile.version,
+        actions,
+      },
+    })
+    .execute();
+
+  console.log(response.body);
+}

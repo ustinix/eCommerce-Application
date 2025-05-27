@@ -154,7 +154,6 @@ async function handleAutoLogin(): Promise<void> {
       userData.value.email,
       userData.value.password,
       () => {
-        authStore.setUser(userData.value.email);
         authStore.setAuth(true);
         router.push('/');
       },
