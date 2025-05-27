@@ -153,23 +153,6 @@ async function handleAutoLogin(): Promise<void> {
   if (authStore.isAuthenticated) {
     router.push('/');
   }
-  /* try {
-    await loginCustomer(
-      userData.value.email,
-      userData.value.password,
-      () => {
-        authStore.setAuth(true);
-        router.push('/');
-      },
-      () => {
-        authStore.setError(Errors.AutoLogin);
-        router.push('/login');
-      },
-    );
-  } catch {
-    authStore.setError(Errors.AutoLogin);
-    router.push('/login');
-  }*/
 }
 
 function handleRegistrationError(error: unknown): void {
