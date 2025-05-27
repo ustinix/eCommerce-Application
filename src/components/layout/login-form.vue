@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import BaseInput from './base-input.vue';
-import { loginCustomer } from '../../services/auth-service';
 import { useAuthStore } from '../../stores/auth';
 import router from '../../router/router';
-import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
 import { isEmail } from '../../utils/is-email';
 import { isPassword } from '../../utils/is-password';
 
@@ -25,17 +23,10 @@ const passwordError = ref<string>('');
 
 async function login(event: Event): Promise<void> {
   event.preventDefault();
-  authStore.setError(null);
-  await loginCustomer(email.value, password.value, loginValid, loginFailed);
-}
-
-function loginValid(apiRoot: ByProjectKeyRequestBuilder): void {
-  authStore.setAuth(true);
-  authStore.setApiRoot(apiRoot);
-  router.push('/');
-}
-function loginFailed(errorMessage: string): void {
-  authStore.setError(errorMessage);
+  await authStore.logIn(email.value, password.value);
+  if (authStore.isAuthenticated) {
+    router.push('/');
+  }
 }
 function isButtonDisabled(): boolean {
   return (

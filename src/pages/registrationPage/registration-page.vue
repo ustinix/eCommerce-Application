@@ -14,7 +14,7 @@ import {
   shippingAddress,
   billingAddress,
 } from '../../assets/constants';
-import { loginCustomer } from '../../services/auth-service';
+// import { loginCustomer } from '../../services/auth-service';
 import { validateName } from '../../utils/validate-name';
 import { validateSurame } from '../../utils/validate-surname';
 import { usePostalCodeValidation } from '../../utils/validate-postal-code';
@@ -149,7 +149,11 @@ function getDefaultBillingAddress(isDefault: boolean, isSameAddress: boolean): n
 }
 
 async function handleAutoLogin(): Promise<void> {
-  try {
+  await authStore.logIn(userData.value.email, userData.value.password);
+  if (authStore.isAuthenticated) {
+    router.push('/');
+  }
+  /* try {
     await loginCustomer(
       userData.value.email,
       userData.value.password,
@@ -165,7 +169,7 @@ async function handleAutoLogin(): Promise<void> {
   } catch {
     authStore.setError(Errors.AutoLogin);
     router.push('/login');
-  }
+  }*/
 }
 
 function handleRegistrationError(error: unknown): void {

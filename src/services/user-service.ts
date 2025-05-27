@@ -24,9 +24,6 @@ export async function updateUserProfile(
 ): Promise<void> {
   if (authStore.currentApiRoot === null || userStore.profile === null) return;
   const actions: MyCustomerUpdateAction[] = crateActionsPersonnel(newProfile);
-  /*const currentProfileResponse = await authStore.currentApiRoot.me().get().execute();
-  const currentProfile = currentProfileResponse.body;*/
-
   const response = await authStore.currentApiRoot
     .me()
     .post({
@@ -38,5 +35,27 @@ export async function updateUserProfile(
     .execute();
   const newUser = mapCustomerToUserProfile(response.body);
   userStore.profile = newUser;
-  console.log(response.body);
+  console.log('update personal', response.body);
+}
+export async function updatePassword(
+  currentPassword: string,
+  newPassword: string,
+  userStore: ReturnType<typeof useUserStore>,
+  authStore: ReturnType<typeof useAuthStore>,
+): Promise<void> {
+  if (authStore.currentApiRoot === null || userStore.profile === null) return;
+  const response = await authStore.currentApiRoot
+    .me()
+    .password()
+    .post({
+      body: {
+        version: userStore.profile.version,
+        currentPassword: currentPassword.trim(),
+        newPassword: newPassword.trim(),
+      },
+    })
+    .execute();
+  const newUser = mapCustomerToUserProfile(response.body);
+  userStore.profile = newUser;
+  console.log('update password', response.body);
 }

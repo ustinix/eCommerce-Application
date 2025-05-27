@@ -2,12 +2,14 @@
 import DividerLine from '../ui/divider-line.vue';
 import Logo from '../ui/logo.vue';
 import { useAuthStore } from '../../stores/auth';
+import { useUserStore } from '../../stores/user';
 import { createAnonymClient } from '../../services/anonym-client';
 import { AppNames } from '../../assets/constants';
 import { Pages } from '../../assets/constants';
 import { computed } from 'vue';
 
 const authStore = useAuthStore();
+const userStore = useUserStore();
 
 const navLinks = computed(() => [
   { to: '/', text: Pages.Home, show: true },
@@ -18,9 +20,8 @@ const navLinks = computed(() => [
 ]);
 
 function logout(): void {
-  authStore.setAuth(false);
-  authStore.setUser(null);
-  authStore.setApiRoot(null);
+  authStore.logOut();
+  userStore.setUserProfile(null);
   const anonymApiRoot = createAnonymClient();
   authStore.setApiRoot(anonymApiRoot);
 }

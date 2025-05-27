@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useAuthStore } from '../../stores/auth';
 import { useUserStore } from '../../stores/user';
 import router from '../../router/router';
@@ -7,6 +7,7 @@ import { getUserData } from '../../services/user-service';
 import UserView from '../../components/layout/user-view.vue';
 import UserEdit from '../../components/layout/user-edit.vue';
 import UserAddressView from '../../components/layout/user-address-view.vue';
+import ChangePassword from '../../components/layout/change-password.vue';
 
 const enum textPage {
   title = 'User profile',
@@ -16,6 +17,7 @@ const enum textPage {
   defaultBilling = 'Default Billing Address',
   editButton = 'Edit',
   errorLoading = 'Error loading user data',
+  password = 'Change password',
 }
 
 const authStore = useAuthStore();
@@ -23,7 +25,16 @@ const userStore = useUserStore();
 
 let isEditPersonal = ref(false);
 let isEditAddress = ref(false);
+let isEditPassword = ref(false);
 let errorPage = ref<string | null>(null);
+watch(
+  () => authStore.isAuthenticated,
+  isAuth => {
+    if (!isAuth) {
+      router.push('/');
+    }
+  },
+);
 
 if (!authStore.isAuthenticated) {
   router.push('/');
@@ -42,6 +53,9 @@ const toggleEditPersonal = (): void => {
 };
 const toggleEditAddress = (): void => {
   isEditAddress.value = !isEditAddress.value;
+};
+const toggleEditPassword = (): void => {
+  isEditPassword.value = !isEditPassword.value;
 };
 </script>
 
@@ -64,6 +78,12 @@ const toggleEditAddress = (): void => {
         <UserView v-if="!isEditPersonal" :profile="userStore.profile" />
         <UserEdit v-else :profile="userStore.profile" :toggle="toggleEditPersonal" />
       </div>
+    </section>
+    <section class="profile_section">
+      <button class="button" @click="toggleEditPassword" v-if="!isEditPassword">
+        {{ textPage.password }}
+      </button>
+      <ChangePassword v-else :toggle="toggleEditPassword" />
     </section>
     <section class="profile_section">
       <div class="section-header">
