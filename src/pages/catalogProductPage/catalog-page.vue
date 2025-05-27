@@ -3,9 +3,6 @@ import { onMounted, ref } from 'vue';
 import productApi from '../../services/product-service';
 import type { ProductProjection } from '@commercetools/platform-sdk';
 
-const titlePage = 'Catalog page';
-const textPage = 'catalog';
-
 const products = ref<ProductProjection[]>([]);
 
 const isLoading = ref(true);
@@ -31,9 +28,6 @@ onMounted(() => {
 </script>
 <template>
   <div class="catalog-page">
-    <h1>{{ titlePage }}</h1>
-    <p>{{ textPage }}</p>
-
     <div v-if="isLoading">Загрузка товаров...</div>
 
     <div v-else>
