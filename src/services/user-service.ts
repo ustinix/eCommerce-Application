@@ -1,6 +1,7 @@
 import type { Customer } from '@commercetools/platform-sdk';
-import type { UserProfile } from '../types/user-profile';
+import type { UserProfile, UserPersonnelData } from '../types/user-profile';
 import type { useAuthStore } from '../stores/auth';
+import type { useUserStore } from '../stores/user';
 import { mapCustomerToUserProfile } from '../utils/map-user-profile';
 import { crateActionsPersonnel } from '../utils/create-actions';
 import type { MyCustomerUpdateAction } from '@commercetools/platform-sdk';
@@ -17,23 +18,25 @@ export async function getUserData(
 }
 
 export async function updateUserProfile(
-  newProfile: UserProfile,
+  newProfile: UserPersonnelData,
+  userStore: ReturnType<typeof useUserStore>,
   authStore: ReturnType<typeof useAuthStore>,
 ): Promise<void> {
-  if (authStore.currentApiRoot === null) return;
+  if (authStore.currentApiRoot === null || userStore.profile === null) return;
   const actions: MyCustomerUpdateAction[] = crateActionsPersonnel(newProfile);
-  const currentProfileResponse = await authStore.currentApiRoot.me().get().execute();
-  const currentProfile = currentProfileResponse.body;
+  /*const currentProfileResponse = await authStore.currentApiRoot.me().get().execute();
+  const currentProfile = currentProfileResponse.body;*/
 
   const response = await authStore.currentApiRoot
     .me()
     .post({
       body: {
-        version: currentProfile.version,
+        version: userStore.profile.version,
         actions,
       },
     })
     .execute();
-
+  const newUser = mapCustomerToUserProfile(response.body);
+  userStore.profile = newUser;
   console.log(response.body);
 }

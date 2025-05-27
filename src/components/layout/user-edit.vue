@@ -49,9 +49,10 @@ async function saveEdit(event: Event): Promise<void> {
   event.preventDefault();
   errorUpdate.value = '';
   if (userStore.profile === null || authStore.currentApiRoot === null) return;
-  Object.assign(userStore.profile, newProfile);
+  // Object.assign(userStore.profile, newProfile);
   try {
-    updateUserProfile(userStore.profile, authStore);
+    // updateUserProfile(userStore.profile, authStore);
+    updateUserProfile(newProfile, userStore, authStore);
     toggle();
   } catch {
     errorUpdate.value = textComponent.updateErrorMessage;
