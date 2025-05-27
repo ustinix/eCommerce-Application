@@ -8,4 +8,9 @@ export type UserProfile = {
   addresses: AddressWithId[];
   defaultShippingAddressId?: string;
   defaultBillingAddressId?: string;
+  version: number;
 };
+export type UserPersonnelData = Pick<
+  UserProfile,
+  'firstName' | 'lastName' | 'email' | 'dateOfBirth'
+>;

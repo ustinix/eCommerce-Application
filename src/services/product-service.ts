@@ -1,5 +1,5 @@
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import type { ProductPagedQueryResponse } from '@commercetools/platform-sdk';
+import type { ProductProjectionPagedQueryResponse } from '@commercetools/platform-sdk';
 
 import { ClientBuilder } from '@commercetools/sdk-client-v2';
 
