@@ -13,15 +13,15 @@ export const userData = ref<UserData>({
 export const shippingAddress = ref<Address>({
   country: '',
   city: '',
-  street: '',
-  code: '',
+  streetName: '',
+  postalCode: '',
 });
 
 export const billingAddress = ref<Address>({
   country: '',
   city: '',
-  street: '',
-  code: '',
+  streetName: '',
+  postalCode: '',
 });
 
 export enum AppNames {
@@ -55,6 +55,7 @@ export enum Errors {
   EmailSymbol = 'must contain an "@" symbol',
   PasswordFormat = 'Password must contain at least 8 characters, uppercase and lowercase letter, number and special character',
   PostalCodeFormat = 'The code must follow the format for the country (e.g., 12345 or A1B 2C3 for the U.S. and Canada, respectively).',
+  ProductDescription = 'Product description not available',
   PasswordsNotMatch = 'Passwords do not match',
 }
 
@@ -80,12 +81,50 @@ export enum Placeholders {
   placeholderPassword = 'Password',
   placeholderCode = 'Postal code',
 }
+
+export type Category = {
+  name: string;
+  id: string;
+  sizes: string[];
+};
+
+export const categoriesId = [
+  {
+    name: 'kids',
+    id: '26afa04e-6808-4105-936e-17bd35349eac',
+    sizes: ['25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35'],
+  },
+  {
+    name: 'men',
+    id: 'd265d4e2-da90-48af-ab26-700d36660c3a',
+    sizes: ['42', '43', '44', '45', '46', '47', '48'],
+  },
+  {
+    name: 'women',
+    id: '113f3bd3-16dc-4786-bc24-1630856e00aa',
+    sizes: ['36', '37', '38', '39', '40', '41'],
+  },
+];
+
+export const BreakpointsItemsPerPage = {
+  xs: 4,
+  sm: 8,
+  md: 12,
+  lg: 12,
+  xl: 10,
+  xxl: 12,
+};
+
+export const DefaultItemsPerPage = 10;
+
+
 export const enum TextEditComponent {
   saveButton = 'Save',
   cancelButton = 'Cancel',
   updateSuccessMessage = 'Data updated successfully',
   updateErrorMessage = 'An error occurred while updating',
 }
+
 export const InputStar = '*';
 export const DropSign = '▼';
 export const FooterText = 'The application is written as part of the RS School training course.';
