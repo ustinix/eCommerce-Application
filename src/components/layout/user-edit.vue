@@ -48,10 +48,12 @@ function cancelEdit(event: Event): void {
 async function saveEdit(event: Event): Promise<void> {
   event.preventDefault();
   errorUpdate.value = '';
-  if (userStore.profile === null || authStore.currentApiRoot === null) return;
-  Object.assign(userStore.profile, newProfile);
+  if (userStore.profile === null || authStore.currentApiRoot === null) {
+    errorUpdate.value = textComponent.updateErrorMessage;
+    return;
+  }
   try {
-    updateUserProfile(userStore.profile, authStore);
+    updateUserProfile(newProfile, userStore, authStore);
     toggle();
   } catch {
     errorUpdate.value = textComponent.updateErrorMessage;

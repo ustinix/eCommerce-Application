@@ -1,14 +1,14 @@
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
-// import { type User } from '../types/user';
+import { loginCustomer } from '../services/auth-service';
 import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
 import { createExistingTokenClient } from '../services/token-client';
 import { isToken } from '../utils/is-token';
+import { isCorrectError } from '../utils/is-error';
 import { decodeToken } from '../utils/token-decoder';
 
 export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = ref<boolean>(false);
-  // const user = ref<User | null>(null);
   const errorAuth = ref<string | null>(null);
   const currentApiRoot = ref<ByProjectKeyRequestBuilder | null>(null);
   const saved = localStorage.getItem('authStore');
@@ -16,8 +16,8 @@ export const useAuthStore = defineStore('auth', () => {
   if (saved) {
     const parsed = JSON.parse(saved);
     isAuthenticated.value = parsed.isAuthenticated ?? false;
-    // user.value = parsed.user ?? null;
   }
+
   const saveToken = localStorage.getItem('authToken');
   if (saveToken) {
     const existingToken = JSON.parse(saveToken);
@@ -33,17 +33,32 @@ export const useAuthStore = defineStore('auth', () => {
         'authStore',
         JSON.stringify({
           isAuthenticated: isAuthenticated.value,
-          // user: user.value,
         }),
       );
     },
     { deep: true },
   );
-  /*
-  const setUser = (data: string | null): void => {
-    user.value = data ? { email: data } : null;
-  };
-*/
+
+  async function logIn(email: string, password: string): Promise<void> {
+    try {
+      const apiRoot = await loginCustomer(email, password);
+      currentApiRoot.value = apiRoot;
+      isAuthenticated.value = true;
+      errorAuth.value = null;
+    } catch (error: unknown) {
+      const defaultError = 'Server authentication error';
+      errorAuth.value = isCorrectError(error) ? error.message : defaultError;
+      isAuthenticated.value = false;
+      currentApiRoot.value = null;
+    }
+  }
+
+  function logOut(): void {
+    isAuthenticated.value = false;
+    currentApiRoot.value = null;
+    localStorage.removeItem('authToken');
+  }
+
   const setError = (error: string | null): void => {
     errorAuth.value = error;
   };
@@ -58,10 +73,10 @@ export const useAuthStore = defineStore('auth', () => {
   };
   return {
     isAuthenticated,
-    // user,
     errorAuth,
     currentApiRoot,
-    // setUser,
+    logIn,
+    logOut,
     setError,
     setAuth,
     setApiRoot,

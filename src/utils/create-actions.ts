@@ -1,7 +1,5 @@
-import type { UserProfile } from '../types/user-profile';
+import type { UserPersonnelData } from '../types/user-profile';
 import type { MyCustomerUpdateAction } from '@commercetools/platform-sdk';
-
-type UserProfilePersonnel = Pick<UserProfile, 'firstName' | 'lastName' | 'email' | 'dateOfBirth'>;
 
 const enum actionsPersonnel {
   firstName = 'setFirstName',
@@ -10,7 +8,7 @@ const enum actionsPersonnel {
   dateOfBirth = 'setDateOfBirth',
 }
 
-export function crateActionsPersonnel(profile: UserProfilePersonnel): MyCustomerUpdateAction[] {
+export function crateActionsPersonnel(profile: UserPersonnelData): MyCustomerUpdateAction[] {
   const actions: MyCustomerUpdateAction[] = [];
   if (profile.firstName) {
     actions.push({
