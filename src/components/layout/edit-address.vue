@@ -16,7 +16,7 @@ const authStore = useAuthStore();
 const props = defineProps<EditAddressProps & { close: () => void }>();
 const startAddress = {
   id: props.id,
-  country: props.country || '',
+  country: props.country === 'RU' ? 'Russia' : 'United States',
   city: props.city || '',
   streetName: props.streetName || '',
   postalCode: props.postalCode || '',
@@ -35,6 +35,7 @@ const disabled = defineModel<boolean>('disabled', { default: false });
 const { validateCode } = usePostalCodeValidation(disabled);
 async function updateAddress(): Promise<void> {
   if (userStore.profile === null) return;
+  newAddress.country = newAddress.country === 'Russia' ? 'RU' : 'US';
   const actions = createActionsChangeAddress(newAddress, userStore.profile);
   await updateUserAddressData(userStore, authStore, actions);
   props.close();

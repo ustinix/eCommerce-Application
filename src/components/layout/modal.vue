@@ -24,7 +24,7 @@ function closeModal(): void {
         <!--<component :is="props.component" v-bind="props.componentProps  as any" />-->
         <component
           :is="props.component"
-          v-bind="{ ...(props.componentProps ?? {}), close: closeModal } as any"
+          v-bind="{ ...props.componentProps, close: closeModal } as any"
         />
       </v-card-text>
       <v-card-actions>
