@@ -68,7 +68,7 @@ function logout(): void {
 @use '../../assets/styles/variables.scss' as v;
 
 .header {
-  padding-top: 2rem;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;

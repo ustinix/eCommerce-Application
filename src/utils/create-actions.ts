@@ -1,4 +1,5 @@
-import type { UserPersonnelData } from '../types/user-profile';
+import type { UserPersonnelData, UserProfile } from '../types/user-profile';
+import type { AddressWithId } from '../types/address';
 import type { MyCustomerUpdateAction } from '@commercetools/platform-sdk';
 
 const enum actionsPersonnel {
@@ -6,6 +7,13 @@ const enum actionsPersonnel {
   lastName = 'setLastName',
   email = 'changeEmail',
   dateOfBirth = 'setDateOfBirth',
+}
+const enum actionsAddress {
+  removeShippingAddress = 'removeShippingAddressId',
+  removeBillingAddressId = 'removeBillingAddressId',
+  removeAddress = 'removeAddress',
+  setDefaultShippingAddress = 'setDefaultShippingAddress',
+  setDefaultBillingAddress = 'setDefaultBillingAddress',
 }
 
 export function crateActionsPersonnel(profile: UserPersonnelData): MyCustomerUpdateAction[] {
@@ -37,5 +45,44 @@ export function crateActionsPersonnel(profile: UserPersonnelData): MyCustomerUpd
       dateOfBirth: profile.dateOfBirth,
     });
   }
+  return actions;
+}
+export function crateActionsAddress(
+  address: AddressWithId,
+  userProfile: UserProfile,
+): MyCustomerUpdateAction[] {
+  const actions: MyCustomerUpdateAction[] = [];
+  if (address.id === undefined) return actions;
+
+  if (userProfile.shippingAddressIds?.includes(address.id)) {
+    actions.push({
+      action: actionsAddress.removeShippingAddress,
+      addressId: address.id,
+    });
+  }
+
+  if (userProfile.billingAddressIds?.includes(address.id)) {
+    actions.push({
+      action: actionsAddress.removeBillingAddressId,
+      addressId: address.id,
+    });
+  }
+  if (userProfile.defaultShippingAddressId === address.id) {
+    actions.push({
+      action: actionsAddress.setDefaultShippingAddress,
+      addressId: undefined,
+    });
+  }
+
+  if (userProfile.defaultBillingAddressId === address.id) {
+    actions.push({
+      action: actionsAddress.setDefaultBillingAddress,
+      addressId: undefined,
+    });
+  }
+  actions.push({
+    action: actionsAddress.removeAddress,
+    addressId: address.id,
+  });
   return actions;
 }

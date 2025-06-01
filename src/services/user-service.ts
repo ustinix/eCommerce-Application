@@ -2,8 +2,9 @@ import type { Customer } from '@commercetools/platform-sdk';
 import type { UserProfile, UserPersonnelData } from '../types/user-profile';
 import type { useAuthStore } from '../stores/auth';
 import type { useUserStore } from '../stores/user';
+import type { AddressWithId } from '../types/address';
 import { mapCustomerToUserProfile } from '../utils/map-user-profile';
-import { crateActionsPersonnel } from '../utils/create-actions';
+import { crateActionsPersonnel, crateActionsAddress } from '../utils/create-actions';
 import type { MyCustomerUpdateAction } from '@commercetools/platform-sdk';
 
 export async function getUserData(
@@ -58,4 +59,25 @@ export async function updatePassword(
   const newUser = mapCustomerToUserProfile(response.body);
   userStore.profile = newUser;
   console.log('update password', response.body);
+}
+
+export async function deleteUserProfile(
+  address: AddressWithId,
+  userStore: ReturnType<typeof useUserStore>,
+  authStore: ReturnType<typeof useAuthStore>,
+): Promise<void> {
+  if (authStore.currentApiRoot === null || userStore.profile === null) return;
+  const actions: MyCustomerUpdateAction[] = crateActionsAddress(address, userStore.profile);
+  const response = await authStore.currentApiRoot
+    .me()
+    .post({
+      body: {
+        version: userStore.profile.version,
+        actions,
+      },
+    })
+    .execute();
+  const newUser = mapCustomerToUserProfile(response.body);
+  userStore.profile = newUser;
+  console.log('update personal', response.body);
 }

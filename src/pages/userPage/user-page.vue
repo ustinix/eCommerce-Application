@@ -16,6 +16,7 @@ const enum textPage {
   defaultShipping = 'Default Shipping Address',
   defaultBilling = 'Default Billing Address',
   editButton = 'Edit',
+  deleteButton = 'Delete',
   errorLoading = 'Error loading user data',
   password = 'Change password',
 }
@@ -51,9 +52,10 @@ onMounted(async () => {
 const toggleEditPersonal = (): void => {
   isEditPersonal.value = !isEditPersonal.value;
 };
+/*
 const toggleEditAddress = (): void => {
   isEditAddress.value = !isEditAddress.value;
-};
+};*/
 const toggleEditPassword = (): void => {
   isEditPassword.value = !isEditPassword.value;
 };
@@ -88,9 +90,6 @@ const toggleEditPassword = (): void => {
     <section class="profile_section">
       <div class="section-header">
         <h3 class="title-small">{{ textPage.sectionAddresses }}</h3>
-        <button class="button" @click="toggleEditAddress" v-if="!isEditAddress">
-          {{ textPage.editButton }}
-        </button>
       </div>
       <div v-if="userStore.profile">
         <UserAddressView v-if="!isEditAddress" :profile="userStore.profile" />
