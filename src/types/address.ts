@@ -5,3 +5,7 @@ export type Address = {
   postalCode: string;
 };
 export type AddressWithId = Partial<Address> & { id?: string };
+export type EditAddressProps = AddressWithId & {
+  defaultShipping: boolean;
+  defaultBilling: boolean;
+};

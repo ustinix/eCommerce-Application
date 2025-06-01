@@ -1,5 +1,5 @@
 import type { UserPersonnelData, UserProfile } from '../types/user-profile';
-import type { AddressWithId } from '../types/address';
+import type { AddressWithId, EditAddressProps } from '../types/address';
 import type { MyCustomerUpdateAction } from '@commercetools/platform-sdk';
 
 const enum actionsPersonnel {
@@ -14,6 +14,7 @@ const enum actionsAddress {
   removeAddress = 'removeAddress',
   setDefaultShippingAddress = 'setDefaultShippingAddress',
   setDefaultBillingAddress = 'setDefaultBillingAddress',
+  changeAddress = 'changeAddress',
 }
 
 export function crateActionsPersonnel(profile: UserPersonnelData): MyCustomerUpdateAction[] {
@@ -47,7 +48,7 @@ export function crateActionsPersonnel(profile: UserPersonnelData): MyCustomerUpd
   }
   return actions;
 }
-export function crateActionsAddress(
+export function crateActionsDeleteAddress(
   address: AddressWithId,
   userProfile: UserProfile,
 ): MyCustomerUpdateAction[] {
@@ -84,5 +85,49 @@ export function crateActionsAddress(
     action: actionsAddress.removeAddress,
     addressId: address.id,
   });
+  return actions;
+}
+export function createActionsChangeAddress(
+  address: EditAddressProps,
+  userProfile: UserProfile,
+): MyCustomerUpdateAction[] {
+  const actions: MyCustomerUpdateAction[] = [];
+
+  const updatedAddress = {
+    country: address.country ?? '',
+    city: address.city,
+    streetName: address.streetName,
+    postalCode: address.postalCode,
+  };
+  actions.push({
+    action: actionsAddress.changeAddress,
+    addressId: address.id,
+    address: updatedAddress,
+  });
+
+  if (address.defaultShipping && userProfile.defaultBillingAddressId !== address.id) {
+    actions.push({
+      action: actionsAddress.setDefaultShippingAddress,
+      addressId: address.id,
+    });
+  } else if (!address.defaultShipping && userProfile.defaultShippingAddressId === address.id) {
+    actions.push({
+      action: actionsAddress.setDefaultShippingAddress,
+      addressId: undefined,
+    });
+  }
+
+  if (address.defaultBilling && userProfile.defaultBillingAddressId !== address.id) {
+    actions.push({
+      action: actionsAddress.setDefaultBillingAddress,
+      addressId: address.id,
+    });
+  } else if (!address.defaultBilling && userProfile.defaultBillingAddressId === address.id) {
+    actions.push({
+      action: actionsAddress.setDefaultBillingAddress,
+      addressId: undefined,
+    });
+  }
+  console.log('actions', actions);
   return actions;
 }

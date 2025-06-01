@@ -14,7 +14,6 @@ import {
   shippingAddress,
   billingAddress,
 } from '../../assets/constants';
-// import { loginCustomer } from '../../services/auth-service';
 import { validateName } from '../../utils/validate-name';
 import { validateSurame } from '../../utils/validate-surname';
 import { usePostalCodeValidation } from '../../utils/validate-postal-code';

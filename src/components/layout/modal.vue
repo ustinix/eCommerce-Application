@@ -1,16 +1,15 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends Record<string, any>">
 import type { DefineComponent } from 'vue';
 
 const props = defineProps<{
   modelValue: boolean;
-  component: DefineComponent;
-  componentProps?: Record<string, string>;
+  component: DefineComponent<T>;
+  componentProps: T;
 }>();
 
 const emit = defineEmits<(event: 'update:modelValue', value: boolean) => void>();
-
-function saveData(): void {
-  console.log('save');
+function closeModal(): void {
+  emit('update:modelValue', false);
 }
 </script>
 
@@ -22,12 +21,15 @@ function saveData(): void {
   >
     <v-card>
       <v-card-text>
-        <component :is="props.component" v-bind="props.componentProps" />
+        <!--<component :is="props.component" v-bind="props.componentProps  as any" />-->
+        <component
+          :is="props.component"
+          v-bind="{ ...(props.componentProps ?? {}), close: closeModal } as any"
+        />
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn color="primary" @click="saveData">Save</v-btn>
-        <v-btn color="secondary" @click="emit('update:modelValue', false)">Cancel</v-btn>
+        <v-btn color="secondary" @click="closeModal">Cancel</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
