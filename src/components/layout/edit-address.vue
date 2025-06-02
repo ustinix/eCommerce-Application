@@ -122,7 +122,7 @@ async function updateDataAddress(): Promise<void> {
       <label class="chkBoxText">{{ SetAddress.DefaultBilling }}</label>
       <input type="checkbox" class="chkBox" v-model="newAddress.defaultBilling" />
     </div>
-    <div>
+    <div class="buttons">
       <button class="button" @click.prevent="updateAddress" :disabled="isButtonDisabled()">
         {{ textComponent.saveButton }}
       </button>
@@ -131,4 +131,9 @@ async function updateDataAddress(): Promise<void> {
   </form>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+</style>

@@ -127,6 +127,7 @@ function addAddress(): void {
 .section-header {
   display: flex;
   justify-content: space-between;
+  padding: 20px;
 }
 .profile {
   width: 450px;

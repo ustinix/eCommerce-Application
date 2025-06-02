@@ -54,13 +54,18 @@ async function deleteAddress(address: AddressWithId): Promise<void> {
 }
 </script>
 <template v-if="profile">
-  <div v-for="address in profile.addresses" :key="address.id" class="address-item">
+  <div
+    v-for="address in profile.addresses"
+    :key="address.id"
+    class="address-item"
+    :class="{ 'default-class': isDefaultShipping(address) || isDefaultBilling(address) }"
+  >
     <p>
       {{ address.streetName }}, {{ address.city }}, {{ address.postalCode }},
       {{ address.country }}
     </p>
-    <p v-if="isDefaultShipping(address)">{{ componentPage.defaultShipping }}</p>
-    <p v-if="isDefaultBilling(address)">{{ componentPage.defaultBilling }}</p>
+    <p v-if="isDefaultShipping(address)" class="subtext">{{ componentPage.defaultShipping }}</p>
+    <p v-if="isDefaultBilling(address)" class="subtext">{{ componentPage.defaultBilling }}</p>
     <div class="buttons">
       <button class="button" @click="openModal(address)">
         {{ componentPage.editButton }}
@@ -96,5 +101,14 @@ async function deleteAddress(address: AddressWithId): Promise<void> {
 .address-item {
   padding: 10px;
   margin-bottom: 10px;
+}
+.subtext {
+  text-align: right;
+  font-size: 8px;
+  margin-top: 10px;
+}
+.default-class {
+  background-color: rgba(v.$color-selected, 0.5);
+  border-radius: 20px;
 }
 </style>
