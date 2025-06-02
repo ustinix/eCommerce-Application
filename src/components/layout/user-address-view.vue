@@ -4,11 +4,13 @@ import type { AddressWithId, EditAddressProps } from '../../types/address';
 import type { UserProfile } from '../../types/user-profile';
 import { useUserStore } from '../../stores/user';
 import { useAuthStore } from '../../stores/auth';
+import { useSnackbarStore } from '../../stores/snackbar';
 import editAddress from './edit-address.vue';
 import Modal from './modal.vue';
 import { updateUserAddressData } from '../../services/user-service';
 import { crateActionsDeleteAddress } from '../../utils/create-actions';
 
+const snackbarStore = useSnackbarStore();
 const userStore = useUserStore();
 const authStore = useAuthStore();
 const enum componentPage {
@@ -16,6 +18,8 @@ const enum componentPage {
   defaultBilling = 'Default Billing Address',
   deleteButton = 'Delete',
   editButton = 'Edit',
+  errorAddressDelete = 'Failed to delete address. Try again later.',
+  successAddressDelete = 'Address successfully deleted',
 }
 
 const { profile } = defineProps<{
@@ -38,14 +42,19 @@ function openModal(address: AddressWithId): void {
   } satisfies EditAddressProps;
   isModalOpen.value = true;
 }
-function deleteAddress(address: AddressWithId): void {
+async function deleteAddress(address: AddressWithId): Promise<void> {
   if (userStore.profile === null) return;
   const actions = crateActionsDeleteAddress(address, userStore.profile);
-  updateUserAddressData(userStore, authStore, actions);
+  try {
+    await updateUserAddressData(userStore, authStore, actions);
+    snackbarStore.success(componentPage.successAddressDelete);
+  } catch {
+    snackbarStore.success(componentPage.errorAddressDelete);
+  }
 }
 </script>
 <template v-if="profile">
-  <div v-for="address in profile.addresses" :key="address.id">
+  <div v-for="address in profile.addresses" :key="address.id" class="address-item">
     <p>
       {{ address.streetName }}, {{ address.city }}, {{ address.postalCode }},
       {{ address.country }}
@@ -78,5 +87,14 @@ function deleteAddress(address: AddressWithId): void {
 }
 .label {
   font-weight: 600;
+}
+.buttons {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+}
+.address-item {
+  padding: 10px;
+  margin-bottom: 10px;
 }
 </style>

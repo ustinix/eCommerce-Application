@@ -110,4 +110,9 @@ async function saveEdit(event: Event): Promise<void> {
     </div>
   </form>
 </template>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+</style>

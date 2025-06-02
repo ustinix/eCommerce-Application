@@ -112,4 +112,9 @@ const isButtonDisabled = computed(() => {
   </form>
   <p v-if="errorUpdate !== ''">{{ errorUpdate }}</p>
 </template>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+</style>

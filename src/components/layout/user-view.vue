@@ -21,6 +21,7 @@ const { profile } = defineProps<{
 @use '../../assets/styles/variables.scss' as v;
 
 .label {
-  font-weight: 600;
+  font-weight: 800;
+  color: v.$color-grey;
 }
 </style>

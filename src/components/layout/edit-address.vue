@@ -8,11 +8,12 @@ import AddressForm from './address-form.vue';
 import BaseInput from './base-input.vue';
 import { useUserStore } from '../../stores/user';
 import { useAuthStore } from '../../stores/auth';
+import { useSnackbarStore } from '../../stores/snackbar';
 import { updateUserAddressData } from '../../services/user-service';
-import { normalizeCountry } from '../../utils/normalize-country';
 
 const userStore = useUserStore();
 const authStore = useAuthStore();
+const snackbarStore = useSnackbarStore();
 
 const props = defineProps<EditAddressProps & { close: () => void }>();
 const startAddress = {
@@ -32,20 +33,23 @@ const enum textComponent {
   labelStreet = 'Street',
   saveButton = 'Save',
   cancelButton = 'Cancel',
+  errorAddress = 'Failed to update address. Try again later',
+  successAddress = 'Address updated successfully',
 }
 const disabled = defineModel<boolean>('disabled', { default: false });
 const { validateCode } = usePostalCodeValidation(disabled);
 
 async function updateAddress(): Promise<void> {
   if (userStore.profile === null) return;
-  newAddress.country = normalizeCountry(newAddress.country);
-  if (newAddress.id === undefined) {
-    handleNewAddress();
-  } else {
-    await updateDataAddress();
+  newAddress.country = newAddress.country === 'Russia' ? 'RU' : 'US';
+  try {
+    await (newAddress.id === undefined ? handleNewAddress() : updateDataAddress());
+    snackbarStore.success(textComponent.successAddress);
+  } catch {
+    snackbarStore.success(textComponent.errorAddress);
+  } finally {
+    props.close();
   }
-
-  props.close();
 }
 function isButtonDisabled(): boolean {
   const { country, city, streetName, postalCode } = newAddress;

@@ -10,6 +10,7 @@ import UserAddressView from '../../components/layout/user-address-view.vue';
 import ChangePassword from '../../components/layout/change-password.vue';
 import editAddress from '../../components/layout/edit-address.vue';
 import Modal from '../../components/layout/modal.vue';
+import Snackbar from '../../components/layout/snack-bar.vue';
 
 const enum textPage {
   title = 'User profile',
@@ -85,6 +86,7 @@ function addAddress(): void {
   <p v-if="errorPage" class="error_text">{{ errorPage }}</p>
 
   <div class="profile" v-else>
+    <Snackbar />
     <section class="profile_section">
       <div class="section-header">
         <h3 class="title-small">{{ textPage.sectionPersonal }}</h3>
@@ -97,7 +99,7 @@ function addAddress(): void {
         <UserEdit v-else :profile="userStore.profile" :toggle="toggleEditPersonal" />
       </div>
     </section>
-    <section class="profile_section">
+    <section class="profile_section section_password">
       <button class="button" @click="toggleEditPassword" v-if="!isEditPassword">
         {{ textPage.password }}
       </button>
@@ -117,11 +119,27 @@ function addAddress(): void {
 </template>
 <style lang="scss" scoped>
 @use '../../assets/styles/hero.scss' as *;
+@use '../../assets/styles/variables.scss' as v;
+
 .hero-user {
   @include hero-section('../../assets/images/profile.png');
 }
 .section-header {
   display: flex;
   justify-content: space-between;
+}
+.profile {
+  width: 450px;
+  margin: 20px auto;
+}
+.profile_section {
+  text-align: left;
+  padding: 20px;
+  border-bottom: 1px solid v.$color-red;
+}
+.section_password {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
