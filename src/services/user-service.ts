@@ -13,7 +13,6 @@ export async function getUserData(
   const response = await authStore.currentApiRoot.me().get().execute();
   const customer: Customer = response.body;
   if (!customer) return null;
-  console.log(customer);
   return mapCustomerToUserProfile(customer);
 }
 
@@ -35,7 +34,6 @@ export async function updateUserProfile(
     .execute();
   const newUser = mapCustomerToUserProfile(response.body);
   userStore.profile = newUser;
-  console.log('update personal', response.body);
 }
 export async function updatePassword(
   currentPassword: string,
@@ -57,7 +55,6 @@ export async function updatePassword(
     .execute();
   const newUser = mapCustomerToUserProfile(response.body);
   userStore.profile = newUser;
-  console.log('update password', response.body);
 }
 export async function updateUserAddressData(
   userStore: ReturnType<typeof useUserStore>,
@@ -79,45 +76,3 @@ export async function updateUserAddressData(
   const newUser = mapCustomerToUserProfile(response.body);
   userStore.profile = newUser;
 }
-/*
-export async function deleteUserAddress(
-  address: AddressWithId,
-  userStore: ReturnType<typeof useUserStore>,
-  authStore: ReturnType<typeof useAuthStore>,
-): Promise<void> {
-  if (authStore.currentApiRoot === null || userStore.profile === null) return;
-  const actions: MyCustomerUpdateAction[] = crateActionsDeleteAddress(address, userStore.profile);
-  const response = await authStore.currentApiRoot
-    .me()
-    .post({
-      body: {
-        version: userStore.profile.version,
-        actions,
-      },
-    })
-    .execute();
-  const newUser = mapCustomerToUserProfile(response.body);
-  userStore.profile = newUser;
-  console.log('update personal', response.body);
-}
-export async function updatedAddress(
-  address: EditAddressProps,
-  userStore: ReturnType<typeof useUserStore>,
-  authStore: ReturnType<typeof useAuthStore>,
-): Promise<void> {
-  if (authStore.currentApiRoot === null || userStore.profile === null) return;
-  const actions: MyCustomerUpdateAction[] = crateActionsChangeAddress(address, userStore.profile);
-  const response = await authStore.currentApiRoot
-    .me()
-    .post({
-      body: {
-        version: userStore.profile.version,
-        actions,
-      },
-    })
-    .execute();
-  const newUser = mapCustomerToUserProfile(response.body);
-  userStore.profile = newUser;
-  console.log('update personal', response.body);
-}
-*/
