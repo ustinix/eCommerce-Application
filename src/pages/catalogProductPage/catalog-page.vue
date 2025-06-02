@@ -1,24 +1,60 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import productApi from '../../services/product-service';
 import type { ProductProjection } from '@commercetools/platform-sdk';
 import ProductCard from '../../components/product/product-card.vue';
 import { BreakpointsItemsPerPage, DefaultItemsPerPage } from '../../assets/constants';
 import { useDisplay } from 'vuetify';
+import { debounceReference } from '../../utils/debounce';
+import {
+  categoriesId,
+  sortOptions,
+  availableBrands,
+  availableSportTypes,
+} from '../../assets/constants';
 
 const products = ref<ProductProjection[]>([]);
-
 const isLoading = ref(true);
 const error = ref<string | null>(null);
 const currentPage = ref(1);
 const itemsPerPage = ref(DefaultItemsPerPage);
 const totalProducts = ref(0);
+const search = ref<string>('');
+const debouncedSearch = debounceReference(search.value, 500);
 const display = useDisplay();
+const categories = ref<string[]>([]);
+const brands = ref<string[]>([]);
+const sportTypes = ref<string[]>([]);
+const selectedSort = ref('name.en-US asc');
+let searchTimeout: ReturnType<typeof globalThis.setTimeout> | undefined;
+
+const availableCategories = categoriesId.map(cat => ({
+  name: cat.name,
+  id: cat.id,
+}));
 
 const loadProducts = async (offset = 0): Promise<void> => {
   try {
     isLoading.value = true;
-    const response = await productApi.getProducts(itemsPerPage.value, offset);
+
+    let sortParameter = selectedSort.value;
+    if (sortParameter.includes('price')) {
+      const direction = sortParameter.split(' ')[1];
+      sortParameter = `price ${direction}`;
+    }
+
+    const response = await productApi.getProducts(
+      itemsPerPage.value,
+      offset,
+      [sortParameter],
+      'USD',
+      debouncedSearch.value,
+      {
+        categories: categories.value,
+        brands: brands.value,
+        sportTypes: sportTypes.value,
+      },
+    );
     products.value = response.results;
     totalProducts.value = response.total || 0;
 
@@ -31,7 +67,28 @@ const loadProducts = async (offset = 0): Promise<void> => {
   }
 };
 
-const updateItemsPerPage = (breakpoint: string) => {
+const resetFilters = (): void => {
+  categories.value = [];
+  brands.value = [];
+  sportTypes.value = [];
+  loadProducts(0);
+};
+
+watch(search, newValue => {
+  if (searchTimeout !== undefined) {
+    globalThis.clearTimeout(searchTimeout);
+  }
+  searchTimeout = globalThis.setTimeout(() => {
+    debouncedSearch.value = newValue;
+  }, 500);
+});
+
+watch(debouncedSearch, () => {
+  currentPage.value = 1;
+  loadProducts(0);
+});
+
+const updateItemsPerPage = (breakpoint: string): void => {
   itemsPerPage.value =
     BreakpointsItemsPerPage[breakpoint as keyof typeof BreakpointsItemsPerPage] ||
     DefaultItemsPerPage;
@@ -40,8 +97,12 @@ const updateItemsPerPage = (breakpoint: string) => {
 };
 
 watch(() => display.name.value, updateItemsPerPage, { immediate: true });
+watch(selectedSort, () => {
+  currentPage.value = 1;
+  loadProducts(0);
+});
 
-const handlePageChange = (page: number) => {
+const handlePageChange = (page: number): void => {
   currentPage.value = page;
   const offset = (page - 1) * itemsPerPage.value;
   loadProducts(offset);
@@ -49,14 +110,9 @@ const handlePageChange = (page: number) => {
 
 const totalPages = computed(() => Math.ceil(totalProducts.value / itemsPerPage.value));
 
-const addToCart = (item: { productId: string; size: string }) => {
+const addToCart = (item: { productId: string; size: string }): void => {
   console.log('Добавление в корзину:', item);
 };
-
-onMounted(() => {
-  updateItemsPerPage(display.name.value);
-  loadProducts();
-});
 </script>
 <template>
   <div class="catalog-page">
@@ -64,27 +120,87 @@ onMounted(() => {
     <div v-else-if="error" class="error-message">{{ error }}</div>
     <div v-else>
       <h3>Available products: {{ totalProducts }}</h3>
+      <div class="tools">
+        <v-select
+          v-model="selectedSort"
+          :items="sortOptions"
+          item-title="title"
+          item-value="value"
+          label="Sort by ..."
+          density="comfortable"
+          style="max-width: 300px"
+          variant="outlined"
+        ></v-select>
+        <v-text-field
+          v-model="search"
+          label="Search"
+          prepend-inner-icon="mdi-magnify"
+          variant="outlined"
+          hide-details
+          single-line
+          style="max-width: 300px"
+        ></v-text-field>
+      </div>
 
-      <v-container class="pt-5">
-        <v-row class="d-flex justify-space-between ga-3">
+      <v-container class="pt-5" style="display: flex">
+        <div class="filters-container">
+          <div class="filter-section">
+            <h4>Category</h4>
+            <v-checkbox
+              v-for="category in availableCategories"
+              :key="category.id"
+              v-model="categories"
+              :label="category.name"
+              :value="category.id"
+              @update:modelValue="loadProducts(0)"
+            />
+          </div>
+
+          <div class="filter-section">
+            <h4>Brand</h4>
+            <v-checkbox
+              v-for="brand in availableBrands"
+              :key="brand"
+              v-model="brands"
+              :label="brand"
+              :value="brand"
+              @update:modelValue="loadProducts(0)"
+            />
+          </div>
+
+          <div class="filter-section">
+            <h4>Sport Type</h4>
+            <v-checkbox
+              v-for="type in availableSportTypes"
+              :key="type"
+              v-model="sportTypes"
+              :label="type"
+              :value="type"
+              @update:modelValue="loadProducts(0)"
+            />
+          </div>
+
+          <v-btn @click="resetFilters" color="primary" class="reset-btn"> Reset Filters </v-btn>
+        </div>
+        <v-row class="d-flex justify-space-evenly ga-3">
           <v-col
             v-for="product in products"
             :key="product.id"
             cols="12"
             sm="6"
-            md="4"
-            lg="3"
-            xl="2"
+            md="6"
+            lg="4"
+            xl="3"
           >
             <ProductCard :product="product" @add-to-cart="addToCart" />
           </v-col>
         </v-row>
       </v-container>
-      <v-container v-if="totalProducts > itemsPerPage">
+      <v-container class="d-flex justify-center" v-if="totalProducts > itemsPerPage">
         <v-pagination
           v-model="currentPage"
           :length="totalPages"
-          :total-visible="7"
+          :total-visible="3"
           @update:model-value="handlePageChange"
           class="mt-6"
         ></v-pagination>
@@ -100,6 +216,75 @@ onMounted(() => {
   padding: 20px;
   .error-message {
     color: v.$color-red;
+  }
+  .tools {
+    padding-top: 50px;
+    display: flex;
+    justify-content: space-between;
+    :deep(.v-text-field) {
+      height: 50px;
+
+      .v-field {
+        height: 50px;
+      }
+    }
+  }
+  .v-container {
+    display: flex;
+    gap: 20px;
+    padding: 0;
+    .filters-container {
+      width: 300px;
+      flex-shrink: 0;
+      background: v.$color-lightgray;
+      border-radius: 8px;
+      position: sticky;
+      padding-top: 20px;
+      align-self: flex-start;
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
+
+      .filter-section {
+        margin-bottom: 10px;
+
+        h4 {
+          margin-bottom: 10px;
+          font-weight: 500;
+        }
+        .v-input {
+          height: 36.2px;
+        }
+        .v-checkbox {
+          margin: 0px;
+        }
+      }
+
+      .reset-btn {
+        margin: 20px 0 15px 0;
+        width: 90%;
+        color: v.$color-red;
+      }
+    }
+
+    .content-area {
+      flex: 1;
+    }
+  }
+}
+
+@media (max-width: 960px) {
+  .tools {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .v-container {
+    flex-direction: column;
+
+    .filters-container {
+      width: 100%;
+      position: static;
+      margin-bottom: 20px;
+    }
   }
 }
 </style>

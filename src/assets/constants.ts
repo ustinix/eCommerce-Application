@@ -107,14 +107,24 @@ export const categoriesId = [
 
 export const BreakpointsItemsPerPage = {
   xs: 4,
-  sm: 8,
-  md: 12,
-  lg: 12,
-  xl: 10,
-  xxl: 12,
+  sm: 6,
+  md: 6,
+  lg: 8,
+  xl: 9,
+  xxl: 9,
 };
 
-export const DefaultItemsPerPage = 10;
+export const sortOptions = [
+  { title: 'Name (А-Z)', value: 'name.en-US asc' },
+  { title: 'Name (Z-А)', value: 'name.en-US desc' },
+  { title: 'Price: Low to High', value: 'price asc' },
+  { title: 'Price: High to Low', value: 'price desc' },
+];
+
+export const availableBrands = ['New Balance', 'Reebok', 'Adidas', 'Puma', 'Nike'];
+export const availableSportTypes = ['football', 'fitness', 'basketball', 'casual', 'running'];
+
+export const DefaultItemsPerPage = 12;
 
 export const InputStar = '*';
 export const DropSign = '▼';
