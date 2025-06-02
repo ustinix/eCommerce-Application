@@ -41,20 +41,8 @@ async function updateAddress(): Promise<void> {
   newAddress.country = normalizeCountry(newAddress.country);
   if (newAddress.id === undefined) {
     handleNewAddress();
-    /* const actions = createActionsAddAddress(newAddress);
-    await updateUserAddressData(userStore, authStore, actions);
-
-    if (newAddress.defaultBilling || newAddress.defaultShipping) {
-      const indexNewAddress = userStore.profile.addresses.length - 1;
-      const lastAddress = userStore.profile.addresses[indexNewAddress];
-      newAddress.id = lastAddress.id;
-      const actions = createActionsChangeAddress(newAddress, userStore.profile);
-      await updateUserAddressData(userStore, authStore, actions);
-    }*/
   } else {
     await updateDataAddress();
-    /*const actions = createActionsChangeAddress(newAddress, userStore.profile);
-    await updateUserAddressData(userStore, authStore, actions);*/
   }
 
   props.close();

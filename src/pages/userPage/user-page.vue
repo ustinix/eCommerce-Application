@@ -71,7 +71,7 @@ const toggleEditPersonal = (): void => {
 const toggleEditPassword = (): void => {
   isEditPassword.value = !isEditPassword.value;
 };
-function addAddress() {
+function addAddress(): void {
   modalComponent.value = editAddress;
   isModalOpen.value = true;
 }
