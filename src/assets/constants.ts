@@ -56,6 +56,7 @@ export enum Errors {
   PasswordFormat = 'Password must contain at least 8 characters, uppercase and lowercase letter, number and special character',
   PostalCodeFormat = 'The code must follow the format for the country (e.g., 12345 or A1B 2C3 for the U.S. and Canada, respectively).',
   ProductDescription = 'Product description not available',
+  PasswordsNotMatch = 'Passwords do not match',
 }
 
 export enum SetAddress {
@@ -125,6 +126,13 @@ export const availableBrands = ['New Balance', 'Reebok', 'Adidas', 'Puma', 'Nike
 export const availableSportTypes = ['football', 'fitness', 'basketball', 'casual', 'running'];
 
 export const DefaultItemsPerPage = 12;
+
+export const enum TextEditComponent {
+  saveButton = 'Save',
+  cancelButton = 'Cancel',
+  updateSuccessMessage = 'Data updated successfully',
+  updateErrorMessage = 'An error occurred while updating',
+}
 
 export const InputStar = '*';
 export const DropSign = '▼';

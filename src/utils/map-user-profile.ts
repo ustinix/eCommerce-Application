@@ -10,5 +10,6 @@ export function mapCustomerToUserProfile(customer: Customer): UserProfile {
     addresses: customer.addresses || [],
     defaultShippingAddressId: customer.defaultShippingAddressId || '',
     defaultBillingAddressId: customer.defaultBillingAddressId || '',
+    version: customer.version,
   };
 }
