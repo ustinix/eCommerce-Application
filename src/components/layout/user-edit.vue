@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { reactive, computed, ref } from 'vue';
+import { reactive, computed } from 'vue';
 import type { UserProfile } from '../../types/user-profile';
 import { useUserStore } from '../../stores/user';
 import { useAuthStore } from '../../stores/auth';
+import { useSnackbarStore } from '../../stores/snackbar';
 import BaseInput from '../../components/layout/base-input.vue';
 import { Labels, Placeholders } from '../../assets/constants';
 import { validateName } from '../../utils/validate-name';
@@ -13,6 +14,7 @@ import { updateUserProfile } from '../../services/user-service';
 
 const userStore = useUserStore();
 const authStore = useAuthStore();
+const snackbarStore = useSnackbarStore();
 
 const { profile, toggle } = defineProps<{
   profile: UserProfile;
@@ -24,7 +26,6 @@ const newProfile = reactive({
   email: profile.email,
   dateOfBirth: profile.dateOfBirth,
 });
-const errorUpdate = ref<string>('');
 
 const enum textComponent {
   saveButton = 'Save',
@@ -47,16 +48,17 @@ function cancelEdit(event: Event): void {
 }
 async function saveEdit(event: Event): Promise<void> {
   event.preventDefault();
-  errorUpdate.value = '';
   if (userStore.profile === null || authStore.currentApiRoot === null) {
-    errorUpdate.value = textComponent.updateErrorMessage;
+    snackbarStore.error(textComponent.updateErrorMessage);
     return;
   }
   try {
-    updateUserProfile(newProfile, userStore, authStore);
-    toggle();
+    await updateUserProfile(newProfile, userStore, authStore);
+    snackbarStore.success(textComponent.updateSuccessMessage);
   } catch {
-    errorUpdate.value = textComponent.updateErrorMessage;
+    snackbarStore.error(textComponent.updateErrorMessage);
+  } finally {
+    toggle();
   }
 }
 const isButtonDisabled = computed(() => {
@@ -110,6 +112,10 @@ const isButtonDisabled = computed(() => {
       <button class="button" @click="cancelEdit">{{ textComponent.cancelButton }}</button>
     </div>
   </form>
-  <p v-if="errorUpdate !== ''">{{ errorUpdate }}</p>
 </template>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+</style>

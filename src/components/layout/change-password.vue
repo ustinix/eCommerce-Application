@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import BaseInput from './base-input.vue';
-import { reactive, computed, ref } from 'vue';
+import { reactive, computed } from 'vue';
 import { validatePassword } from '../../utils/validate-password';
 import { Errors, TextEditComponent } from '../../assets/constants';
 import { useUserStore } from '../../stores/user';
 import { useAuthStore } from '../../stores/auth';
+import { useSnackbarStore } from '../../stores/snackbar';
 import { updatePassword } from '../../services/user-service';
 
 const userStore = useUserStore();
 const authStore = useAuthStore();
+const snackbarStore = useSnackbarStore();
 
 const { toggle } = defineProps<{
   toggle: () => void;
@@ -20,7 +22,10 @@ const enum Labels {
   newPassword = 'New Password: ',
   confirmNewPassword = 'Confirm New Password: ',
 }
-
+const snackMessage = {
+  successPassword: 'Password successfully updated',
+  errorPassword: 'Failed to update password',
+};
 const passwords = reactive({
   current: '',
   new: '',
@@ -32,8 +37,6 @@ const fieldErrors = reactive({
   confirmPassword: '',
   passwordsNotMatch: '',
 });
-const messageUpdate = ref<string>('');
-const errorUpdate = ref<string>('');
 
 function setFieldError(field: keyof typeof fieldErrors, error: string): void {
   fieldErrors[field] = error;
@@ -51,28 +54,26 @@ function cancelEdit(event: Event): void {
 
 async function saveEdit(event: Event): Promise<void> {
   event.preventDefault();
-  messageUpdate.value = '';
-  errorUpdate.value = '';
 
   if (userStore.profile === null || authStore.currentApiRoot === null) {
-    errorUpdate.value = TextEditComponent.updateErrorMessage;
+    snackbarStore.error(TextEditComponent.updateErrorMessage);
     return;
   }
   try {
     await updatePassword(passwords.current, passwords.new, userStore, authStore);
-    messageUpdate.value = TextEditComponent.updateErrorMessage;
     authStore.logOut();
     authStore.logIn(userStore.profile.email, passwords.new);
-    toggle();
+    snackbarStore.success(snackMessage.successPassword);
   } catch {
-    errorUpdate.value = TextEditComponent.updateErrorMessage;
+    snackbarStore.error(snackMessage.errorPassword);
+  } finally {
     toggle();
   }
 }
 </script>
 
 <template>
-  <form>
+  <form class="form">
     <BaseInput
       v-model="passwords.current"
       :label="Labels.currentPassword"
@@ -82,7 +83,6 @@ async function saveEdit(event: Event): Promise<void> {
       :validate="validatePassword"
       @update:error="setFieldError('currentPassword', $event)"
     />
-    <label>New Password</label>
     <BaseInput
       v-model="passwords.new"
       :label="Labels.newPassword"
@@ -110,4 +110,12 @@ async function saveEdit(event: Event): Promise<void> {
     </div>
   </form>
 </template>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.form {
+  width: 100%;
+}
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+</style>

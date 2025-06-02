@@ -10,7 +10,7 @@ const labelEmail = 'Email address';
 const placeholderEmail = 'Enter your email';
 const labelPassword = 'Password';
 const placeholderPassword = 'Password';
-const textSumbmitButton = 'LOG IN';
+const textSubmitButton = 'LOG IN';
 const linkText = 'Sign Up';
 const text = 'Do not have an account?';
 
@@ -81,7 +81,7 @@ function validatePassword(value: string): string {
       data-test="login-button"
       :disabled="!isButtonDisabled()"
     >
-      {{ textSumbmitButton }}
+      {{ textSubmitButton }}
     </button>
     <p>
       {{ text }} <RouterLink to="/register">{{ linkText }}</RouterLink>
