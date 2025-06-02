@@ -15,6 +15,7 @@ const enum actionsAddress {
   setDefaultShippingAddress = 'setDefaultShippingAddress',
   setDefaultBillingAddress = 'setDefaultBillingAddress',
   changeAddress = 'changeAddress',
+  addAddress = 'addAddress',
 }
 
 export function crateActionsPersonnel(profile: UserPersonnelData): MyCustomerUpdateAction[] {
@@ -128,6 +129,21 @@ export function createActionsChangeAddress(
       addressId: undefined,
     });
   }
-  console.log('actions', actions);
+  return actions;
+}
+
+export function createActionsAddAddress(address: AddressWithId): MyCustomerUpdateAction[] {
+  const actions: MyCustomerUpdateAction[] = [];
+
+  const updatedAddress = {
+    country: address.country ?? '',
+    city: address.city,
+    streetName: address.streetName,
+    postalCode: address.postalCode,
+  };
+  actions.push({
+    action: actionsAddress.addAddress,
+    address: updatedAddress,
+  });
   return actions;
 }

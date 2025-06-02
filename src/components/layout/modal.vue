@@ -27,10 +27,6 @@ function closeModal(): void {
           v-bind="{ ...props.componentProps, close: closeModal } as any"
         />
       </v-card-text>
-      <v-card-actions>
-        <v-spacer />
-        <v-btn color="secondary" @click="closeModal">Cancel</v-btn>
-      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>

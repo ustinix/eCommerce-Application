@@ -2,13 +2,14 @@
 import { defineProps, reactive } from 'vue';
 import type { EditAddressProps } from '../../types/address';
 import { usePostalCodeValidation } from '../../utils/validate-postal-code';
-import { createActionsChangeAddress } from '../../utils/create-actions';
+import { createActionsChangeAddress, createActionsAddAddress } from '../../utils/create-actions';
 import { Labels, SetAddress, Placeholders } from '../../assets/constants';
 import AddressForm from './address-form.vue';
 import BaseInput from './base-input.vue';
 import { useUserStore } from '../../stores/user';
 import { useAuthStore } from '../../stores/auth';
 import { updateUserAddressData } from '../../services/user-service';
+import { normalizeCountry } from '../../utils/normalize-country';
 
 const userStore = useUserStore();
 const authStore = useAuthStore();
@@ -30,15 +31,60 @@ const enum textComponent {
   labelCity = 'City',
   labelStreet = 'Street',
   saveButton = 'Save',
+  cancelButton = 'Cancel',
 }
 const disabled = defineModel<boolean>('disabled', { default: false });
 const { validateCode } = usePostalCodeValidation(disabled);
+
 async function updateAddress(): Promise<void> {
   if (userStore.profile === null) return;
-  newAddress.country = newAddress.country === 'Russia' ? 'RU' : 'US';
-  const actions = createActionsChangeAddress(newAddress, userStore.profile);
-  await updateUserAddressData(userStore, authStore, actions);
+  newAddress.country = normalizeCountry(newAddress.country);
+  if (newAddress.id === undefined) {
+    handleNewAddress();
+    /* const actions = createActionsAddAddress(newAddress);
+    await updateUserAddressData(userStore, authStore, actions);
+
+    if (newAddress.defaultBilling || newAddress.defaultShipping) {
+      const indexNewAddress = userStore.profile.addresses.length - 1;
+      const lastAddress = userStore.profile.addresses[indexNewAddress];
+      newAddress.id = lastAddress.id;
+      const actions = createActionsChangeAddress(newAddress, userStore.profile);
+      await updateUserAddressData(userStore, authStore, actions);
+    }*/
+  } else {
+    await updateDataAddress();
+    /*const actions = createActionsChangeAddress(newAddress, userStore.profile);
+    await updateUserAddressData(userStore, authStore, actions);*/
+  }
+
   props.close();
+}
+function isButtonDisabled(): boolean {
+  const { country, city, streetName, postalCode } = newAddress;
+  const requiredFields = [country, city, streetName, postalCode];
+  return requiredFields.some(field => !field?.trim());
+}
+async function handleNewAddress(): Promise<void> {
+  const addActions = createActionsAddAddress(newAddress);
+  await updateUserAddressData(userStore, authStore, addActions);
+
+  if (newAddress.defaultBilling || newAddress.defaultShipping) {
+    const newId = getLastAddressId();
+    if (newId) {
+      newAddress.id = newId;
+      await updateDataAddress();
+    }
+  }
+}
+function getLastAddressId(): string | undefined {
+  if (userStore.profile !== null) {
+    const addresses = userStore.profile.addresses;
+    return addresses.at(-1)?.id;
+  }
+}
+async function updateDataAddress(): Promise<void> {
+  const updateActions = createActionsChangeAddress(newAddress, userStore.profile!);
+  await updateUserAddressData(userStore, authStore, updateActions);
 }
 </script>
 <template>
@@ -84,7 +130,12 @@ async function updateAddress(): Promise<void> {
       <label class="chkBoxText">{{ SetAddress.DefaultBilling }}</label>
       <input type="checkbox" class="chkBox" v-model="newAddress.defaultBilling" />
     </div>
-    <button class="button" @click.prevent="updateAddress">{{ textComponent.saveButton }}</button>
+    <div>
+      <button class="button" @click.prevent="updateAddress" :disabled="isButtonDisabled()">
+        {{ textComponent.saveButton }}
+      </button>
+      <button class="button" @click.prevent="close">{{ textComponent.cancelButton }}</button>
+    </div>
   </form>
 </template>
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, shallowRef } from 'vue';
 import { useAuthStore } from '../../stores/auth';
 import { useUserStore } from '../../stores/user';
 import router from '../../router/router';
@@ -8,6 +8,8 @@ import UserView from '../../components/layout/user-view.vue';
 import UserEdit from '../../components/layout/user-edit.vue';
 import UserAddressView from '../../components/layout/user-address-view.vue';
 import ChangePassword from '../../components/layout/change-password.vue';
+import editAddress from '../../components/layout/edit-address.vue';
+import Modal from '../../components/layout/modal.vue';
 
 const enum textPage {
   title = 'User profile',
@@ -17,6 +19,7 @@ const enum textPage {
   defaultBilling = 'Default Billing Address',
   editButton = 'Edit',
   deleteButton = 'Delete',
+  addButton = 'Add',
   errorLoading = 'Error loading user data',
   password = 'Change password',
 }
@@ -28,6 +31,18 @@ let isEditPersonal = ref(false);
 let isEditAddress = ref(false);
 let isEditPassword = ref(false);
 let errorPage = ref<string | null>(null);
+//
+const startAddress = {
+  country: '',
+  city: '',
+  streetName: '',
+  postalCode: '',
+  defaultShipping: false,
+  defaultBilling: false,
+};
+const isModalOpen = ref(false);
+const modalComponent = shallowRef();
+const modalProps = ref(startAddress);
 watch(
   () => authStore.isAuthenticated,
   isAuth => {
@@ -52,13 +67,14 @@ onMounted(async () => {
 const toggleEditPersonal = (): void => {
   isEditPersonal.value = !isEditPersonal.value;
 };
-/*
-const toggleEditAddress = (): void => {
-  isEditAddress.value = !isEditAddress.value;
-};*/
+
 const toggleEditPassword = (): void => {
   isEditPassword.value = !isEditPassword.value;
 };
+function addAddress() {
+  modalComponent.value = editAddress;
+  isModalOpen.value = true;
+}
 </script>
 
 <template>
@@ -90,12 +106,14 @@ const toggleEditPassword = (): void => {
     <section class="profile_section">
       <div class="section-header">
         <h3 class="title-small">{{ textPage.sectionAddresses }}</h3>
+        <button class="button" @click="addAddress">{{ textPage.addButton }}</button>
       </div>
       <div v-if="userStore.profile">
         <UserAddressView v-if="!isEditAddress" :profile="userStore.profile" />
       </div>
     </section>
   </div>
+  <Modal v-model="isModalOpen" :component="modalComponent" :componentProps="modalProps ?? {}" />
 </template>
 <style lang="scss" scoped>
 @use '../../assets/styles/hero.scss' as *;
