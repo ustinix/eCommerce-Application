@@ -1,7 +1,7 @@
 import type { ProductProjectionPagedSearchResponse } from '@commercetools/platform-sdk';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { ClientBuilder } from '@commercetools/sdk-client-v2';
-import type { Product } from '@commercetools/platform-sdk';
+import type { Product, ProductData } from '@commercetools/platform-sdk';
 
 const projectKey = 'rss-ecom';
 
@@ -93,8 +93,10 @@ export default {
     }
   },
 };
-export async function getProductById(id: string): Promise<Product> {
+export async function getProductById(id: string): Promise<ProductData> {
   const apiRoot = createApiBuilderFromCtpClient(client).withProjectKey({ projectKey });
   const response = await apiRoot.products().withId({ ID: id }).get().execute();
-  return response.body;
+  const product: Product = response.body;
+  const currentData: ProductData = product.masterData.current;
+  return currentData;
 }
