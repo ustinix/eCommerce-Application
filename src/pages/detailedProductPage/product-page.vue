@@ -5,6 +5,7 @@ import { getProductById } from '../../services/product-service';
 import type { ProductData, Image } from '@commercetools/platform-sdk';
 import Snackbar from '../../components/layout/snack-bar.vue';
 import { useSnackbarStore } from '../../stores/snackbar';
+import CategoryButtons from '../../components/layout/category-buttons.vue';
 
 const snackbarStore = useSnackbarStore();
 const errorMessage = 'Failed to fetch product';
@@ -40,14 +41,19 @@ function getImages(): Image[] {
   }
   return images;
 }
-const  showArrows= () :boolean => images.value.length > 1;
+const showArrows = (): boolean => images.value.length > 1;
+
+const currentCategory = computed(() => {
+  return productData.value?.categories?.[0]?.id || null;
+});
 </script>
 <template>
   <v-container class="py-6" v-if="productData">
-    <v-row justify="start">
+    <v-row class="justify-center align-center ga-16">
       <v-btn to="/catalog" color="primary" variant="flat" prepend-icon="mdi-arrow-left">
         {{ backButtonText }}
       </v-btn>
+      <CategoryButtons with-routing :current-category="currentCategory" />
     </v-row>
 
     <v-row justify="center">
