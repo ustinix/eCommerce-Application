@@ -16,7 +16,6 @@ let product = ref<ProductView | null>(null);
 onMounted(async () => {
   try {
     const productData = await getProductById(id);
-    console.log(productData);
     product.value = mapProductDataToProductView(productData);
   } catch {
     snackbarStore.error(errorMessage);
