@@ -185,7 +185,9 @@ const totalPages = computed(() => Math.ceil(totalProducts.value / itemsPerPage.v
             lg="4"
             xl="3"
           >
-            <ProductCard :product="product" @add-to-cart="addToCart" />
+            <RouterLink :to="'/product/' + product.id">
+              <ProductCard :product="product" />
+            </RouterLink>
           </v-col>
         </v-row>
       </v-container>
