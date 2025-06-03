@@ -1,49 +1,32 @@
-<!-- eslint-disable prettier/prettier -->
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref } from 'vue';
 import { getProductById } from '../../services/product-service';
-import type { ProductData, Image } from '@commercetools/platform-sdk';
 import Snackbar from '../../components/layout/snack-bar.vue';
 import { useSnackbarStore } from '../../stores/snackbar';
+import { formatPrice } from '../../utils/format-price';
+import type { ProductView } from '../../types/product';
+import { mapProductDataToProductView } from '../../utils/map-product';
 
 const snackbarStore = useSnackbarStore();
 const errorMessage = 'Failed to fetch product';
 const backButtonText = 'Back to catalog';
 const { id } = defineProps<{ id: string }>();
-let productData = ref<ProductData>();
-
-const placeholderImage = {
-  url: 'http://dummyimage.com/400x400/99cccc.gif&text=the+image+disappeared!',
-  dimensions: {
-    w: 400,
-    h: 400,
-  },
-};
+let product = ref<ProductView | null>(null);
 
 onMounted(async () => {
   try {
-    productData.value = await getProductById(id);
-    console.log(' productData.value', productData.value);
+    const productData = await getProductById(id);
+    console.log(productData);
+    product.value = mapProductDataToProductView(productData);
   } catch {
     snackbarStore.error(errorMessage);
   }
 });
-const images = computed(() => getImages());
-function getImages(): Image[] {
-  const images =
-    productData.value && productData.value.masterVariant && productData.value.masterVariant.images
-      ? productData.value.masterVariant.images
-      : [];
 
-  if (images.length === 0) {
-    images.push(placeholderImage);
-  }
-  return images;
-}
-const  showArrows= () :boolean => images.value.length > 1;
+const showArrows = (): boolean => (product.value ? product.value?.images.length > 1 : false);
 </script>
 <template>
-  <v-container class="py-6" v-if="productData">
+  <v-container class="py-6" v-if="product">
     <v-row justify="start">
       <v-btn to="/catalog" color="primary" variant="flat" prepend-icon="mdi-arrow-left">
         {{ backButtonText }}
@@ -60,7 +43,7 @@ const  showArrows= () :boolean => images.value.length > 1;
             cycle
             class="mb-6 rounded-lg"
           >
-            <v-carousel-item v-for="(img, i) in images" :key="i">
+            <v-carousel-item v-for="(img, i) in product.images" :key="i">
               <v-img
                 :src="img.url"
                 :style="{ objectFit: 'contain' }"
@@ -71,11 +54,19 @@ const  showArrows= () :boolean => images.value.length > 1;
             </v-carousel-item>
           </v-carousel>
           <h1 class="text-h4 font-weight-bold mb-4">
-            {{ productData.name['en-US'] }}
+            {{ product.name }}
           </h1>
 
-          <div class="text-body-1" v-if="productData.description">
-            {{ productData.description['en-US'] }}
+          <div class="text-body-1" v-if="product.description">
+            {{ product.description }}
+          </div>
+          <div class="price-container mt-2">
+            <span class="original-price" v-if="product.price !== null">{{
+              formatPrice(product.price)
+            }}</span>
+            <span class="discounted-price" v-if="product.priceDiscounted !== null">{{
+              formatPrice(product.priceDiscounted)
+            }}</span>
           </div>
         </v-card>
       </v-col>
@@ -84,3 +75,24 @@ const  showArrows= () :boolean => images.value.length > 1;
 
   <Snackbar />
 </template>
+<style lang="scss" scoped>
+@use '../../assets/styles/variables.scss' as v;
+.price-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: v.$color-grey;
+  font-size: 1rem;
+}
+
+.discounted-price {
+  color: v.$color-red;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+</style>
