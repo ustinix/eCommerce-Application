@@ -192,7 +192,9 @@ const addToCart = (item: { productId: string; size: string }): void => {
             lg="4"
             xl="3"
           >
-            <ProductCard :product="product" @add-to-cart="addToCart" />
+            <RouterLink :to="'/product/' + product.id">
+              <ProductCard :product="product" @add-to-cart="addToCart" />
+            </RouterLink>
           </v-col>
         </v-row>
       </v-container>
