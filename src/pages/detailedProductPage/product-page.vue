@@ -1,3 +1,4 @@
+<!-- eslint-disable prettier/prettier -->
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue';
 import { getProductById } from '../../services/product-service';
@@ -7,6 +8,7 @@ import { useSnackbarStore } from '../../stores/snackbar';
 
 const snackbarStore = useSnackbarStore();
 const errorMessage = 'Failed to fetch product';
+const backButtonText = 'Back to catalog';
 const { id } = defineProps<{ id: string }>();
 let productData = ref<ProductData>();
 
@@ -38,15 +40,22 @@ function getImages(): Image[] {
   }
   return images;
 }
+const  showArrows= () :boolean => images.value.length > 1;
 </script>
 <template>
   <v-container class="py-6" v-if="productData">
+    <v-row justify="start">
+      <v-btn to="/catalog" color="primary" variant="flat" prepend-icon="mdi-arrow-left">
+        {{ backButtonText }}
+      </v-btn>
+    </v-row>
+
     <v-row justify="center">
       <v-col cols="12" md="10" lg="8">
         <v-card elevation="2" class="pa-4 rounded-xl">
           <v-carousel
             hide-delimiter-background
-            show-arrows
+            :show-arrows="showArrows()"
             height="400"
             cycle
             class="mb-6 rounded-lg"

@@ -109,10 +109,6 @@ const handlePageChange = (page: number): void => {
 };
 
 const totalPages = computed(() => Math.ceil(totalProducts.value / itemsPerPage.value));
-
-const addToCart = (item: { productId: string; size: string }): void => {
-  console.log('Добавление в корзину:', item);
-};
 </script>
 <template>
   <div class="catalog-page">
@@ -193,7 +189,7 @@ const addToCart = (item: { productId: string; size: string }): void => {
             xl="3"
           >
             <RouterLink :to="'/product/' + product.id">
-              <ProductCard :product="product" @add-to-cart="addToCart" />
+              <ProductCard :product="product" />
             </RouterLink>
           </v-col>
         </v-row>
