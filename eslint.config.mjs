@@ -68,15 +68,15 @@ export default tseslint.config(
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
-  ...vue.configs['flat/recommended'],
-  ...vuetify.configs['flat/recommended'],
+  ...tseslint.configs.stylistic,
+  ...vue.configs['flat/base'],
+  ...vuetify.configs['flat/base'],
   eslintPluginUnicorn.configs.recommended,
   eslintPluginPrettierRecommended,
 
   {
     files: ['**/*.vue'],
     languageOptions: {
-      sourceType: 'module',
       parser: vueParser,
       parserOptions: {
         parser: tseslint.parser,
