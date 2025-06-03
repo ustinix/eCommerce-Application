@@ -57,11 +57,8 @@ const loadProducts = async (offset = 0): Promise<void> => {
     );
     products.value = response.results;
     totalProducts.value = response.total || 0;
-
-    console.log('Полученные товары:', products.value);
   } catch (error_) {
     error.value = error_ instanceof Error ? error_.message : 'Неизвестная ошибка';
-    console.error('Ошибка загрузки:', error_);
   } finally {
     isLoading.value = false;
   }
@@ -109,10 +106,6 @@ const handlePageChange = (page: number): void => {
 };
 
 const totalPages = computed(() => Math.ceil(totalProducts.value / itemsPerPage.value));
-
-const addToCart = (item: { productId: string; size: string }): void => {
-  console.log('Добавление в корзину:', item);
-};
 </script>
 <template>
   <div class="catalog-page">

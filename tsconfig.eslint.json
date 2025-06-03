@@ -1,18 +1,11 @@
 {
   "extends": "./tsconfig.app.json",
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "src/**/*.js",
-    "src/**/*.jsx",
-    "src/**/*.d.ts",
-    "src/**/*.mjs",
-    "src/**/*.cjs",
-    "tests/*.spec.ts"
-  ],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.vue", "**/*.d.ts"],
   "exclude": ["node_modules", "dist", "coverage"],
   "compilerOptions": {
-    "types": ["vue"]
+    "types": ["vue"],
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true
   }
 }
