@@ -6,4 +6,5 @@ export type ProductView = {
   price: number | null;
   priceDiscounted: number | null;
   images: Image[];
+  categories?: Array<{ id: string }>;
 };

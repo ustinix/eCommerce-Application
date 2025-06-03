@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { getProductById } from '../../services/product-service';
 import Snackbar from '../../components/layout/snack-bar.vue';
 import { useSnackbarStore } from '../../stores/snackbar';
@@ -23,25 +23,14 @@ onMounted(async () => {
   }
 });
 
-
 const showArrows = (): boolean => (product.value ? product.value?.images.length > 1 : false);
-</script>
-<template>
-  <v-container class="py-6" v-if="product">
-    <v-row justify="start">
-  if (images.length === 0) {
-    images.push(placeholderImage);
-  }
-  return images;
-}
-const showArrows = (): boolean => images.value.length > 1;
 
 const currentCategory = computed(() => {
-  return productData.value?.categories?.[0]?.id || null;
+  return product.value?.categories?.[0]?.id || null;
 });
 </script>
 <template>
-  <v-container class="py-6" v-if="productData">
+  <v-container class="py-6" v-if="product">
     <v-row class="justify-center align-center ga-16">
       <v-btn to="/catalog" color="primary" variant="flat" prepend-icon="mdi-arrow-left">
         {{ backButtonText }}
