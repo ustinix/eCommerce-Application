@@ -102,6 +102,7 @@ const formatPrice = (price: number): string => {
 
 .product-card:hover {
   transform: translateY(-5px);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
 }
 
 .v-card-title {
