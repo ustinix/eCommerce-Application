@@ -6,6 +6,7 @@ import { useSnackbarStore } from '../../stores/snackbar';
 import { formatPrice } from '../../utils/format-price';
 import type { ProductView } from '../../types/product';
 import { mapProductDataToProductView } from '../../utils/map-product';
+import CategoryButtons from '../../components/layout/category-buttons.vue';
 
 const snackbarStore = useSnackbarStore();
 const errorMessage = 'Failed to fetch product';
@@ -22,14 +23,30 @@ onMounted(async () => {
   }
 });
 
+
 const showArrows = (): boolean => (product.value ? product.value?.images.length > 1 : false);
 </script>
 <template>
   <v-container class="py-6" v-if="product">
     <v-row justify="start">
+  if (images.length === 0) {
+    images.push(placeholderImage);
+  }
+  return images;
+}
+const showArrows = (): boolean => images.value.length > 1;
+
+const currentCategory = computed(() => {
+  return productData.value?.categories?.[0]?.id || null;
+});
+</script>
+<template>
+  <v-container class="py-6" v-if="productData">
+    <v-row class="justify-center align-center ga-16">
       <v-btn to="/catalog" color="primary" variant="flat" prepend-icon="mdi-arrow-left">
         {{ backButtonText }}
       </v-btn>
+      <CategoryButtons with-routing :current-category="currentCategory" />
     </v-row>
 
     <v-row justify="center">

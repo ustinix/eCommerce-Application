@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import productApi from '../../services/product-service';
 import type { ProductProjection } from '@commercetools/platform-sdk';
 import ProductCard from '../../components/product/product-card.vue';
 import { BreakpointsItemsPerPage, DefaultItemsPerPage } from '../../assets/constants';
 import { useDisplay } from 'vuetify';
 import { debounceReference } from '../../utils/debounce';
+import CategoryButtons from '../../components/layout/category-buttons.vue';
+import { useRoute } from 'vue-router';
 import {
   categoriesId,
   sortOptions,
@@ -13,6 +15,7 @@ import {
   availableSportTypes,
 } from '../../assets/constants';
 
+const route = useRoute();
 const products = ref<ProductProjection[]>([]);
 const isLoading = ref(true);
 const error = ref<string | null>(null);
@@ -57,11 +60,8 @@ const loadProducts = async (offset = 0): Promise<void> => {
     );
     products.value = response.results;
     totalProducts.value = response.total || 0;
-
-    console.log('Полученные товары:', products.value);
   } catch (error_) {
     error.value = error_ instanceof Error ? error_.message : 'Неизвестная ошибка';
-    console.error('Ошибка загрузки:', error_);
   } finally {
     isLoading.value = false;
   }
@@ -109,6 +109,17 @@ const handlePageChange = (page: number): void => {
 };
 
 const totalPages = computed(() => Math.ceil(totalProducts.value / itemsPerPage.value));
+
+const handleCategoryChange = (): void => {
+  loadProducts(0);
+};
+
+onMounted(() => {
+  if (route.query.category) {
+    categories.value = [route.query.category as string];
+    loadProducts(0);
+  }
+});
 </script>
 <template>
   <div class="catalog-page">
@@ -127,6 +138,7 @@ const totalPages = computed(() => Math.ceil(totalProducts.value / itemsPerPage.v
           style="max-width: 300px"
           variant="outlined"
         ></v-select>
+        <CategoryButtons v-model="categories" @change="handleCategoryChange" />
         <v-text-field
           v-model="search"
           label="Search"
@@ -224,6 +236,15 @@ const totalPages = computed(() => Math.ceil(totalProducts.value / itemsPerPage.v
 
       .v-field {
         height: 50px;
+      }
+    }
+    .category-buttons {
+      display: flex;
+      gap: 20px;
+      margin: 0 20px;
+
+      @media (max-width: 600px) {
+        gap: 10px;
       }
     }
   }
