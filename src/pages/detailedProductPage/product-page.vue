@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { getProductById } from '../../services/product-service';
 import Snackbar from '../../components/layout/snack-bar.vue';
 import { useSnackbarStore } from '../../stores/snackbar';
 import { formatPrice } from '../../utils/format-price';
 import type { ProductView } from '../../types/product';
 import { mapProductDataToProductView } from '../../utils/map-product';
+import CategoryButtons from '../../components/layout/category-buttons.vue';
 
 const snackbarStore = useSnackbarStore();
 const errorMessage = 'Failed to fetch product';
@@ -23,13 +24,18 @@ onMounted(async () => {
 });
 
 const showArrows = (): boolean => (product.value ? product.value?.images.length > 1 : false);
+
+const currentCategory = computed(() => {
+  return product.value?.categories?.[0]?.id || null;
+});
 </script>
 <template>
   <v-container class="py-6" v-if="product">
-    <v-row justify="start">
+    <v-row class="justify-center align-center ga-16">
       <v-btn to="/catalog" color="primary" variant="flat" prepend-icon="mdi-arrow-left">
         {{ backButtonText }}
       </v-btn>
+      <CategoryButtons with-routing :current-category="currentCategory" />
     </v-row>
 
     <v-row justify="center">

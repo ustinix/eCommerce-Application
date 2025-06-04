@@ -26,6 +26,7 @@ export function mapProductDataToProductView(productData: ProductData): ProductVi
     price: productData.masterVariant.prices?.[0]?.value?.centAmount || null,
     priceDiscounted: productData.masterVariant.prices?.[0]?.discounted?.value.centAmount || null,
     images: getImages(productData),
+    categories: productData.categories,
   };
 }
 function getImages(productData: ProductData): Image[] {

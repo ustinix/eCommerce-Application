@@ -6,8 +6,6 @@
     "**/*.config.*",
     "**/*.cjs",
     "**/*.mjs",
-    "**/types/**",
-    "eCommerce-Application/src/types/**",
     "node_modules",
     "**/commitlint.config.*",
     "**/eslint*",
