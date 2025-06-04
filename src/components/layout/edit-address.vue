@@ -27,15 +27,15 @@ const startAddress = {
 };
 const newAddress = reactive(startAddress);
 
-const enum textComponent {
-  labelsCountry = 'Country',
-  labelCity = 'City',
-  labelStreet = 'Street',
-  saveButton = 'Save',
-  cancelButton = 'Cancel',
-  errorAddress = 'Failed to update address. Try again later',
-  successAddress = 'Address updated successfully',
-}
+const textComponent = {
+  labelsCountry: 'Country',
+  labelCity: 'City',
+  labelStreet: 'Street',
+  saveButton: 'Save',
+  cancelButton: 'Cancel',
+  errorAddress: 'Failed to update address. Try again later',
+  successAddress: 'Address updated successfully',
+};
 const disabled = defineModel<boolean>('disabled', { default: false });
 const { validateCode } = usePostalCodeValidation(disabled);
 
@@ -135,5 +135,8 @@ async function updateDataAddress(): Promise<void> {
 .buttons {
   display: flex;
   gap: 10px;
+}
+.chkBox {
+  padding: 3px;
 }
 </style>

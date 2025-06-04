@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, shallowRef } from 'vue';
 import { getProductById } from '../../services/product-service';
 import Snackbar from '../../components/layout/snack-bar.vue';
 import { useSnackbarStore } from '../../stores/snackbar';
@@ -7,13 +7,18 @@ import { formatPrice } from '../../utils/format-price';
 import type { ProductView } from '../../types/product';
 import { mapProductDataToProductView } from '../../utils/map-product';
 import CategoryButtons from '../../components/layout/category-buttons.vue';
+import Carousel from '../../components/layout/carousel.vue';
+import Modal from '../../components/layout/modal.vue';
 
 const snackbarStore = useSnackbarStore();
 const errorMessage = 'Failed to fetch product';
 const backButtonText = 'Back to catalog';
 const { id } = defineProps<{ id: string }>();
 let product = ref<ProductView | null>(null);
-
+const isModalOpen = ref(false);
+const modalComponent = shallowRef();
+const modalProps = ref();
+const widthModal = 1200;
 onMounted(async () => {
   try {
     const productData = await getProductById(id);
@@ -22,8 +27,14 @@ onMounted(async () => {
     snackbarStore.error(errorMessage);
   }
 });
-
-const showArrows = (): boolean => (product.value ? product.value?.images.length > 1 : false);
+function openModal(): void {
+  if (product.value !== null) {
+    console.log('click');
+    modalComponent.value = Carousel;
+    modalProps.value = { images: product.value.images };
+    isModalOpen.value = true;
+  }
+}
 
 const currentCategory = computed(() => {
   return product.value?.categories?.[0]?.id || null;
@@ -38,26 +49,11 @@ const currentCategory = computed(() => {
       <CategoryButtons with-routing :current-category="currentCategory" />
     </v-row>
 
-    <v-row justify="center">
+    <v-row justify="center" class="gap-4">
       <v-col cols="12" md="10" lg="8">
         <v-card elevation="2" class="pa-4 rounded-xl">
-          <v-carousel
-            hide-delimiter-background
-            :show-arrows="showArrows()"
-            height="400"
-            cycle
-            class="mb-6 rounded-lg"
-          >
-            <v-carousel-item v-for="(img, i) in product.images" :key="i">
-              <v-img
-                :src="img.url"
-                :style="{ objectFit: 'contain' }"
-                width="100%"
-                height="100%"
-                class="rounded-lg"
-              />
-            </v-carousel-item>
-          </v-carousel>
+          <Carousel :images="product.images" :onClick="openModal" />
+
           <h1 class="text-h4 font-weight-bold mb-4">
             {{ product.name }}
           </h1>
@@ -77,7 +73,12 @@ const currentCategory = computed(() => {
       </v-col>
     </v-row>
   </v-container>
-
+  <Modal
+    v-model="isModalOpen"
+    :component="modalComponent"
+    :componentProps="modalProps ?? {}"
+    :width="widthModal"
+  />
   <Snackbar />
 </template>
 <style lang="scss" scoped>

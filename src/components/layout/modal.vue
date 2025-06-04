@@ -5,6 +5,7 @@ const props = defineProps<{
   modelValue: boolean;
   component: DefineComponent<T>;
   componentProps: T;
+  width?: number;
 }>();
 
 const emit = defineEmits<(event: 'update:modelValue', value: boolean) => void>();
@@ -17,7 +18,7 @@ function closeModal(): void {
   <v-dialog
     :model-value="props.modelValue"
     @update:modelValue="emit('update:modelValue', $event)"
-    max-width="600"
+    :max-width="props.width || '600'"
   >
     <v-card>
       <v-card-text>
@@ -29,3 +30,8 @@ function closeModal(): void {
     </v-card>
   </v-dialog>
 </template>
+<style lang="scss" scoped>
+.form-modal {
+  max-width: 600px;
+}
+</style>
