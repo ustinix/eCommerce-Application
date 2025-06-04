@@ -125,7 +125,7 @@ export const sortOptions = [
 export const availableBrands = ['New Balance', 'Reebok', 'Adidas', 'Puma', 'Nike'];
 export const availableSportTypes = ['football', 'fitness', 'basketball', 'casual', 'running'];
 
-export const DefaultItemsPerPage = 12;
+export const DefaultItemsPerPage = 8;
 
 export const enum TextEditComponent {
   saveButton = 'Save',
