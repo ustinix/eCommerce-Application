@@ -1,6 +1,7 @@
 import { ref } from 'vue';
 import type { UserData } from '../types/user-data';
 import { type Address } from '../types/address';
+import type { CountryCityData } from '../types/country-data';
 
 export const userData = ref<UserData>({
   firstName: '',
@@ -82,12 +83,6 @@ export enum Placeholders {
   placeholderCode = 'Postal code',
 }
 
-export type Category = {
-  name: string;
-  id: string;
-  sizes: string[];
-};
-
 export const categoriesId = [
   {
     name: 'kids',
@@ -137,13 +132,6 @@ export const enum TextEditComponent {
 export const InputStar = '*';
 export const DropSign = '▼';
 export const FooterText = 'The application is written as part of the RS School training course.';
-
-type CountryData = {
-  isoCode: string;
-  cities: string[];
-};
-
-type CountryCityData = Record<string, CountryData>;
 
 export const countryCityList: CountryCityData = {
   Russia: {
