@@ -36,8 +36,6 @@ function openModal(): void {
   }
 }
 
-// const showArrows = (): boolean => (product.value ? product.value?.images.length > 1 : false);
-
 const currentCategory = computed(() => {
   return product.value?.categories?.[0]?.id || null;
 });
