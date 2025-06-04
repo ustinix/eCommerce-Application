@@ -135,7 +135,7 @@ onMounted(() => {
           item-value="value"
           label="Sort by ..."
           density="comfortable"
-          style="max-width: 300px"
+          style="min-width: 300px"
           variant="outlined"
         ></v-select>
         <CategoryButtons v-model="categories" @change="handleCategoryChange" />
@@ -146,11 +146,11 @@ onMounted(() => {
           variant="outlined"
           hide-details
           single-line
-          style="max-width: 300px"
+          style="min-width: 300px"
         ></v-text-field>
       </div>
 
-      <v-container class="pt-5" style="display: flex">
+      <v-container class="main-container">
         <div class="filters-container">
           <div class="filter-section">
             <h4>Category</h4>
@@ -190,21 +190,23 @@ onMounted(() => {
 
           <v-btn @click="resetFilters" color="primary" class="reset-btn"> Reset Filters </v-btn>
         </div>
-        <v-row class="d-flex justify-space-evenly ga-3">
-          <v-col
-            v-for="product in products"
-            :key="product.id"
-            cols="12"
-            sm="6"
-            md="6"
-            lg="4"
-            xl="3"
-          >
-            <RouterLink :to="'/product/' + product.id">
-              <ProductCard :product="product" />
-            </RouterLink>
-          </v-col>
-        </v-row>
+        <div class="cards-container">
+          <v-row class="card-row">
+            <v-col
+              v-for="product in products"
+              :key="product.id"
+              cols="12"
+              sm="6"
+              md="6"
+              lg="4"
+              xl="3"
+            >
+              <RouterLink :to="'/product/' + product.id">
+                <ProductCard :product="product" />
+              </RouterLink>
+            </v-col>
+          </v-row>
+        </div>
       </v-container>
       <v-container class="d-flex justify-center" v-if="totalProducts > itemsPerPage">
         <v-pagination
@@ -228,15 +230,11 @@ onMounted(() => {
     color: v.$color-red;
   }
   .tools {
-    padding-top: 50px;
+    padding: 50px 0;
     display: flex;
     justify-content: space-between;
     :deep(.v-text-field) {
       height: 50px;
-
-      .v-field {
-        height: 50px;
-      }
     }
     .category-buttons {
       display: flex;
@@ -248,16 +246,16 @@ onMounted(() => {
       }
     }
   }
-  .v-container {
+  .main-container {
+    padding: 20px 0;
     display: flex;
-    gap: 20px;
-    padding: 0;
+    justify-content: space-between !important;
+    gap: 35px;
+
     .filters-container {
-      width: 300px;
-      flex-shrink: 0;
+      min-width: 300px;
       background: v.$color-lightgray;
       border-radius: 8px;
-      position: sticky;
       padding-top: 20px;
       align-self: flex-start;
       max-height: calc(100vh - 40px);
@@ -273,9 +271,6 @@ onMounted(() => {
         .v-input {
           height: 36.2px;
         }
-        .v-checkbox {
-          margin: 0px;
-        }
       }
 
       .reset-btn {
@@ -284,25 +279,23 @@ onMounted(() => {
         color: v.$color-red;
       }
     }
-
-    .content-area {
-      flex: 1;
-    }
   }
+}
+.v-container {
+  max-width: none !important;
 }
 
 @media (max-width: 960px) {
   .tools {
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     gap: 20px;
   }
-  .v-container {
+  .main-container {
     flex-direction: column;
-
     .filters-container {
       width: 100%;
-      position: static;
-      margin-bottom: 20px;
     }
   }
 }

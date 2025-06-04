@@ -110,9 +110,9 @@ export const BreakpointsItemsPerPage = {
   xs: 4,
   sm: 6,
   md: 6,
-  lg: 8,
-  xl: 9,
-  xxl: 9,
+  lg: 6,
+  xl: 8,
+  xxl: 8,
 };
 
 export const sortOptions = [
