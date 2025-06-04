@@ -8,15 +8,6 @@ const placeholderImage = {
     h: 400,
   },
 };
-/*
-export type ProductView = {
-  name: string;
-  description: string;
-  price: number | null;
-  priceDiscounted: number | null;
-  images: Image[];
-};
-*/
 
 export function mapProductDataToProductView(productData: ProductData): ProductView {
   const prefix = 'en-US';

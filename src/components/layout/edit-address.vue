@@ -136,4 +136,7 @@ async function updateDataAddress(): Promise<void> {
   display: flex;
   gap: 10px;
 }
+.chkBox {
+  padding: 3px;
+}
 </style>

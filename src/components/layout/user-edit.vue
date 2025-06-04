@@ -27,12 +27,12 @@ const newProfile = reactive({
   dateOfBirth: profile.dateOfBirth,
 });
 
-const enum textComponent {
-  saveButton = 'Save',
-  cancelButton = 'Cancel',
-  updateSuccessMessage = 'Data updated successfully',
-  updateErrorMessage = 'An error occurred while updating',
-}
+const textComponent = {
+  saveButton: 'Save',
+  cancelButton: 'Cancel',
+  updateSuccessMessage: 'Data updated successfully',
+  updateErrorMessage: 'An error occurred while updating',
+};
 const fieldErrors = reactive({
   firstName: '',
   lastName: '',
