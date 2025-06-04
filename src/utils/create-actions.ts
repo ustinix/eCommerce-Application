@@ -106,7 +106,7 @@ export function createActionsChangeAddress(
     address: updatedAddress,
   });
 
-  if (address.defaultShipping && userProfile.defaultBillingAddressId !== address.id) {
+  if (address.defaultShipping && userProfile.defaultShippingAddressId !== address.id) {
     actions.push({
       action: actionsAddress.setDefaultShippingAddress,
       addressId: address.id,
