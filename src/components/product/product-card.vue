@@ -34,7 +34,7 @@ const formatPrice = (price: number): string => {
 };
 </script>
 <template>
-  <v-card class="product-card" width="296">
+  <v-card class="product-card">
     <v-img
       :src="product.masterVariant.images?.[0]?.url || 'https://via.placeholder.com/296x400'"
       :alt="product.name?.['en-US']"
@@ -77,6 +77,9 @@ const formatPrice = (price: number): string => {
 <style lang="scss" scoped>
 @use '../../assets/styles/variables.scss' as v;
 .product-card {
+  width: 100% !important;
+  max-width: 296px;
+  margin: 0 auto;
   transition: transform 0.3s ease;
   height: 100%;
   display: flex;
