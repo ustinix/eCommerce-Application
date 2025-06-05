@@ -32,15 +32,16 @@
 <script setup lang="ts">
 import rsIcon from '../../assets/images/rs_school_js.svg';
 import { AppNames } from '../../enums/app-names';
-import { FooterText } from '../../assets/constants';
+import { FooterText } from '../../constants/constants';
 import { getDate } from '../../utils/get-date';
 import type { SocialLink } from '../../types/social-links';
 import type { RS } from '../../types/social-links';
-enum SocialLinksTitles {
-  Ksenia = 'Ksenia GitHub',
-  Olga = 'Olga GitHub',
-  RS = 'RS School',
-}
+
+const SocialLinksTitles = {
+  Ksenia: 'Ksenia GitHub',
+  Olga: 'Olga GitHub',
+  RS: 'RS School',
+};
 const socialLinks: SocialLink[] = [
   {
     icon: 'mdi-github',

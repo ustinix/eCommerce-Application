@@ -7,7 +7,12 @@ import { useAuthStore } from '../../stores/auth';
 import { createCustomer } from '../../services/register-service';
 import type { CustomerSignInResult } from '@commercetools/platform-sdk';
 import { type Address } from '../../types/address';
-import { countryCityList, userData, shippingAddress, billingAddress } from '../../assets/constants';
+import {
+  countryCityList,
+  userData,
+  shippingAddress,
+  billingAddress,
+} from '../../constants/constants';
 import { Errors } from '../../enums/errors';
 import { validateName } from '../../utils/validate-name';
 import { validateSurame } from '../../utils/validate-surname';

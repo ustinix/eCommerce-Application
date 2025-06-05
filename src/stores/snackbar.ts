@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { colorSnackbar } from '../assets/constants';
+import { colorSnackbar } from '../enums/color-snackbar';
 
 export type SnackbarMessage = {
   text: string;

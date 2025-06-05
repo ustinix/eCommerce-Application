@@ -12,18 +12,18 @@ import editAddress from '../../components/layout/edit-address.vue';
 import Modal from '../../components/layout/modal.vue';
 import Snackbar from '../../components/layout/snack-bar.vue';
 
-const enum textPage {
-  title = 'User profile',
-  sectionPersonal = 'Personal information',
-  sectionAddresses = 'Addresses',
-  defaultShipping = 'Default Shipping Address',
-  defaultBilling = 'Default Billing Address',
-  editButton = 'Edit',
-  deleteButton = 'Delete',
-  addButton = 'Add',
-  errorLoading = 'Error loading user data',
-  password = 'Change password',
-}
+const textPage = {
+  title: 'User profile',
+  sectionPersonal: 'Personal information',
+  sectionAddresses: 'Addresses',
+  defaultShipping: 'Default Shipping Address',
+  defaultBilling: 'Default Billing Address',
+  editButton: 'Edit',
+  deleteButton: 'Delete',
+  addButton: 'Add',
+  errorLoading: 'Error loading user data',
+  password: 'Change password',
+};
 
 const authStore = useAuthStore();
 const userStore = useUserStore();

@@ -13,14 +13,14 @@ import { crateActionsDeleteAddress } from '../../utils/create-actions';
 const snackbarStore = useSnackbarStore();
 const userStore = useUserStore();
 const authStore = useAuthStore();
-const enum componentPage {
-  defaultShipping = 'Default Shipping Address',
-  defaultBilling = 'Default Billing Address',
-  deleteButton = 'Delete',
-  editButton = 'Edit',
-  errorAddressDelete = 'Failed to delete address. Try again later.',
-  successAddressDelete = 'Address successfully deleted',
-}
+const textComponent = {
+  defaultShipping: 'Default Shipping Address',
+  defaultBilling: 'Default Billing Address',
+  deleteButton: 'Delete',
+  editButton: 'Edit',
+  errorAddressDelete: 'Failed to delete address. Try again later.',
+  successAddressDelete: 'Address successfully deleted',
+};
 
 const { profile } = defineProps<{
   profile: UserProfile;
@@ -47,9 +47,9 @@ async function deleteAddress(address: AddressWithId): Promise<void> {
   const actions = crateActionsDeleteAddress(address, userStore.profile);
   try {
     await updateUserAddressData(userStore, authStore, actions);
-    snackbarStore.success(componentPage.successAddressDelete);
+    snackbarStore.success(textComponent.successAddressDelete);
   } catch {
-    snackbarStore.success(componentPage.errorAddressDelete);
+    snackbarStore.success(textComponent.errorAddressDelete);
   }
 }
 </script>
@@ -64,14 +64,14 @@ async function deleteAddress(address: AddressWithId): Promise<void> {
       {{ address.streetName }}, {{ address.city }}, {{ address.postalCode }},
       {{ address.country }}
     </p>
-    <p v-if="isDefaultShipping(address)" class="subtext">{{ componentPage.defaultShipping }}</p>
-    <p v-if="isDefaultBilling(address)" class="subtext">{{ componentPage.defaultBilling }}</p>
+    <p v-if="isDefaultShipping(address)" class="subtext">{{ textComponent.defaultShipping }}</p>
+    <p v-if="isDefaultBilling(address)" class="subtext">{{ textComponent.defaultBilling }}</p>
     <div class="buttons">
       <button class="button" @click="openModal(address)">
-        {{ componentPage.editButton }}
+        {{ textComponent.editButton }}
       </button>
       <button class="button" @click="deleteAddress(address)">
-        {{ componentPage.deleteButton }}
+        {{ textComponent.deleteButton }}
       </button>
     </div>
     <Modal v-model="isModalOpen" :component="modalComponent" :componentProps="modalProps ?? {}" />
