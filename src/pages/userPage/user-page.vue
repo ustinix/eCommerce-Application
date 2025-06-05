@@ -54,7 +54,7 @@ watch(
 );
 
 if (!authStore.isAuthenticated) {
-  router.push('/');
+  router.push('/login');
 }
 onMounted(async () => {
   try {
