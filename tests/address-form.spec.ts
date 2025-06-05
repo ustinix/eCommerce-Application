@@ -4,7 +4,7 @@ import AddressForm from '../src/components/layout/address-form.vue';
 import { createVuetify } from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
-import { Errors } from '../src/assets/constants';
+import { Errors } from '../src/enums/errors';
 
 const vuetify = createVuetify({
   components,

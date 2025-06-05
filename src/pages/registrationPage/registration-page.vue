@@ -7,20 +7,17 @@ import { useAuthStore } from '../../stores/auth';
 import { createCustomer } from '../../services/register-service';
 import type { CustomerSignInResult } from '@commercetools/platform-sdk';
 import { type Address } from '../../types/address';
-import {
-  countryCityList,
-  Errors,
-  userData,
-  shippingAddress,
-  billingAddress,
-} from '../../assets/constants';
+import { countryCityList, userData, shippingAddress, billingAddress } from '../../assets/constants';
+import { Errors } from '../../enums/errors';
 import { validateName } from '../../utils/validate-name';
 import { validateSurame } from '../../utils/validate-surname';
 import { usePostalCodeValidation } from '../../utils/validate-postal-code';
 import { validateDate } from '../../utils/validate-date';
 import { validateEmail } from '../../utils/validate-email';
 import { validatePassword } from '../../utils/validate-password';
-import { SetAddress, Labels, Placeholders } from '../../assets/constants';
+import { Placeholders } from '../../enums/placeholders';
+import { Labels } from '../../enums/labels';
+import { SetAddress } from '../../enums/set-address';
 
 const disabled = defineModel<boolean>('disabled', { default: false });
 const { validateCode } = usePostalCodeValidation(disabled);

@@ -4,8 +4,8 @@ import Logo from '../ui/logo.vue';
 import { useAuthStore } from '../../stores/auth';
 import { useUserStore } from '../../stores/user';
 import { createAnonymClient } from '../../services/anonym-client';
-import { AppNames } from '../../assets/constants';
-import { Pages } from '../../assets/constants';
+import { AppNames } from '../../enums/app-names';
+import { Pages } from '../../enums/pages';
 import { computed } from 'vue';
 
 const authStore = useAuthStore();

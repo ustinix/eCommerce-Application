@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Labels } from '../../assets/constants';
+import { Labels } from '../../enums/labels';
 import type { UserProfile } from '../../types/user-profile';
 
 const { profile } = defineProps<{

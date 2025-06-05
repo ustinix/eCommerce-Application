@@ -1,5 +1,5 @@
 import { ref, type Ref } from 'vue';
-import { Errors } from '../../src/assets/constants';
+import { Errors } from '../enums/errors';
 
 type PostalCodeValidation = {
   codeError: Ref<string>;
