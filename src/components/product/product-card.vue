@@ -78,7 +78,7 @@ const formatPrice = (price: number): string => {
 @use '../../assets/styles/variables.scss' as v;
 .product-card {
   width: 100% !important;
-  max-width: 296px;
+  min-width: 296px;
   margin: 0 auto;
   transition: transform 0.3s ease;
   height: 100%;
