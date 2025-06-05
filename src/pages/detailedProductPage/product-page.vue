@@ -19,6 +19,7 @@ const isModalOpen = ref(false);
 const modalComponent = shallowRef();
 const modalProps = ref();
 const widthModal = 1200;
+const buttonTextAdd = 'Add to Cart';
 onMounted(async () => {
   try {
     const productData = await getProductById(id);
@@ -39,6 +40,10 @@ function openModal(): void {
 const currentCategory = computed(() => {
   return product.value?.categories?.[0]?.id || null;
 });
+
+const addToCart = (): void => {
+  console.log('add to cart');
+};
 </script>
 <template>
   <v-container class="py-6" v-if="product">
@@ -51,7 +56,7 @@ const currentCategory = computed(() => {
 
     <v-row justify="center" class="gap-4">
       <v-col cols="12" md="10" lg="8">
-        <v-card elevation="2" class="pa-4 rounded-xl">
+        <v-card elevation="2" class="card pa-4 rounded-xl">
           <Carousel :images="product.images" :onClick="openModal" />
 
           <h1 class="text-h4 font-weight-bold mb-4">
@@ -69,6 +74,11 @@ const currentCategory = computed(() => {
               formatPrice(product.priceDiscounted)
             }}</span>
           </div>
+          <v-card-actions class="addBtn pb-4">
+            <v-btn color="primary" variant="flat" block @click="addToCart">
+              {{ buttonTextAdd }}
+            </v-btn>
+          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
@@ -100,5 +110,14 @@ const currentCategory = computed(() => {
   color: v.$color-red;
   font-weight: bold;
   font-size: 1.1rem;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.addBtn {
+  width: 50%;
+  color: v.$color-red;
 }
 </style>
