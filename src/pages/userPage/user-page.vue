@@ -130,7 +130,7 @@ function addAddress(): void {
   padding: 20px;
 }
 .profile {
-  width: 450px;
+  max-width: 450px;
   margin: 20px auto;
 }
 .profile_section {
