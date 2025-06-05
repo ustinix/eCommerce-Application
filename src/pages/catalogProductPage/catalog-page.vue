@@ -5,7 +5,6 @@ import type { ProductProjection } from '@commercetools/platform-sdk';
 import ProductCard from '../../components/product/product-card.vue';
 import { BreakpointsItemsPerPage, DefaultItemsPerPage } from '../../assets/constants';
 import { useDisplay } from 'vuetify';
-import { debounceReference } from '../../utils/debounce';
 import CategoryButtons from '../../components/layout/category-buttons.vue';
 import { useRoute } from 'vue-router';
 import {
@@ -23,7 +22,6 @@ const currentPage = ref(1);
 const itemsPerPage = ref(DefaultItemsPerPage);
 const totalProducts = ref(0);
 const search = ref<string>('');
-const debouncedSearch = debounceReference(search.value, 500);
 const display = useDisplay();
 const categories = ref<string[]>([]);
 const brands = ref<string[]>([]);
@@ -51,7 +49,7 @@ const loadProducts = async (offset = 0): Promise<void> => {
       offset,
       [sortParameter],
       'USD',
-      debouncedSearch.value,
+      search.value,
       {
         categories: categories.value,
         brands: brands.value,
@@ -74,18 +72,12 @@ const resetFilters = (): void => {
   loadProducts(0);
 };
 
-watch(search, newValue => {
-  if (searchTimeout !== undefined) {
-    globalThis.clearTimeout(searchTimeout);
-  }
+watch(search, () => {
+  globalThis.clearTimeout(searchTimeout);
   searchTimeout = globalThis.setTimeout(() => {
-    debouncedSearch.value = newValue;
-  }, 500);
-});
-
-watch(debouncedSearch, () => {
-  currentPage.value = 1;
-  loadProducts(0);
+    currentPage.value = 1;
+    loadProducts(0);
+  }, 300);
 });
 
 const updateItemsPerPage = (breakpoint: string): void => {
