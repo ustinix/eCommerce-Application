@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { isEmail } from '../utils/is-email';
-import { Errors } from '../../src/assets/constants';
+import { Errors } from '../enums/errors';
 
 const emailError = ref<string>('');
 

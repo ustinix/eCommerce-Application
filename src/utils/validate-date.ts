@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { Errors } from '../../src/assets/constants';
+import { Errors } from '../enums/errors';
 
 const dateError = ref<string>('');
 

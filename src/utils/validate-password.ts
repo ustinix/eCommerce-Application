@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { isPassword } from '../utils/is-password';
-import { Errors } from '../../src/assets/constants';
+import { Errors } from '../enums/errors';
 
 const passwordError = ref<string>('');
 

@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import rsIcon from '../../assets/images/rs_school_js.svg';
-import { AppNames } from '../../assets/constants';
+import { AppNames } from '../../enums/app-names';
 import { FooterText } from '../../assets/constants';
 import { getDate } from '../../utils/get-date';
 import type { SocialLink } from '../../types/social-links';

@@ -2,7 +2,8 @@
 import BaseInput from './base-input.vue';
 import { reactive, computed } from 'vue';
 import { validatePassword } from '../../utils/validate-password';
-import { Errors, TextEditComponent } from '../../assets/constants';
+import { TextEditComponent } from '../../enums/text-edit-component';
+import { Errors } from '../../enums/errors';
 import { useUserStore } from '../../stores/user';
 import { useAuthStore } from '../../stores/auth';
 import { useSnackbarStore } from '../../stores/snackbar';
