@@ -29,7 +29,7 @@ export const categoriesId = [
   {
     name: 'kids',
     id: '26afa04e-6808-4105-936e-17bd35349eac',
-    sizes: ['25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35'],
+    sizes: ['29', '30', '31', '32', '33', '34', '35'],
   },
   {
     name: 'men',
@@ -42,6 +42,8 @@ export const categoriesId = [
     sizes: ['36', '37', '38', '39', '40', '41'],
   },
 ];
+
+export const dollarSing = '$';
 
 export const BreakpointsItemsPerPage = {
   xs: 4,
