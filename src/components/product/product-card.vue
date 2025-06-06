@@ -46,10 +46,13 @@ const formatPrice = (price: number): string => {
     <v-card-title class="d-flex flex-column align-center px-4 pt-4 pb-2">
       <h3 class="text-h6">{{ product.name?.['en-US'] }}</h3>
       <div class="price-container mt-2">
-        <span class="original-price">{{
-          formatPrice(product.masterVariant.prices?.[0]?.value?.centAmount)
-        }}</span>
-        <span class="discounted-price">{{
+        <span
+          class="original-price"
+          :class="{ 'line-through': product.masterVariant.prices?.[0]?.discounted }"
+        >
+          {{ formatPrice(product.masterVariant.prices?.[0]?.value?.centAmount) }}</span
+        >
+        <span v-if="product.masterVariant.prices?.[0]?.discounted" class="discounted-price">{{
           formatPrice(product.masterVariant.prices?.[0]?.discounted?.value.centAmount)
         }}</span>
       </div>
@@ -91,9 +94,13 @@ const formatPrice = (price: number): string => {
     align-items: center;
   }
 
-  .original-price {
+  .line-through {
     text-decoration: line-through;
-    color: v.$color-grey;
+    opacity: 0.7;
+  }
+
+  .original-price {
+    color: v.$color-black;
     font-size: 1rem;
   }
 
