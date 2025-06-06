@@ -193,9 +193,7 @@ onMounted(() => {
               lg="4"
               xl="3"
             >
-              <RouterLink :to="'/product/' + product.id">
-                <ProductCard :product="product" />
-              </RouterLink>
+              <ProductCard :product="product" />
             </v-col>
           </v-row>
         </div>

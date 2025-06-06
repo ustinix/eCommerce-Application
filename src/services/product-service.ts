@@ -97,6 +97,7 @@ export async function getProductById(id: string): Promise<ProductData> {
   const apiRoot = createApiBuilderFromCtpClient(client).withProjectKey({ projectKey });
   const response = await apiRoot.products().withId({ ID: id }).get().execute();
   const product: Product = response.body;
+  console.log('product', response.body);
   const currentData: ProductData = product.masterData.current;
   return currentData;
 }

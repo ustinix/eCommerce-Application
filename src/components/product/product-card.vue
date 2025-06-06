@@ -27,6 +27,7 @@ const addToCart = (): void => {
     productId: props.product.id,
     size: selectedSize.value,
   });
+  console.log('add');
 };
 
 const dollarSing = '$';
@@ -36,42 +37,57 @@ const formatPrice = (price: number): string => {
 </script>
 <template>
   <v-card class="product-card">
-    <v-img
-      :src="product.masterVariant.images?.[0]?.url || 'https://via.placeholder.com/296x400'"
-      :alt="product.name?.['en-US']"
-      height="400"
-      cover
-    ></v-img>
+    <RouterLink :to="'/product/' + product.id" class="product-card_link">
+      <v-img
+        :src="product.masterVariant.images?.[0]?.url || 'https://via.placeholder.com/296x400'"
+        :alt="product.name?.['en-US']"
+        height="400"
+        cover
+      ></v-img>
 
-    <v-card-title class="d-flex flex-column align-center px-4 pt-4 pb-2">
-      <h3 class="text-h6">{{ product.name?.['en-US'] }}</h3>
-      <div class="price-container mt-2">
-        <span class="original-price">{{
-          formatPrice(product.masterVariant.prices?.[0]?.value?.centAmount)
-        }}</span>
-        <span class="discounted-price">{{
-          formatPrice(product.masterVariant.prices?.[0]?.discounted?.value.centAmount)
-        }}</span>
-      </div>
-    </v-card-title>
+      <v-card-title class="d-flex flex-column align-center px-4 pt-4 pb-2">
+        <h3 class="text-h6">{{ product.name?.['en-US'] }}</h3>
+        <div class="price-container mt-2">
+          <span class="original-price">{{
+            formatPrice(product.masterVariant.prices?.[0]?.value?.centAmount)
+          }}</span>
+          <span class="discounted-price">{{
+            formatPrice(product.masterVariant.prices?.[0]?.discounted?.value.centAmount)
+          }}</span>
+        </div>
+      </v-card-title>
 
-    <v-card-text class="px-4 py-2 text-body-2">
-      {{ product.description?.['en-US'] || Errors.ProductDescription }}
-    </v-card-text>
+      <v-card-text class="px-4 py-2 text-body-2">
+        {{ product.description?.['en-US'] || Errors.ProductDescription }}
+      </v-card-text>
 
-    <v-divider class="mx-4"></v-divider>
-
+      <v-divider class="mx-4"></v-divider>
+    </RouterLink>
     <v-card-text class="px-4 py-2">
       <span class="subheading">{{ selectText }}</span>
-      <v-chip-group v-model="selectedSize" selected-class="text-primary" mandatory class="mt-2">
-        <v-chip v-for="size in sizes" :key="size" :value="size" variant="outlined" size="small">
+      <v-chip-group
+        v-model="selectedSize"
+        selected-class="text-primary"
+        mandatory
+        class="mt-2 d-flex flex-wrap"
+      >
+        <v-chip
+          class="chip"
+          v-for="size in sizes"
+          :key="size"
+          :value="size"
+          variant="outlined"
+          size="small"
+        >
           {{ size }}
         </v-chip>
       </v-chip-group>
     </v-card-text>
 
     <v-card-actions class="px-4 pb-4">
-      <v-btn color="primary" variant="flat" block @click="addToCart"> {{ buttonTextAdd }} </v-btn>
+      <v-btn color="primary" class="button-cart" variant="flat" block @click="addToCart">
+        {{ buttonTextAdd }}
+      </v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -103,8 +119,7 @@ const formatPrice = (price: number): string => {
     font-size: 1.1rem;
   }
 }
-
-.product-card:hover {
+.product-card:has(.product-card_link:hover) {
   transform: translateY(-5px);
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
 }
@@ -115,5 +130,13 @@ const formatPrice = (price: number): string => {
 
 .v-card-text {
   flex-grow: 1;
+}
+
+.button-cart:hover {
+  background-color: v.$color-hover !important;
+}
+.chip:hover {
+  border-color: v.$color-hover !important;
+  color: v.$color-hover !important;
 }
 </style>
