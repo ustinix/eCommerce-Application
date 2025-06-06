@@ -12,6 +12,7 @@ import { useUserStore } from '../../stores/user';
 import { useAuthStore } from '../../stores/auth';
 import { useSnackbarStore } from '../../stores/snackbar';
 import { updateUserAddressData } from '../../services/user-service';
+import { getCountryCode, getCountryName } from '../../utils/code-country';
 
 const userStore = useUserStore();
 const authStore = useAuthStore();
@@ -20,7 +21,7 @@ const snackbarStore = useSnackbarStore();
 const props = defineProps<EditAddressProps & { close: () => void }>();
 const startAddress = {
   id: props.id,
-  country: props.country === 'RU' ? 'Russia' : 'United States',
+  country: getCountryName(props.country || ''),
   city: props.city || '',
   streetName: props.streetName || '',
   postalCode: props.postalCode || '',
@@ -43,7 +44,7 @@ const { validateCode } = usePostalCodeValidation(disabled);
 
 async function updateAddress(): Promise<void> {
   if (userStore.profile === null) return;
-  newAddress.country = newAddress.country === 'Russia' ? 'RU' : 'US';
+  newAddress.country = getCountryCode(newAddress.country);
   try {
     await (newAddress.id === undefined ? handleNewAddress() : updateDataAddress());
     snackbarStore.success(textComponent.successAddress);

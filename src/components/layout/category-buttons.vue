@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { categoriesId } from '../../assets/constants';
+import { categoriesId } from '../../constants/constants';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();

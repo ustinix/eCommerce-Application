@@ -4,6 +4,7 @@ import { reactive, computed } from 'vue';
 import { validatePassword } from '../../utils/validate-password';
 import { TextEditComponent } from '../../enums/text-edit-component';
 import { Errors } from '../../enums/errors';
+import { Labels } from '../../enums/labels';
 import { useUserStore } from '../../stores/user';
 import { useAuthStore } from '../../stores/auth';
 import { useSnackbarStore } from '../../stores/snackbar';
@@ -18,11 +19,7 @@ const { toggle } = defineProps<{
 }>();
 
 const placeholderPassword = 'Password';
-const enum Labels {
-  currentPassword = 'Current Password: ',
-  newPassword = 'New Password: ',
-  confirmNewPassword = 'Confirm New Password: ',
-}
+
 const snackMessage = {
   successPassword: 'Password successfully updated',
   errorPassword: 'Failed to update password',

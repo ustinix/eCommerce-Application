@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { categoriesId } from '../../assets/constants';
+import { categoriesId } from '../../constants/constants';
 import { Errors } from '../../enums/errors';
 
 const buttonTextAdd = 'Add to Cart';
