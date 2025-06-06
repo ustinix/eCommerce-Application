@@ -1,4 +1,4 @@
-import { dollarSing } from '../assets/constants';
+import { dollarSing } from '../constants/constants';
 
 export const formatPrice = (price: number | undefined): string => {
   if (!price) {

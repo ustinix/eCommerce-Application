@@ -32,33 +32,33 @@ const addToCart = (): void => {
   <v-card class="product-card">
     <RouterLink :to="'/product/' + product.id" class="product-card_link">
       <v-img
-      :src="product.masterVariant.images?.[0]?.url || 'https://via.placeholder.com/296x400'"
-      :alt="product.name?.['en-US']"
-      height="400"
-      cover
-    ></v-img>
+        :src="product.masterVariant.images?.[0]?.url || 'https://via.placeholder.com/296x400'"
+        :alt="product.name?.['en-US']"
+        height="400"
+        cover
+      ></v-img>
 
-    <v-card-title class="d-flex flex-column align-center px-4 pt-4 pb-2">
-      <h3 class="text-h6">{{ product.name?.['en-US'] }}</h3>
-      <div class="price-container mt-2">
-        <span
-          class="original-price"
-          :class="{ 'line-through': product.masterVariant.prices?.[0]?.discounted }"
-        >
-          {{ formatPrice(product.masterVariant.prices?.[0]?.value?.centAmount) }}</span
-        >
-        <span v-if="product.masterVariant.prices?.[0]?.discounted" class="discounted-price">{{
-          formatPrice(product.masterVariant.prices?.[0]?.discounted?.value.centAmount)
-        }}</span>
-      </div>
-    </v-card-title>
+      <v-card-title class="d-flex flex-column align-center px-4 pt-4 pb-2">
+        <h3 class="text-h6">{{ product.name?.['en-US'] }}</h3>
+        <div class="price-container mt-2">
+          <span
+            class="original-price"
+            :class="{ 'line-through': product.masterVariant.prices?.[0]?.discounted }"
+          >
+            {{ formatPrice(product.masterVariant.prices?.[0]?.value?.centAmount) }}</span
+          >
+          <span v-if="product.masterVariant.prices?.[0]?.discounted" class="discounted-price">{{
+            formatPrice(product.masterVariant.prices?.[0]?.discounted?.value.centAmount)
+          }}</span>
+        </div>
+      </v-card-title>
 
-    <v-card-text class="px-4 py-2 text-body-2">
-      {{ product.description?.['en-US'] || Errors.ProductDescription }}
-    </v-card-text>
+      <v-card-text class="px-4 py-2 text-body-2">
+        {{ product.description?.['en-US'] || Errors.ProductDescription }}
+      </v-card-text>
 
-    <v-divider class="mx-4"></v-divider>
-
+      <v-divider class="mx-4"></v-divider>
+    </RouterLink>
     <v-card-text class="px-4 py-2">
       <span class="subheading">{{ AppNames.selectText }}</span>
       <v-chip-group v-model="selectedSize" selected-class="text-primary" mandatory class="mt-2">
@@ -74,10 +74,9 @@ const addToCart = (): void => {
       </v-chip-group>
     </v-card-text>
 
-    <v-card-actions class="px-4 pb-4"> 
+    <v-card-actions class="px-4 pb-4">
       <v-btn color="primary" variant="flat" block @click="addToCart" :disabled="!selectedSize">
         {{ AppNames.buttonTextAdd }}
-
       </v-btn>
     </v-card-actions>
   </v-card>
