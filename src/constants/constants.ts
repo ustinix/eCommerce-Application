@@ -21083,8 +21083,3 @@ export const countryCityList: CountryCityData = {
     ],
   },
 };
-
-export const enum colorSnackbar {
-  success = 'success',
-  error = 'error',
-}

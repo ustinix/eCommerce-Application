@@ -30,7 +30,6 @@ onMounted(async () => {
 });
 function openModal(): void {
   if (product.value !== null) {
-    console.log('click');
     modalComponent.value = Carousel;
     modalProps.value = { images: product.value.images };
     isModalOpen.value = true;

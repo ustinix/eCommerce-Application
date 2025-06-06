@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { countryCityList } from '../../assets/constants';
-import { InputStar } from '../../assets/constants';
-import { DropSign } from '../../assets/constants';
+import { countryCityList } from '../../constants/constants';
+import { InputStar } from '../../constants/constants';
+import { DropSign } from '../../constants/constants';
 import BaseInput from './base-input.vue';
 import validateStreet from '../../utils/validate-street';
 

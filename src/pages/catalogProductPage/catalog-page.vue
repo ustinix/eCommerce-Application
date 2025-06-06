@@ -3,7 +3,7 @@ import { computed, onMounted, ref, watch } from 'vue';
 import productApi from '../../services/product-service';
 import type { ProductProjection } from '@commercetools/platform-sdk';
 import ProductCard from '../../components/product/product-card.vue';
-import { BreakpointsItemsPerPage, DefaultItemsPerPage } from '../../assets/constants';
+import { BreakpointsItemsPerPage, DefaultItemsPerPage } from '../../constants/constants';
 import { useDisplay } from 'vuetify';
 import CategoryButtons from '../../components/layout/category-buttons.vue';
 import { useRoute } from 'vue-router';
@@ -13,7 +13,7 @@ import {
   sortOptions,
   availableBrands,
   availableSportTypes,
-} from '../../assets/constants';
+} from '../../constants/constants';
 
 const route = useRoute();
 const products = ref<ProductProjection[]>([]);

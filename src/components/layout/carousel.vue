@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Image } from '@commercetools/platform-sdk';
+
 const props = defineProps<{ images: Image[]; onClick?: () => void }>();
 function handleClick(): void {
   if (props.onClick) {

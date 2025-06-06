@@ -5,4 +5,7 @@ export enum Labels {
   labelPassword = 'Password',
   labelDate = 'Date',
   labelCode = 'Postal code',
+  currentPassword = 'Current Password: ',
+  newPassword = 'New Password: ',
+  confirmNewPassword = 'Confirm New Password: ',
 }

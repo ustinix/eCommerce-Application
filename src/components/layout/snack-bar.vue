@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useSnackbarStore } from '../../stores/snackbar';
-import { colorSnackbar } from '../../assets/constants';
+import { colorSnackbar } from '../../enums/color-snackbar';
 const snackbarStore = useSnackbarStore();
 const { message, isVisible } = storeToRefs(snackbarStore);
 const defaultTime = 3000;
