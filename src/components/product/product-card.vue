@@ -25,11 +25,13 @@ const addToCart = (): void => {
     productId: props.product.id,
     size: selectedSize.value,
   });
+  console.log('add');
 };
 </script>
 <template>
   <v-card class="product-card">
-    <v-img
+    <RouterLink :to="'/product/' + product.id" class="product-card_link">
+      <v-img
       :src="product.masterVariant.images?.[0]?.url || 'https://via.placeholder.com/296x400'"
       :alt="product.name?.['en-US']"
       height="400"
@@ -72,9 +74,10 @@ const addToCart = (): void => {
       </v-chip-group>
     </v-card-text>
 
-    <v-card-actions class="px-4 pb-4">
+    <v-card-actions class="px-4 pb-4"> 
       <v-btn color="primary" variant="flat" block @click="addToCart" :disabled="!selectedSize">
         {{ AppNames.buttonTextAdd }}
+
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -111,8 +114,7 @@ const addToCart = (): void => {
     font-size: 1.1rem;
   }
 }
-
-.product-card:hover {
+.product-card:has(.product-card_link:hover) {
   transform: translateY(-5px);
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
 }
@@ -123,5 +125,13 @@ const addToCart = (): void => {
 
 .v-card-text {
   flex-grow: 1;
+}
+
+.button-cart:hover {
+  background-color: v.$color-hover !important;
+}
+.chip:hover {
+  border-color: v.$color-hover !important;
+  color: v.$color-hover !important;
 }
 </style>
