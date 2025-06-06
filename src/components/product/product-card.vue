@@ -1,37 +1,30 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { categoriesId } from '../../constants/constants';
 import { Errors } from '../../enums/errors';
+import type { ProductProjection } from '@commercetools/platform-sdk';
+import { getAllSizes } from '../../utils/get-sizes';
+import { formatPrice } from '../../utils/format-price';
+import { AppNames } from '../../enums/app-names';
 
-const buttonTextAdd = 'Add to Cart';
-const selectText = 'Select size';
 const props = defineProps({
   product: {
-    type: Object,
+    type: Object as () => ProductProjection,
     required: true,
   },
 });
 
 const emit = defineEmits(['add-to-cart']);
 
-const sizes = computed(() => {
-  const categoryId = props.product.categories?.[0]?.id;
-  const category = categoriesId.find(cat => cat.id === categoryId);
+const productSizes = computed(() => getAllSizes(props.product));
 
-  return category?.sizes || ['One Size'];
-});
-const selectedSize = ref(sizes.value[0]);
+const selectedSize = ref(productSizes.value[0]);
 
 const addToCart = (): void => {
+  if (!selectedSize.value) return;
   emit('add-to-cart', {
     productId: props.product.id,
     size: selectedSize.value,
   });
-};
-
-const dollarSing = '$';
-const formatPrice = (price: number): string => {
-  return `${dollarSing}${(price / 100).toFixed(2)}`;
 };
 </script>
 <template>
@@ -46,10 +39,13 @@ const formatPrice = (price: number): string => {
     <v-card-title class="d-flex flex-column align-center px-4 pt-4 pb-2">
       <h3 class="text-h6">{{ product.name?.['en-US'] }}</h3>
       <div class="price-container mt-2">
-        <span class="original-price">{{
-          formatPrice(product.masterVariant.prices?.[0]?.value?.centAmount)
-        }}</span>
-        <span class="discounted-price">{{
+        <span
+          class="original-price"
+          :class="{ 'line-through': product.masterVariant.prices?.[0]?.discounted }"
+        >
+          {{ formatPrice(product.masterVariant.prices?.[0]?.value?.centAmount) }}</span
+        >
+        <span v-if="product.masterVariant.prices?.[0]?.discounted" class="discounted-price">{{
           formatPrice(product.masterVariant.prices?.[0]?.discounted?.value.centAmount)
         }}</span>
       </div>
@@ -62,16 +58,24 @@ const formatPrice = (price: number): string => {
     <v-divider class="mx-4"></v-divider>
 
     <v-card-text class="px-4 py-2">
-      <span class="subheading">{{ selectText }}</span>
+      <span class="subheading">{{ AppNames.selectText }}</span>
       <v-chip-group v-model="selectedSize" selected-class="text-primary" mandatory class="mt-2">
-        <v-chip v-for="size in sizes" :key="size" :value="size" variant="outlined" size="small">
+        <v-chip
+          v-for="size in productSizes"
+          :key="size"
+          :value="size"
+          variant="outlined"
+          size="small"
+        >
           {{ size }}
         </v-chip>
       </v-chip-group>
     </v-card-text>
 
     <v-card-actions class="px-4 pb-4">
-      <v-btn color="primary" variant="flat" block @click="addToCart"> {{ buttonTextAdd }} </v-btn>
+      <v-btn color="primary" variant="flat" block @click="addToCart" :disabled="!selectedSize">
+        {{ AppNames.buttonTextAdd }}
+      </v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -91,9 +95,13 @@ const formatPrice = (price: number): string => {
     align-items: center;
   }
 
-  .original-price {
+  .line-through {
     text-decoration: line-through;
-    color: v.$color-grey;
+    opacity: 0.7;
+  }
+
+  .original-price {
+    color: v.$color-black;
     font-size: 1rem;
   }
 
