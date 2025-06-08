@@ -271,6 +271,9 @@ onMounted(() => {
         color: v.$color-red;
       }
     }
+    .cards-container {
+      margin: 0 auto;
+    }
   }
 }
 .v-container {

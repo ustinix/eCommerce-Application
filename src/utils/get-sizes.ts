@@ -1,6 +1,7 @@
 import type { ProductProjection } from '@commercetools/platform-sdk';
+import type { ProductData } from '@commercetools/platform-sdk';
 
-export function getAllSizes(product: ProductProjection): string[] {
+export function getAllSizes(product: ProductProjection | ProductData): string[] {
   const allVariants = [product.masterVariant, ...product.variants];
 
   const uniqueSizeKeys = new Set<string>();

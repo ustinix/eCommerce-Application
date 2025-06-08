@@ -61,7 +61,12 @@ const addToCart = (): void => {
     </RouterLink>
     <v-card-text class="px-4 py-2">
       <span class="subheading">{{ AppNames.selectText }}</span>
-      <v-chip-group v-model="selectedSize" selected-class="text-primary" mandatory class="mt-2">
+      <v-chip-group
+        v-model="selectedSize"
+        selected-class="text-primary"
+        mandatory
+        class="mt-2 justify-center"
+      >
         <v-chip
           v-for="size in productSizes"
           :key="size"
@@ -113,24 +118,17 @@ const addToCart = (): void => {
     font-size: 1.1rem;
   }
 }
-.product-card:has(.product-card_link:hover) {
-  transform: translateY(-5px);
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
-}
 
-.v-card-title {
-  word-break: break-word;
-}
-
+.v-card-title,
 .v-card-text {
-  flex-grow: 1;
+  color: v.$color-black;
+}
+
+.v-chip-group :deep(.v-slide-group__content) {
+  justify-content: center;
 }
 
 .button-cart:hover {
   background-color: v.$color-hover !important;
-}
-.chip:hover {
-  border-color: v.$color-hover !important;
-  color: v.$color-hover !important;
 }
 </style>

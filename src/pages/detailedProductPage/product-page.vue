@@ -53,26 +53,39 @@ const addToCart = (): void => {
       <CategoryButtons with-routing :current-category="currentCategory" />
     </v-row>
 
-    <v-row justify="center" class="gap-4">
+    <v-row justify="center" class="ga-5">
       <v-col cols="12" md="10" lg="8">
-        <v-card elevation="2" class="card pa-4 rounded-xl">
+        <v-card elevation="2" class="card pa-4 rounded-xl ga-3">
           <Carousel :images="product.images" :onClick="openModal" />
 
-          <h1 class="text-h4 font-weight-bold mb-4">
+          <h1 class="text-h4 font-weight-bold">
             {{ product.name }}
           </h1>
-
-          <div class="text-body-1" v-if="product.description">
-            {{ product.description }}
-          </div>
-          <div class="price-container mt-2">
-            <span class="original-price" v-if="product.price !== null">{{
-              formatPrice(product.price)
-            }}</span>
+          <div class="price-container">
+            <span
+              class="original-price"
+              v-if="product.price !== null"
+              :class="{ 'line-through': product.priceDiscounted }"
+              >{{ formatPrice(product.price) }}</span
+            >
             <span class="discounted-price" v-if="product.priceDiscounted !== null">{{
               formatPrice(product.priceDiscounted)
             }}</span>
           </div>
+
+          <div class="text-body-1" v-if="product.description">
+            {{ product.description }}
+          </div>
+          <v-chip-group>
+            <v-chip
+              v-for="size in product.sizes"
+              :key="size"
+              :value="size"
+              variant="outlined"
+              size="small"
+              >{{ size }}</v-chip
+            >
+          </v-chip-group>
           <v-card-actions class="addBtn pb-4">
             <v-btn color="primary" variant="flat" block @click="addToCart">
               {{ buttonTextAdd }}
@@ -99,9 +112,13 @@ const addToCart = (): void => {
   justify-content: center;
 }
 
-.original-price {
+.line-through {
   text-decoration: line-through;
-  color: v.$color-grey;
+  opacity: 0.7;
+}
+
+.original-price {
+  color: v.$color-black;
   font-size: 1rem;
 }
 
