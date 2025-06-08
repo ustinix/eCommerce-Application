@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, shallowRef } from 'vue';
+import { computed, onMounted, ref, shallowRef, watch } from 'vue';
 import { getProductById } from '../../services/product-service';
 import Snackbar from '../../components/layout/snack-bar.vue';
 import { useSnackbarStore } from '../../stores/snackbar';
@@ -40,9 +40,24 @@ function openModal(): void {
 const currentCategory = computed(() => {
   return product.value?.categories?.[0]?.id || null;
 });
+const productSizes = computed(() => product.value?.sizes || []);
+const selectedSize = ref<string | null>(null);
+
+watch(
+  product,
+  newProduct => {
+    if (newProduct?.sizes?.length) {
+      selectedSize.value = newProduct.sizes[0];
+    }
+  },
+  { immediate: true },
+);
 
 const addToCart = (): void => {
-  console.log('add to cart');
+  if (!selectedSize.value || !product.value) return;
+  console.log('Adding to cart:', {
+    size: selectedSize.value,
+  });
 };
 </script>
 <template>
@@ -79,9 +94,14 @@ const addToCart = (): void => {
           </div>
           <v-card-text class="px-4 py-2">
             <span class="subheading">{{ AppNames.selectText }}</span>
-            <v-chip-group>
+            <v-chip-group
+              v-model="selectedSize"
+              selected-class="text-primary"
+              mandatory
+              class="mt-2 justify-center"
+            >
               <v-chip
-                v-for="size in product.sizes"
+                v-for="size in productSizes"
                 :key="size"
                 :value="size"
                 variant="outlined"
@@ -91,7 +111,13 @@ const addToCart = (): void => {
             </v-chip-group>
           </v-card-text>
           <v-card-actions class="addBtn pb-4">
-            <v-btn color="primary" variant="flat" block @click="addToCart">
+            <v-btn
+              color="primary"
+              variant="flat"
+              block
+              @click="addToCart"
+              :disabled="!selectedSize"
+            >
               {{ buttonTextAdd }}
             </v-btn>
           </v-card-actions>
