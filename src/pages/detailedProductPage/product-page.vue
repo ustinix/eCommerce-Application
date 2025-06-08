@@ -9,6 +9,7 @@ import { mapProductDataToProductView } from '../../utils/map-product';
 import CategoryButtons from '../../components/layout/category-buttons.vue';
 import Carousel from '../../components/layout/carousel.vue';
 import Modal from '../../components/layout/modal.vue';
+import { AppNames } from '../../enums/app-names';
 
 const snackbarStore = useSnackbarStore();
 const errorMessage = 'Failed to fetch product';
@@ -76,16 +77,19 @@ const addToCart = (): void => {
           <div class="text-body-1" v-if="product.description">
             {{ product.description }}
           </div>
-          <v-chip-group>
-            <v-chip
-              v-for="size in product.sizes"
-              :key="size"
-              :value="size"
-              variant="outlined"
-              size="small"
-              >{{ size }}</v-chip
-            >
-          </v-chip-group>
+          <v-card-text class="px-4 py-2">
+            <span class="subheading">{{ AppNames.selectText }}</span>
+            <v-chip-group>
+              <v-chip
+                v-for="size in product.sizes"
+                :key="size"
+                :value="size"
+                variant="outlined"
+                size="small"
+                >{{ size }}</v-chip
+              >
+            </v-chip-group>
+          </v-card-text>
           <v-card-actions class="addBtn pb-4">
             <v-btn color="primary" variant="flat" block @click="addToCart">
               {{ buttonTextAdd }}
