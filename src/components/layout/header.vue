@@ -3,7 +3,7 @@ import DividerLine from '../ui/divider-line.vue';
 import Logo from '../ui/logo.vue';
 import { useAuthStore } from '../../stores/auth';
 import { useUserStore } from '../../stores/user';
-import { createAnonymClient } from '../../services/anonym-client';
+// import { createAnonymClient } from '../../services/anonym-client';
 import { AppNames } from '../../enums/app-names';
 import { Pages } from '../../enums/pages';
 import { computed } from 'vue';
@@ -22,8 +22,8 @@ const navLinks = computed(() => [
 function logout(): void {
   authStore.logOut();
   userStore.setUserProfile(null);
-  const anonymApiRoot = createAnonymClient();
-  authStore.setApiRoot(anonymApiRoot);
+  //const anonymApiRoot = createAnonymClient();
+  // authStore.setApiRoot(anonymApiRoot);
 }
 </script>
 

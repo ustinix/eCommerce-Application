@@ -1,35 +1,28 @@
-import { createHttpClient, createClient } from '@commercetools/sdk-client-v2';
 import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import { createAuthMiddlewareForAnonymousSessionFlow } from '@commercetools/sdk-middleware-auth';
-import { tokenCache } from '../utils/token-cache';
+import { ClientBuilder } from '@commercetools/sdk-client-v2';
 
 const projectKey = import.meta.env.VITE_CTP_CLIENT_PROJECT_KEY;
 const AUTH_URL = import.meta.env.VITE_CTP_AUTH_URL;
 const API_URL = import.meta.env.VITE_CTP_API_URL;
 
-export function createAnonymClient(): ByProjectKeyRequestBuilder {
-  const anonymousClient = createClient({
-    middlewares: [
-      createAuthMiddlewareForAnonymousSessionFlow({
-        host: AUTH_URL,
-        projectKey,
-        credentials: {
-          clientId: import.meta.env.VITE_CTP_CLIENT_ID,
-          clientSecret: import.meta.env.VITE_CTP_CLIENT_SECRET,
-        },
-        scopes: [`manage_project:${projectKey}`],
-        fetch,
-        tokenCache,
-      }),
-      createHttpClient({
-        host: API_URL,
-        fetch,
-      }),
-    ],
-  });
-
-  return createApiBuilderFromCtpClient(anonymousClient).withProjectKey({
+const client = new ClientBuilder()
+  .withClientCredentialsFlow({
+    host: AUTH_URL,
     projectKey,
-  });
+    credentials: {
+      clientId: import.meta.env.VITE_CTP_CLIENT_ID,
+      clientSecret: import.meta.env.VITE_CTP_CLIENT_SECRET,
+    },
+    scopes: [`manage_orders:${projectKey}`, `view_products:${projectKey}`],
+  })
+  .withHttpMiddleware({
+    host: API_URL,
+  })
+  .build();
+
+const apiRoot = createApiBuilderFromCtpClient(client);
+
+export function createAnonymClient(): ByProjectKeyRequestBuilder {
+  return apiRoot.withProjectKey({ projectKey });
 }

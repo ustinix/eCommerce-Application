@@ -34,6 +34,6 @@ export async function loginCustomer(
     ],
   });
   const apiRoot = createApiBuilderFromCtpClient(passwordClient).withProjectKey({ projectKey });
-  await apiRoot.me().get().execute();
+  // await apiRoot.me().get().execute();
   return apiRoot;
 }

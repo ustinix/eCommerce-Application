@@ -1,21 +1,26 @@
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
 import { loginCustomer } from '../services/auth-service';
+import { createAnonymClient } from '../services/anonym-client';
 import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
 import { createExistingTokenClient } from '../services/token-client';
 import { isToken } from '../utils/is-token';
 import { isCorrectError } from '../utils/is-error';
 import { decodeToken } from '../utils/token-decoder';
 
+const anonymClient = createAnonymClient();
+
 export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = ref<boolean>(false);
   const errorAuth = ref<string | null>(null);
-  const currentApiRoot = ref<ByProjectKeyRequestBuilder | null>(null);
+  const currentApiRoot = ref<ByProjectKeyRequestBuilder>(anonymClient);
+  const savedCartId = ref<string>('');
+  console.log('start', currentApiRoot.value);
   const saved = localStorage.getItem('authStore');
-
   if (saved) {
     const parsed = JSON.parse(saved);
     isAuthenticated.value = parsed.isAuthenticated ?? false;
+    savedCartId.value = parsed.savedCartId ?? '';
   }
 
   const saveToken = localStorage.getItem('authToken');
@@ -27,12 +32,13 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
   watch(
-    [isAuthenticated],
+    [isAuthenticated, savedCartId],
     () => {
       localStorage.setItem(
         'authStore',
         JSON.stringify({
           isAuthenticated: isAuthenticated.value,
+          savedCartId: savedCartId.value,
         }),
       );
     },
@@ -49,14 +55,14 @@ export const useAuthStore = defineStore('auth', () => {
       const defaultError = 'Server authentication error';
       errorAuth.value = isCorrectError(error) ? error.message : defaultError;
       isAuthenticated.value = false;
-      currentApiRoot.value = null;
+      currentApiRoot.value = await createAnonymClient();
     }
   }
 
-  function logOut(): void {
+  async function logOut(): Promise<void> {
     isAuthenticated.value = false;
-    currentApiRoot.value = null;
     localStorage.removeItem('authToken');
+    currentApiRoot.value = await createAnonymClient();
   }
 
   const setError = (error: string | null): void => {
@@ -65,7 +71,7 @@ export const useAuthStore = defineStore('auth', () => {
   const setAuth = (value: boolean): void => {
     isAuthenticated.value = value;
   };
-  const setApiRoot = (api: ByProjectKeyRequestBuilder | null): void => {
+  const setApiRoot = (api: ByProjectKeyRequestBuilder): void => {
     currentApiRoot.value = api;
     if (api === null) {
       localStorage.removeItem('authToken');
@@ -75,6 +81,7 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     errorAuth,
     currentApiRoot,
+    savedCartId,
     logIn,
     logOut,
     setError,
