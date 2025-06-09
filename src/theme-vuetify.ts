@@ -1,6 +1,6 @@
 const themeName = 'appTheme';
 const primaryColor = '#f22735';
-const primaryDarken = ' #d9202f';
+const primaryDarken = '#d9202f';
 
 export const theme = {
   defaultTheme: themeName,
