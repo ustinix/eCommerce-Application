@@ -33,7 +33,7 @@ const props = defineProps({
     default: 'Contribution to the project:',
   },
   items: {
-    type: Array as () => Array<{ text: string; icon: string }>,
+    type: Array<{ text: string; icon: string }>,
     default: () => [],
   },
 });
