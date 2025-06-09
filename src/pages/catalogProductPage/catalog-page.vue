@@ -7,6 +7,7 @@ import { BreakpointsItemsPerPage, DefaultItemsPerPage } from '../../constants/co
 import { useDisplay } from 'vuetify';
 import CategoryButtons from '../../components/layout/category-buttons.vue';
 import { useRoute } from 'vue-router';
+import { Errors } from '../../enums/errors';
 import {
   categoriesId,
   sortOptions,
@@ -57,9 +58,10 @@ const loadProducts = async (offset = 0): Promise<void> => {
       },
     );
     products.value = response.results;
+    console.log(response.results);
     totalProducts.value = response.total || 0;
   } catch (error_) {
-    error.value = error_ instanceof Error ? error_.message : 'Неизвестная ошибка';
+    error.value = error_ instanceof Error ? error_.message : Errors.UnknownError;
   } finally {
     isLoading.value = false;
   }
@@ -193,9 +195,7 @@ onMounted(() => {
               lg="4"
               xl="3"
             >
-              <RouterLink :to="'/product/' + product.id">
-                <ProductCard :product="product" />
-              </RouterLink>
+              <ProductCard :product="product" />
             </v-col>
           </v-row>
         </div>
@@ -270,6 +270,9 @@ onMounted(() => {
         width: 90%;
         color: v.$color-red;
       }
+    }
+    .cards-container {
+      margin: 0 auto;
     }
   }
 }

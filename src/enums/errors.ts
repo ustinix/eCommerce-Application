@@ -18,4 +18,6 @@ export enum Errors {
   ProductDescription = 'Product description not available',
   PasswordsNotMatch = 'Passwords do not match',
   ProductNotAdd = 'There was an error adding the item to the cart',
+  UnknownError = 'Unknown error',
+
 }

@@ -7,4 +7,5 @@ export type ProductView = {
   priceDiscounted: number | null;
   images: Image[];
   categories?: Array<{ id: string }>;
+  sizes: string[];
 };
