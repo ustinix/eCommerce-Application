@@ -7,6 +7,7 @@ import { tokenCache } from '../utils/token-cache';
 const projectKey = import.meta.env.VITE_CTP_CLIENT_PROJECT_KEY;
 const AUTH_URL = import.meta.env.VITE_CTP_AUTH_URL;
 const API_URL = import.meta.env.VITE_CTP_API_URL;
+// const saved = localStorage.getItem('cartId');
 
 export async function loginCustomer(
   email: string,

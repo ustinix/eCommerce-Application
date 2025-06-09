@@ -14,13 +14,11 @@ export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = ref<boolean>(false);
   const errorAuth = ref<string | null>(null);
   const currentApiRoot = ref<ByProjectKeyRequestBuilder>(anonymClient);
-  const savedCartId = ref<string>('');
   console.log('start', currentApiRoot.value);
   const saved = localStorage.getItem('authStore');
   if (saved) {
     const parsed = JSON.parse(saved);
     isAuthenticated.value = parsed.isAuthenticated ?? false;
-    savedCartId.value = parsed.savedCartId ?? '';
   }
 
   const saveToken = localStorage.getItem('authToken');
@@ -32,13 +30,12 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
   watch(
-    [isAuthenticated, savedCartId],
+    [isAuthenticated],
     () => {
       localStorage.setItem(
         'authStore',
         JSON.stringify({
           isAuthenticated: isAuthenticated.value,
-          savedCartId: savedCartId.value,
         }),
       );
     },
@@ -81,7 +78,6 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     errorAuth,
     currentApiRoot,
-    savedCartId,
     logIn,
     logOut,
     setError,

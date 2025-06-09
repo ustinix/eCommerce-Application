@@ -3,6 +3,7 @@ import DividerLine from '../ui/divider-line.vue';
 import Logo from '../ui/logo.vue';
 import { useAuthStore } from '../../stores/auth';
 import { useUserStore } from '../../stores/user';
+import { useCartStore } from '../../stores/cart';
 // import { createAnonymClient } from '../../services/anonym-client';
 import { AppNames } from '../../enums/app-names';
 import { Pages } from '../../enums/pages';
@@ -10,6 +11,7 @@ import { computed } from 'vue';
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
+const cartStore = useCartStore();
 
 const navLinks = computed(() => [
   { to: '/', text: Pages.Home, show: true },
@@ -22,6 +24,8 @@ const navLinks = computed(() => [
 function logout(): void {
   authStore.logOut();
   userStore.setUserProfile(null);
+  cartStore.cart = null;
+  cartStore.cartId = '';
   //const anonymApiRoot = createAnonymClient();
   // authStore.setApiRoot(anonymApiRoot);
 }

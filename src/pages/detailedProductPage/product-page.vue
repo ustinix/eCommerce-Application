@@ -4,6 +4,7 @@ import { getProductById } from '../../services/product-service';
 import Snackbar from '../../components/layout/snack-bar.vue';
 import { useSnackbarStore } from '../../stores/snackbar';
 import { useAuthStore } from '../../stores/auth';
+import { useCartStore } from '../../stores/cart';
 import { formatPrice } from '../../utils/format-price';
 import type { ProductView } from '../../types/product';
 import { mapProductDataToProductView } from '../../utils/map-product';
@@ -11,13 +12,16 @@ import CategoryButtons from '../../components/layout/category-buttons.vue';
 import Carousel from '../../components/layout/carousel.vue';
 import Modal from '../../components/layout/modal.vue';
 import { addProductToCart } from '../../services/cart-service';
+import { Errors } from '../../enums/errors';
 
 const snackbarStore = useSnackbarStore();
 const authStore = useAuthStore();
+const cartStore = useCartStore();
 
 const errorMessage = 'Failed to fetch product';
 const backButtonText = 'Back to catalog';
 const addButton = 'Add to cart';
+const successMessage = 'Item added to cart';
 
 const { id } = defineProps<{ id: string }>();
 let product = ref<ProductView | null>(null);
@@ -46,7 +50,12 @@ function openModal(): void {
   }
 }
 function addInCart(): void {
-  addProductToCart(authStore, id, variantsId.value, 1);
+  try {
+    addProductToCart(authStore, cartStore, id, variantsId.value, 1);
+    snackbarStore.success(successMessage);
+  } catch {
+    snackbarStore.error(Errors.ProductNotAdd);
+  }
 }
 
 const currentCategory = computed(() => {
