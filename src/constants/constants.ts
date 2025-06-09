@@ -2,6 +2,76 @@ import { ref } from 'vue';
 import type { UserData } from '../types/user-data';
 import { type Address } from '../types/address';
 import type { CountryCityData } from '../types/country-data';
+import { AppNames } from '../enums/app-names';
+import type { SocialLink } from '../types/social-links';
+import type { RS } from '../types/social-links';
+
+export const ksuData = {
+  backgroundImage: '/фон.jpg',
+  avatarImage: '/KsuPhoto.jpg',
+  title: 'Arsenteva Ksenia',
+  subtitle: 'Developer',
+  aboutText:
+    'I have been studying Frontend for a year and a half. My goal is to learn as much as possible about front-end development. I have completed several free courses and want to continue developing my skills. I really enjoy learning new things.',
+  contributionTitle: AppNames.Contribution,
+  items: [
+    { text: 'Repository setup', icon: 'mdi-clock' },
+    { text: 'Development environment configuration and scripts', icon: 'mdi-paperclip' },
+    { text: 'Registration pages (cliet side + server-side)', icon: 'mdi-book' },
+    { text: 'Make product lis with all data;', icon: 'mdi-checkbox-marked' },
+    { text: 'Catalog page (cliet side + server-side)', icon: 'mdi-flag' },
+    { text: 'Navigation and Header, Footer implementation', icon: 'mdi-menu' },
+    { text: 'Routing implementation', icon: 'mdi-radiobox-marked' },
+    { text: 'About page implementation', icon: 'mdi-heart' },
+  ],
+  github: 'https://github.com/ustinix',
+  githubLabel: 'GitHub',
+};
+
+export const olgaData = {
+  backgroundImage: '/фон.jpg',
+  avatarImage: '/OlgaPhoto.jpg',
+  title: 'Alexandrova Olga',
+  subtitle: 'Developer',
+  aboutText:
+    'First and foremost, I want to gain new knowledge, skills, and experience. I am confident that they will be useful to me in the future. A good achievement would be to successfully complete all stages of training and get a new job. ',
+  contributionTitle: AppNames.Contribution,
+  items: [
+    { text: 'Task board setup', icon: 'mdi-calendar' },
+    { text: 'CommerceTools project and api client setup;', icon: 'mdi-paperclip' },
+    { text: 'Login pages (cliet side + server-side)', icon: 'mdi-checkbox-marked' },
+    { text: 'User page (cliet side + server-side);', icon: 'mdi-account' },
+    { text: 'Edit user profile information;', icon: 'mdi-pencil' },
+    { text: 'Detailed product page (cliet side + server-side);', icon: 'mdi-star' },
+    { text: 'Enlarged image modal with slider', icon: 'mdi-checkbox-blank-outline' },
+    { text: 'Shopping cart integration', icon: 'mdi-cart' },
+  ],
+  github: 'https://github.com/AlexOlga',
+  githubLabel: 'GitHub',
+};
+const SocialLinksTitles = {
+  Ksenia: 'Ksenia GitHub',
+  Olga: 'Olga GitHub',
+  RS: 'RS School',
+};
+
+export const rs: RS = {
+  url: 'https://rs.school/courses/javascript-ru',
+  title: SocialLinksTitles.RS,
+};
+
+export const socialLinks: SocialLink[] = [
+  {
+    icon: 'mdi-github',
+    url: 'https://github.com/ustinix',
+    title: SocialLinksTitles.Ksenia,
+  },
+  {
+    icon: 'mdi-github',
+    url: 'https://github.com/AlexOlga',
+    title: SocialLinksTitles.Olga,
+  },
+];
 
 export const userData = ref<UserData>({
   firstName: '',

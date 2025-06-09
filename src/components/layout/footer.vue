@@ -32,33 +32,8 @@
 <script setup lang="ts">
 import rsIcon from '../../assets/images/rs_school_js.svg';
 import { AppNames } from '../../enums/app-names';
-import { FooterText } from '../../constants/constants';
+import { FooterText, socialLinks, rs } from '../../constants/constants';
 import { getDate } from '../../utils/get-date';
-import type { SocialLink } from '../../types/social-links';
-import type { RS } from '../../types/social-links';
-
-const SocialLinksTitles = {
-  Ksenia: 'Ksenia GitHub',
-  Olga: 'Olga GitHub',
-  RS: 'RS School',
-};
-const socialLinks: SocialLink[] = [
-  {
-    icon: 'mdi-github',
-    url: 'https://github.com/ustinix',
-    title: SocialLinksTitles.Ksenia,
-  },
-  {
-    icon: 'mdi-github',
-    url: 'https://github.com/AlexOlga',
-    title: SocialLinksTitles.Olga,
-  },
-];
-
-const rs: RS = {
-  url: 'https://rs.school/courses/javascript-ru',
-  title: SocialLinksTitles.RS,
-};
 </script>
 <style lang="scss" scoped>
 @use '../../assets/styles/variables.scss' as v;
