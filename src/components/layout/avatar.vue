@@ -44,9 +44,11 @@ const props = defineProps({
     <div class="card-container">
       <v-card class="mx-auto" width="600" height="800" rounded="0">
         <v-img :src="props.backgroundImage" cover>
-          <v-avatar color="grey" rounded="10" size="250">
-            <v-img height="100%" :src="props.avatarImage" cover></v-img>
-          </v-avatar>
+          <div class="avatar-wrapper">
+            <v-avatar color="grey" rounded="10" size="250" class="profile-avatar">
+              <v-img height="100%" :src="props.avatarImage" cover></v-img>
+            </v-avatar>
+          </div>
           <div class="info-block">
             <v-list-item
               class="text-black"
@@ -92,10 +94,14 @@ const props = defineProps({
       align-items: center;
       padding: 0 16px;
     }
+    .avatar-wrapper {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+    }
 
     .github-link {
       font-size: 14px;
-      min-height: 40px;
 
       a {
         color: inherit;

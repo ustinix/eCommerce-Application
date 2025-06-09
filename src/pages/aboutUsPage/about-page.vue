@@ -64,11 +64,10 @@ import { TextEditComponent } from '../../enums/text-edit-component';
           align-items: center;
           vertical-align: middle;
           width: 60px;
-          aspect-ratio: 1 / 1;
+          height: 50px;
           transition: all 0.3s ease;
           .rs-icon {
             width: 60px;
-            aspect-ratio: 1 / 1;
           }
 
           &:hover {
@@ -96,12 +95,36 @@ import { TextEditComponent } from '../../enums/text-edit-component';
     flex-direction: column;
   }
 }
-@media (max-width: 800px) {
+@media (max-width: 920px) {
   .avatars {
     flex-direction: column;
   }
+  .about-page .img-container .text .text-inside[data-v-867ab44e] {
+    height: 100%;
+    width: 100%;
+    .rs-icon-link {
+      margin: 0px 5px;
+      display: inline-flex;
+      align-items: center;
+      vertical-align: middle;
+      width: 40px;
+      height: 30px;
+      transition: all 0.3s ease;
+      .rs-icon {
+        width: 40px;
+      }
+    }
+  }
   h1 {
     font-size: 30px;
+  }
+  p {
+    font-size: 12px;
+  }
+}
+@media (max-width: 700px) {
+  h1 {
+    font-size: 20px;
   }
   p {
     font-size: 10px;
