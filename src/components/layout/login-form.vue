@@ -2,14 +2,12 @@
 import { ref } from 'vue';
 import BaseInput from './base-input.vue';
 import { useAuthStore } from '../../stores/auth';
-import { useCartStore } from '../../stores/cart';
 import router from '../../router/router';
 import { isEmail } from '../../utils/is-email';
 import { isPassword } from '../../utils/is-password';
 import { Labels } from '../../enums/labels';
 import { Errors } from '../../enums/errors';
 import { Placeholders } from '../../enums/placeholders';
-import { associateCartToCustomer } from '../../services/cart-service';
 
 const textComponent = {
   submitButton: 'LOG IN',
@@ -18,7 +16,6 @@ const textComponent = {
 };
 
 const authStore = useAuthStore();
-const cartStore = useCartStore();
 
 const email = ref<string>('');
 const emailError = ref<string>('');
@@ -28,9 +25,6 @@ const passwordError = ref<string>('');
 async function login(event: Event): Promise<void> {
   event.preventDefault();
   await authStore.logIn(email.value, password.value);
-  if (cartStore.cart !== null) {
-    cartStore.cart = (await associateCartToCustomer(authStore, cartStore.cart)) ?? null;
-  }
 
   if (authStore.isAuthenticated) {
     router.push('/');

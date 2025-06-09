@@ -8,7 +8,7 @@ import { isToken } from '../utils/is-token';
 import { isCorrectError } from '../utils/is-error';
 import { decodeToken } from '../utils/token-decoder';
 
-const anonymClient = createAnonymClient();
+const anonymClient = await createAnonymClient();
 
 export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = ref<boolean>(false);

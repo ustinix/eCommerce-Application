@@ -8,6 +8,7 @@ async function createAnonymousCart(
 ): Promise<Cart> {
   const apiRoot = await authStore.currentApiRoot;
   const cartResponse = await apiRoot
+    .me()
     .carts()
     .post({
       body: {
@@ -21,9 +22,9 @@ async function createAnonymousCart(
   cartStore.anonymousId = cartResponse.body.anonymousId ?? undefined;
   return cartResponse.body;
 }
-
 async function createUserCart(authStore: ReturnType<typeof useAuthStore>): Promise<Cart> {
-  const newCartResponse = await authStore.currentApiRoot
+  const apiRoot = await authStore.currentApiRoot;
+  const newCartResponse = await apiRoot
     .me()
     .carts()
     .post({
@@ -59,7 +60,9 @@ export async function addProductToCart(
     console.log('нет корзины');
     return;
   }
-  const updatedCartResponse = await authStore.currentApiRoot
+  const apiRoot = await authStore.currentApiRoot;
+
+  const updatedCartResponse = await apiRoot
     .carts()
     .withId({ ID: cartStore.cart.id })
     .post({
@@ -105,7 +108,8 @@ async function getAnonymCart(
   return cartResponse.body;
 }
 async function getUserCart(authStore: ReturnType<typeof useAuthStore>): Promise<Cart> {
-  const cartResponse = await authStore.currentApiRoot
+  const apiRoot = await authStore.currentApiRoot;
+  const cartResponse = await apiRoot
     .me()
     .carts()
     .get({
@@ -121,49 +125,4 @@ async function getUserCart(authStore: ReturnType<typeof useAuthStore>): Promise<
       ? await createUserCart(authStore)
       : cartResponse.body.results[0];
   return cart;
-}
-export async function associateCartToCustomer(
-  authStore: ReturnType<typeof useAuthStore>,
-  cart: Cart,
-): Promise<Cart | undefined> {
-  console.log('cart.customerId', cart.customerId);
-  const customerResponse = await authStore.currentApiRoot.me().get().execute();
-  const customerId = customerResponse.body.id;
-  const userCarts = await authStore.currentApiRoot
-    .me()
-    .carts()
-    .get({
-      queryArgs: {
-        where: 'cartState="Active"',
-        sort: 'lastModifiedAt desc',
-        limit: 1,
-      },
-    })
-    .execute();
-  console.log('userCarts.body.results', userCarts.body.results);
-  if (userCarts.body.results[0]) {
-    console.log('есть своя корзина', userCarts.body.results[0]);
-    return;
-  }
-  const updatedCart = await authStore.currentApiRoot
-    .carts()
-    .withId({ ID: cart.id })
-    .post({
-      body: {
-        version: cart.version,
-        actions: [
-          {
-            action: 'setCustomerId',
-            customerId: customerId,
-          },
-          {
-            action: 'setAnonymousId',
-            anonymousId: undefined,
-          },
-        ],
-      },
-    })
-    .execute();
-  console.log(' updatedCart.body', updatedCart.body);
-  return updatedCart.body;
 }
