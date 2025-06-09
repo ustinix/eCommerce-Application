@@ -114,6 +114,66 @@ onMounted(() => {
     loadProducts(0);
   }
 });
+const breadcrumbs = computed(() => {
+  const crumbs: Array<{
+    title: string;
+    disabled: boolean;
+    href: string;
+    filterType?: string;
+    filterValue?: string;
+  }> = [
+    {
+      title: 'Home',
+      disabled: false,
+      href: '/',
+    },
+    {
+      title: 'Catalog',
+      disabled: false,
+      href: '/catalog',
+    },
+  ];
+
+  if (categories.value.length > 0) {
+    availableCategories
+      .filter(cat => categories.value.includes(cat.id))
+      .forEach(cat => {
+        crumbs.push({
+          title: cat.name,
+          disabled: false,
+          href: `/catalog?category=${cat.id}`,
+          filterType: 'category',
+          filterValue: cat.id,
+        });
+      });
+  }
+
+  if (brands.value.length > 0) {
+    crumbs.push({
+      title: `Brands: ${brands.value.join(', ')}`,
+      disabled: true,
+      href: '#',
+    });
+  }
+
+  if (sportTypes.value.length > 0) {
+    crumbs.push({
+      title: `Sports: ${sportTypes.value.join(', ')}`,
+      disabled: true,
+      href: '#',
+    });
+  }
+
+  if (search.value) {
+    crumbs.push({
+      title: `Search: "${search.value}"`,
+      disabled: true,
+      href: '#',
+    });
+  }
+
+  return crumbs;
+});
 </script>
 <template>
   <div class="catalog-page">
@@ -143,7 +203,11 @@ onMounted(() => {
           style="min-width: 300px"
         ></v-text-field>
       </div>
-
+      <v-breadcrumbs :items="breadcrumbs">
+        <template v-slot:title="{ item }">
+          {{ item.title.toUpperCase() }}
+        </template>
+      </v-breadcrumbs>
       <v-container class="main-container">
         <div class="filters-container">
           <div class="filter-section">
@@ -222,7 +286,7 @@ onMounted(() => {
     color: v.$color-red;
   }
   .tools {
-    padding: 50px 0;
+    padding: 50px 0 25px 0;
     display: flex;
     justify-content: space-between;
     :deep(.v-text-field) {
