@@ -3,19 +3,30 @@ import { computed, onMounted, ref, shallowRef, watch } from 'vue';
 import { getProductById } from '../../services/product-service';
 import Snackbar from '../../components/layout/snack-bar.vue';
 import { useSnackbarStore } from '../../stores/snackbar';
+import { useAuthStore } from '../../stores/auth';
+import { useCartStore } from '../../stores/cart';
 import { formatPrice } from '../../utils/format-price';
 import type { ProductView } from '../../types/product';
 import { mapProductDataToProductView } from '../../utils/map-product';
 import CategoryButtons from '../../components/layout/category-buttons.vue';
 import Carousel from '../../components/layout/carousel.vue';
 import Modal from '../../components/layout/modal.vue';
+import { addProductToCart } from '../../services/cart-service';
+import { Errors } from '../../enums/errors';
 import { AppNames } from '../../enums/app-names';
 
 const snackbarStore = useSnackbarStore();
+const authStore = useAuthStore();
+const cartStore = useCartStore();
+
 const errorMessage = 'Failed to fetch product';
 const backButtonText = 'Back to catalog';
+const successMessage = 'Item added to cart';
+
 const { id } = defineProps<{ id: string }>();
 let product = ref<ProductView | null>(null);
+let variantsId = ref<number>(0);
+
 const isModalOpen = ref(false);
 const modalComponent = shallowRef();
 const modalProps = ref();
@@ -24,6 +35,9 @@ const buttonTextAdd = 'Add to Cart';
 onMounted(async () => {
   try {
     const productData = await getProductById(id);
+    console.log(' productData', productData);
+    variantsId.value = productData.variants[0].id;
+
     product.value = mapProductDataToProductView(productData);
   } catch {
     snackbarStore.error(errorMessage);
@@ -34,6 +48,14 @@ function openModal(): void {
     modalComponent.value = Carousel;
     modalProps.value = { images: product.value.images };
     isModalOpen.value = true;
+  }
+}
+function addInCart(): void {
+  try {
+    addProductToCart(authStore, cartStore, id, variantsId.value, 1);
+    snackbarStore.success(successMessage);
+  } catch {
+    snackbarStore.error(Errors.ProductNotAdd);
   }
 }
 
@@ -53,12 +75,12 @@ watch(
   { immediate: true },
 );
 
-const addToCart = (): void => {
+/*const addToCart = (): void => {
   if (!selectedSize.value || !product.value) return;
   console.log('Adding to cart:', {
     size: selectedSize.value,
   });
-};
+};*/
 </script>
 <template>
   <v-container class="py-6" v-if="product">
@@ -115,7 +137,7 @@ const addToCart = (): void => {
               color="primary"
               variant="flat"
               block
-              @click="addToCart"
+              @click="addInCart"
               :disabled="!selectedSize"
             >
               {{ buttonTextAdd }}

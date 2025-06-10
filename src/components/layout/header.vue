@@ -3,13 +3,14 @@ import DividerLine from '../ui/divider-line.vue';
 import Logo from '../ui/logo.vue';
 import { useAuthStore } from '../../stores/auth';
 import { useUserStore } from '../../stores/user';
-import { createAnonymClient } from '../../services/anonym-client';
+import { useCartStore } from '../../stores/cart';
 import { AppNames } from '../../enums/app-names';
 import { Pages } from '../../enums/pages';
 import { computed } from 'vue';
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
+const cartStore = useCartStore();
 
 const navLinks = computed(() => [
   { to: '/', text: Pages.Home, show: true },
@@ -22,8 +23,8 @@ const navLinks = computed(() => [
 function logout(): void {
   authStore.logOut();
   userStore.setUserProfile(null);
-  const anonymApiRoot = createAnonymClient();
-  authStore.setApiRoot(anonymApiRoot);
+  cartStore.cart = null;
+  cartStore.cartId = '';
 }
 </script>
 
@@ -41,14 +42,14 @@ function logout(): void {
         <RouterLink to="/user" v-if="authStore.isAuthenticated" title="User profile">
           <img src="../../assets/images/user.png" alt="user" width="15" height="15" />
         </RouterLink>
-        <a href="#" target="_blank">
+        <RouterLink to="/cart" title="Cart">
           <img
             src="../../assets/images/shopping-cart.png"
             alt="shopping-cart"
             width="15"
             height="15"
           />
-        </a>
+        </RouterLink>
       </div>
     </div>
     <DividerLine />

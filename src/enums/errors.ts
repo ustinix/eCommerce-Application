@@ -17,5 +17,7 @@ export enum Errors {
   PostalCodeFormat = 'The code must follow the format for the country (e.g., 12345 or A1B 2C3 for the U.S. and Canada, respectively).',
   ProductDescription = 'Product description not available',
   PasswordsNotMatch = 'Passwords do not match',
+  ProductNotAdd = 'There was an error adding the item to the cart',
   UnknownError = 'Unknown error',
+  LoadingCart = 'Error loading cart. Try again later',
 }

@@ -25,6 +25,7 @@ const passwordError = ref<string>('');
 async function login(event: Event): Promise<void> {
   event.preventDefault();
   await authStore.logIn(email.value, password.value);
+
   if (authStore.isAuthenticated) {
     router.push('/');
   }
