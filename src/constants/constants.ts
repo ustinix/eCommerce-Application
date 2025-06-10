@@ -6,6 +6,11 @@ import { AppNames } from '../enums/app-names';
 import type { SocialLink } from '../types/social-links';
 import type { RS } from '../types/social-links';
 
+export const COLORS = {
+  ACTIVE: 'primary',
+  INACTIVE: 'grey-lighten-2',
+};
+
 export const ksuData = {
   backgroundImage: '/avatarBg.jpg',
   avatarImage: '/KsuPhoto.jpg',

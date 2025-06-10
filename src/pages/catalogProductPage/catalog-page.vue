@@ -58,7 +58,6 @@ const loadProducts = async (offset = 0): Promise<void> => {
       },
     );
     products.value = response.results;
-    console.log(response.results);
     totalProducts.value = response.total || 0;
   } catch (error_) {
     error.value = error_ instanceof Error ? error_.message : Errors.UnknownError;
