@@ -83,9 +83,8 @@ export async function addProductToCart(
   console.log('Товар добавлен в корзину:');
   console.log(updatedCartResponse.body.lineItems);
   cartStore.cart = updatedCartResponse.body;
-  // return updatedCartResponse.body;
 }
-async function getCart(
+export async function getCart(
   authStore: ReturnType<typeof useAuthStore>,
   cartStore: ReturnType<typeof useCartStore>,
 ): Promise<void> {

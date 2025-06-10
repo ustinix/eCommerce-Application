@@ -5,4 +5,5 @@ export enum Pages {
   Login = 'Login',
   Registration = 'Registration',
   Logout = 'Logout',
+  Cart = 'My Cart',
 }
