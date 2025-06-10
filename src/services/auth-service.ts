@@ -1,7 +1,7 @@
 import { createHttpClient, createClient } from '@commercetools/sdk-client-v2';
 import { createAuthForPasswordFlow } from '@commercetools/sdk-client-v2';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import type { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk';
+import type { ByProjectKeyRequestBuilder, MyCustomerSignin } from '@commercetools/platform-sdk';
 import { tokenCache } from '../utils/token-cache';
 import { useAuthStore } from '../stores/auth';
 import { useCartStore } from '../stores/cart';
@@ -9,6 +9,11 @@ import { useCartStore } from '../stores/cart';
 const projectKey = import.meta.env.VITE_CTP_CLIENT_PROJECT_KEY;
 const AUTH_URL = import.meta.env.VITE_CTP_AUTH_URL;
 const API_URL = import.meta.env.VITE_CTP_API_URL;
+type ExtendedMyCustomerSignin = MyCustomerSignin & {
+  anonymousCart?: { id: string };
+  anonymousId?: string;
+  anonymousCartSignInMode?: 'MergeWithExistingCustomerCart' | 'UseAsNewActiveCustomerCart';
+};
 
 export async function loginCustomer(
   email: string,
@@ -24,15 +29,13 @@ export async function loginCustomer(
       .me()
       .login()
       .post({
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         body: {
           email,
           password,
           anonymousCart: { id: cartId },
           anonymousId: anonymousId ?? undefined,
           anonymousCartSignInMode: 'MergeWithExistingCustomerCart',
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any,
+        } as ExtendedMyCustomerSignin,
       })
       .execute();
     cartStore.cart = null;

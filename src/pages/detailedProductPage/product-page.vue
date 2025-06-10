@@ -15,14 +15,12 @@ import { addProductToCart } from '../../services/cart-service';
 import { Errors } from '../../enums/errors';
 import { AppNames } from '../../enums/app-names';
 
-
 const snackbarStore = useSnackbarStore();
 const authStore = useAuthStore();
 const cartStore = useCartStore();
 
 const errorMessage = 'Failed to fetch product';
 const backButtonText = 'Back to catalog';
-const addButton = 'Add to cart';
 const successMessage = 'Item added to cart';
 
 const { id } = defineProps<{ id: string }>();
@@ -77,12 +75,12 @@ watch(
   { immediate: true },
 );
 
-const addToCart = (): void => {
+/*const addToCart = (): void => {
   if (!selectedSize.value || !product.value) return;
   console.log('Adding to cart:', {
     size: selectedSize.value,
   });
-};
+};*/
 </script>
 <template>
   <v-container class="py-6" v-if="product">
@@ -113,7 +111,6 @@ const addToCart = (): void => {
             }}</span>
           </div>
 
-
           <div class="text-body-1" v-if="product.description">
             {{ product.description }}
           </div>
@@ -140,7 +137,7 @@ const addToCart = (): void => {
               color="primary"
               variant="flat"
               block
-              @click="addToCart"
+              @click="addInCart"
               :disabled="!selectedSize"
             >
               {{ buttonTextAdd }}
