@@ -1,4 +1,4 @@
-export enum Pages {
+export const enum Pages {
   Home = 'Home',
   Catalog = 'Catalog',
   About = 'About us',

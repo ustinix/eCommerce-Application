@@ -2,9 +2,9 @@
 import { computed, ref } from 'vue';
 import { Errors } from '../../enums/errors';
 import type { ProductProjection } from '@commercetools/platform-sdk';
-import { getAllSizes } from '../../utils/get-sizes';
 import { formatPrice } from '../../utils/format-price';
 import { AppNames } from '../../enums/app-names';
+import { mapProductProjection } from '../../utils/map-product-projection';
 
 const props = defineProps<{
   product: ProductProjection;
@@ -12,9 +12,9 @@ const props = defineProps<{
 
 const emit = defineEmits(['add-to-cart']);
 
-const productSizes = computed(() => getAllSizes(props.product));
+const productData = computed(() => mapProductProjection(props.product));
 
-const selectedSize = ref(productSizes.value[0]);
+const selectedSize = ref(productData.value.sizes[0]);
 
 const addToCart = (): void => {
   if (!selectedSize.value) return;
@@ -22,36 +22,27 @@ const addToCart = (): void => {
     productId: props.product.id,
     size: selectedSize.value,
   });
-  console.log('add');
 };
 </script>
 <template>
   <v-card class="product-card">
     <RouterLink :to="'/product/' + product.id" class="product-card_link">
-      <v-img
-        :src="product.masterVariant.images?.[0]?.url || 'https://via.placeholder.com/296x400'"
-        :alt="product.name?.['en-US']"
-        height="400"
-        cover
-      ></v-img>
+      <v-img :src="productData.image" :alt="productData.name" height="400" cover></v-img>
 
       <v-card-title class="d-flex flex-column align-center px-4 pt-4 pb-2">
-        <h3 class="text-h6">{{ product.name?.['en-US'] }}</h3>
+        <h3 class="text-h6">{{ productData.name }}</h3>
         <div class="price-container mt-2">
-          <span
-            class="original-price"
-            :class="{ 'line-through': product.masterVariant.prices?.[0]?.discounted }"
+          <span class="original-price" :class="{ 'line-through': productData.hasDiscount }">
+            {{ formatPrice(productData.price) }}</span
           >
-            {{ formatPrice(product.masterVariant.prices?.[0]?.value?.centAmount) }}</span
-          >
-          <span v-if="product.masterVariant.prices?.[0]?.discounted" class="discounted-price">{{
-            formatPrice(product.masterVariant.prices?.[0]?.discounted?.value.centAmount)
+          <span v-if="productData.hasDiscount" class="discounted-price">{{
+            formatPrice(productData.discountedPrice)
           }}</span>
         </div>
       </v-card-title>
 
       <v-card-text class="px-4 py-2 text-body-2">
-        {{ product.description?.['en-US'] || Errors.ProductDescription }}
+        {{ productData.description || Errors.ProductDescription }}
       </v-card-text>
 
       <v-divider class="mx-4"></v-divider>
@@ -65,7 +56,7 @@ const addToCart = (): void => {
         class="mt-2 justify-center"
       >
         <v-chip
-          v-for="size in productSizes"
+          v-for="size in productData.sizes"
           :key="size"
           :value="size"
           variant="outlined"

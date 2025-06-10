@@ -134,14 +134,14 @@ const breadcrumbs = computed(() => {
 
   if (categories.value.length > 0) {
     availableCategories
-      .filter(cat => categories.value.includes(cat.id))
-      .forEach(cat => {
+      .filter(category => categories.value.includes(category.id))
+      .forEach(category => {
         crumbs.push({
-          title: cat.name,
+          title: category.name,
           disabled: false,
-          href: `/catalog?category=${cat.id}`,
+          href: `/catalog?category=${category.id}`,
           filterType: 'category',
-          filterValue: cat.id,
+          filterValue: category.id,
         });
       });
   }
