@@ -58,7 +58,6 @@ const loadProducts = async (offset = 0): Promise<void> => {
       },
     );
     products.value = response.results;
-    console.log(response.results);
     totalProducts.value = response.total || 0;
   } catch (error_) {
     error.value = error_ instanceof Error ? error_.message : Errors.UnknownError;
@@ -82,10 +81,8 @@ watch(search, () => {
   }, 300);
 });
 
-const updateItemsPerPage = (breakpoint: string): void => {
-  itemsPerPage.value =
-    BreakpointsItemsPerPage[breakpoint as keyof typeof BreakpointsItemsPerPage] ||
-    DefaultItemsPerPage;
+const updateItemsPerPage = (breakpoint: keyof typeof BreakpointsItemsPerPage): void => {
+  itemsPerPage.value = BreakpointsItemsPerPage[breakpoint] || DefaultItemsPerPage;
   currentPage.value = 1;
   loadProducts(0);
 };
@@ -109,10 +106,71 @@ const handleCategoryChange = (): void => {
 };
 
 onMounted(() => {
-  if (route.query.category) {
-    categories.value = [route.query.category as string];
+  const categoryQuery = route.query.category;
+  if (typeof categoryQuery === 'string') {
+    categories.value = [categoryQuery];
     loadProducts(0);
   }
+});
+const breadcrumbs = computed(() => {
+  const crumbs: Array<{
+    title: string;
+    disabled: boolean;
+    href: string;
+    filterType?: string;
+    filterValue?: string;
+  }> = [
+    {
+      title: 'Home',
+      disabled: false,
+      href: '/',
+    },
+    {
+      title: 'Catalog',
+      disabled: false,
+      href: '/catalog',
+    },
+  ];
+
+  if (categories.value.length > 0) {
+    availableCategories
+      .filter(category => categories.value.includes(category.id))
+      .forEach(category => {
+        crumbs.push({
+          title: category.name,
+          disabled: false,
+          href: `/catalog?category=${category.id}`,
+          filterType: 'category',
+          filterValue: category.id,
+        });
+      });
+  }
+
+  if (brands.value.length > 0) {
+    crumbs.push({
+      title: `Brands: ${brands.value.join(', ')}`,
+      disabled: true,
+      href: '#',
+    });
+  }
+
+  if (sportTypes.value.length > 0) {
+    crumbs.push({
+      title: `Sports: ${sportTypes.value.join(', ')}`,
+      disabled: true,
+      href: '#',
+    });
+  }
+
+  if (search.value) {
+    crumbs.push({
+      title: `Search: "${search.value}"`,
+      disabled: true,
+      href: '#',
+    });
+  }
+
+  return crumbs;
 });
 </script>
 <template>
@@ -143,7 +201,11 @@ onMounted(() => {
           style="min-width: 300px"
         ></v-text-field>
       </div>
-
+      <v-breadcrumbs :items="breadcrumbs">
+        <template v-slot:title="{ item }">
+          {{ item.title.toUpperCase() }}
+        </template>
+      </v-breadcrumbs>
       <v-container class="main-container">
         <div class="filters-container">
           <div class="filter-section">
@@ -222,7 +284,7 @@ onMounted(() => {
     color: v.$color-red;
   }
   .tools {
-    padding: 50px 0;
+    padding: 50px 0 25px 0;
     display: flex;
     justify-content: space-between;
     :deep(.v-text-field) {

@@ -1,26 +1,8 @@
 import type { ProductProjectionPagedSearchResponse } from '@commercetools/platform-sdk';
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import { ClientBuilder } from '@commercetools/sdk-client-v2';
 import type { Product, ProductData } from '@commercetools/platform-sdk';
+import apiRoot from '../services/сlient-credentials-flow';
 
 const projectKey = 'rss-ecom';
-
-const client = new ClientBuilder()
-  .withClientCredentialsFlow({
-    host: import.meta.env.VITE_CTP_AUTH_URL,
-    projectKey,
-    credentials: {
-      clientId: import.meta.env.VITE_CTP_CLIENT_ID,
-      clientSecret: import.meta.env.VITE_CTP_CLIENT_SECRET,
-    },
-    scopes: [`view_products:${projectKey}`],
-  })
-  .withHttpMiddleware({
-    host: import.meta.env.VITE_CTP_API_URL,
-  })
-  .build();
-
-const apiRoot = createApiBuilderFromCtpClient(client);
 
 export default {
   async getProducts(
@@ -56,25 +38,25 @@ export default {
       };
 
       if (searchParameters) {
-        queryArguments['text.en-US'] = searchParameters;
-        queryArguments.fuzzy = true;
+        Object.assign(queryArguments, {
+          'text.en-US': searchParameters,
+          fuzzy: true,
+        });
       }
 
-      if (filters?.categories?.length || filters?.brands?.length || filters?.sportTypes?.length) {
-        const filterQueries: string[] = [];
+      const filterQueries = [
+        filters?.categories?.length
+          ? `categories.id:${filters.categories.map(id => `"${id}"`).join(',')}`
+          : undefined,
+        filters?.brands?.length
+          ? `variants.attributes.brand:"${filters.brands.join('","')}"`
+          : undefined,
+        filters?.sportTypes?.length
+          ? `variants.attributes.sport-type:"${filters.sportTypes.join('","')}"`
+          : undefined,
+      ].filter((item): item is string => item !== undefined);
 
-        if (filters?.categories?.length) {
-          filterQueries.push(`categories.id:${filters.categories.map(id => `"${id}"`).join(',')}`);
-        }
-
-        if (filters?.brands?.length) {
-          filterQueries.push(`variants.attributes.brand:"${filters.brands.join('","')}"`);
-        }
-
-        if (filters?.sportTypes?.length) {
-          filterQueries.push(`variants.attributes.sport-type:"${filters.sportTypes.join('","')}"`);
-        }
-
+      if (filterQueries.length > 0) {
         queryArguments['filter.query'] = filterQueries;
       }
 
@@ -93,11 +75,15 @@ export default {
     }
   },
 };
+
 export async function getProductById(id: string): Promise<ProductData> {
-  const apiRoot = createApiBuilderFromCtpClient(client).withProjectKey({ projectKey });
-  const response = await apiRoot.products().withId({ ID: id }).get().execute();
+  const response = await apiRoot
+    .withProjectKey({ projectKey })
+    .products()
+    .withId({ ID: id })
+    .get()
+    .execute();
   const product: Product = response.body;
-  console.log('product', response.body);
   const currentData: ProductData = product.masterData.current;
   return currentData;
 }

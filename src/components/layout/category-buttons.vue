@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
-import { categoriesId } from '../../constants/constants';
+import { computed } from 'vue';
+import { categoriesId, COLORS } from '../../constants/constants';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -16,66 +16,51 @@ const emit = defineEmits<{
   (error: 'change', categoryId: string | null): void;
 }>();
 
-const availableCategories = categoriesId.map(cat => ({
-  name: cat.name,
-  id: cat.id,
-}));
+const availableCategories = computed(() =>
+  categoriesId.map(category => ({
+    name: category.name,
+    id: category.id,
+    isActive: activeCategory.value === category.id,
+    color: activeCategory.value === category.id ? COLORS.ACTIVE : COLORS.INACTIVE,
+  })),
+);
 
-const activeCategory = ref<string | null>(props.currentCategory || props.modelValue?.[0] || null);
-
-const selectCategory = (categoryId: string): void => {
-  if (activeCategory.value === categoryId) {
-    activeCategory.value = null;
-    emit('update:modelValue', []);
-    emit('change', null);
-    if (props.withRouting) {
-      router.push({ path: '/catalog' });
+const activeCategory = computed({
+  get() {
+    return props.currentCategory || props.modelValue?.[0] || null;
+  },
+  set(value: string | null) {
+    if (value === activeCategory.value) {
+      handleCategoryChange(null);
+    } else {
+      handleCategoryChange(value);
     }
-    return;
-  }
+  },
+});
 
-  activeCategory.value = categoryId;
-  emit('update:modelValue', [categoryId]);
+const handleCategoryChange = (categoryId: string | null): void => {
+  emit('update:modelValue', categoryId ? [categoryId] : []);
   emit('change', categoryId);
 
   if (props.withRouting) {
+    updateRoute(categoryId);
+  }
+};
+
+const updateRoute = (categoryId: string | null): void => {
+  if (categoryId) {
     router.push({
       path: '/catalog',
       query: { category: categoryId },
     });
+  } else {
+    router.push({ path: '/catalog' });
   }
 };
 
-watch(
-  () => props.modelValue,
-  newValue => {
-    if (!newValue || newValue.length === 0) {
-      activeCategory.value = null;
-    } else if (newValue[0] !== activeCategory.value) {
-      activeCategory.value = newValue[0];
-    }
-  },
-);
-
-watch(
-  () => props.currentCategory,
-  newValue => {
-    activeCategory.value = newValue || null;
-  },
-);
-
-const vuetifyColorRed = 'primary';
-const vuetifyColorGray = 'grey-lighten-2';
-function checkIsActive(id: string): boolean {
-  return activeCategory.value === id;
-}
-
-function getButtonColorById(id: string): string {
-  return checkIsActive(id) ? vuetifyColorRed : vuetifyColorGray;
-}
-
-const isActive = computed(() => checkIsActive);
-const getButtonColor = computed(() => getButtonColorById);
+const selectCategory = (categoryId: string): void => {
+  activeCategory.value = activeCategory.value === categoryId ? null : categoryId;
+};
 </script>
 
 <template>
@@ -83,11 +68,11 @@ const getButtonColor = computed(() => getButtonColorById);
     <v-btn
       v-for="category in availableCategories"
       :key="category.id"
-      :color="getButtonColor(category.id)"
+      :color="category.color"
       size="x-large"
       @click="selectCategory(category.id)"
       class="category-btn px-4"
-      :class="{ 'active-category': isActive(category.id) }"
+      :class="{ 'active-category': category.isActive }"
     >
       {{ category.name }}
     </v-btn>

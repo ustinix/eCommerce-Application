@@ -12,7 +12,7 @@ export function getAllSizes(product: ProductProjection | ProductData): string[] 
     if (sizeAttribute?.value && Array.isArray(sizeAttribute.value)) {
       for (const sizeObject of sizeAttribute.value) {
         if (sizeObject?.key) {
-          uniqueSizeKeys.add(sizeObject.key);
+          uniqueSizeKeys.add(String(sizeObject.key));
         }
       }
     }
