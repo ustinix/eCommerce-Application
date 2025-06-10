@@ -81,10 +81,8 @@ watch(search, () => {
   }, 300);
 });
 
-const updateItemsPerPage = (breakpoint: string): void => {
-  itemsPerPage.value =
-    BreakpointsItemsPerPage[breakpoint as keyof typeof BreakpointsItemsPerPage] ||
-    DefaultItemsPerPage;
+const updateItemsPerPage = (breakpoint: keyof typeof BreakpointsItemsPerPage): void => {
+  itemsPerPage.value = BreakpointsItemsPerPage[breakpoint] || DefaultItemsPerPage;
   currentPage.value = 1;
   loadProducts(0);
 };
@@ -108,8 +106,9 @@ const handleCategoryChange = (): void => {
 };
 
 onMounted(() => {
-  if (route.query.category) {
-    categories.value = [route.query.category as string];
+  const categoryQuery = route.query.category;
+  if (typeof categoryQuery === 'string') {
+    categories.value = [categoryQuery];
     loadProducts(0);
   }
 });

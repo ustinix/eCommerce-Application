@@ -38,7 +38,7 @@ const activeCategory = computed({
   },
 });
 
-const handleCategoryChange = (categoryId: string | null) => {
+const handleCategoryChange = (categoryId: string | null): void => {
   emit('update:modelValue', categoryId ? [categoryId] : []);
   emit('change', categoryId);
 
@@ -47,7 +47,7 @@ const handleCategoryChange = (categoryId: string | null) => {
   }
 };
 
-const updateRoute = (categoryId: string | null) => {
+const updateRoute = (categoryId: string | null): void => {
   if (categoryId) {
     router.push({
       path: '/catalog',
@@ -58,7 +58,7 @@ const updateRoute = (categoryId: string | null) => {
   }
 };
 
-const selectCategory = (categoryId: string) => {
+const selectCategory = (categoryId: string): void => {
   activeCategory.value = activeCategory.value === categoryId ? null : categoryId;
 };
 </script>

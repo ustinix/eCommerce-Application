@@ -6,12 +6,9 @@ import { getAllSizes } from '../../utils/get-sizes';
 import { formatPrice } from '../../utils/format-price';
 import { AppNames } from '../../enums/app-names';
 
-const props = defineProps({
-  product: {
-    type: Object as () => ProductProjection,
-    required: true,
-  },
-});
+const props = defineProps<{
+  product: ProductProjection;
+}>();
 
 const emit = defineEmits(['add-to-cart']);
 
