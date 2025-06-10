@@ -7,7 +7,7 @@ import type { SocialLink } from '../types/social-links';
 import type { RS } from '../types/social-links';
 
 export const ksuData = {
-  backgroundImage: '/фон.jpg',
+  backgroundImage: '/avatarBg.jpg',
   avatarImage: '/KsuPhoto.jpg',
   title: 'Arsenteva Ksenia',
   subtitle: 'Developer',
@@ -29,7 +29,7 @@ export const ksuData = {
 };
 
 export const olgaData = {
-  backgroundImage: '/фон.jpg',
+  backgroundImage: '/avatarBg.jpg',
   avatarImage: '/OlgaPhoto.jpg',
   title: 'Alexandrova Olga',
   subtitle: 'Developer',
