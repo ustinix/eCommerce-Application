@@ -12,33 +12,14 @@ if (authStore.isAuthenticated) {
 </script>
 
 <template>
-  <div class="hero">
+  <div class="hero-login">
     <h2 class="hero_title">{{ title }}</h2>
   </div>
   <loginForm />
 </template>
 <style lang="scss" scoped>
-@use '../../assets/styles/variables.scss' as v;
-
-.hero {
-  background: url('../../assets/images/hero.png') no-repeat center center;
-  background-size: auto 100%;
-  width: 100%;
-  height: 229px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.hero_title {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 700;
-  font-size: 50px;
-  line-height: 100%;
-  letter-spacing: 0%;
-  color: v.$color-white;
-  text-align: center;
-  @media (max-width: 500px) {
-    font-size: 25px;
-  }
+@use '../../assets/styles/hero.scss' as *;
+.hero-login {
+  @include hero-section('../../assets/images/hero.png');
 }
 </style>

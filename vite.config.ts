@@ -15,18 +15,12 @@ export default defineConfig({
   ],
   test: {
     environment: 'jsdom',
-    globals: true, 
-      deps: {
+    globals: true,
+    deps: {
       inline: ['vuetify'],
-  },
-   coverage: {
-      exclude: [
-        '**/*.cjs',
-        '**/*.mjs',
-        'node_modules/',
-        'dist/',
-        '**/*.d.ts',
-       ],
+    },
+    coverage: {
+      exclude: ['**/*.cjs', '**/*.mjs', 'node_modules/', 'dist/', '**/*.d.ts'],
     },
   },
 });

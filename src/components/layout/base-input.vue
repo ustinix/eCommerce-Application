@@ -12,7 +12,10 @@ const props = defineProps<{
 
 const requiredText = '*';
 
-const emit = defineEmits<(event: 'update:modelValue', value: string) => void>();
+const emit = defineEmits<{
+  (event: 'update:modelValue', value: string): void;
+  (event: 'update:error', error: string): void;
+}>();
 
 const inputValue = ref(props.modelValue);
 const errorMessage = ref('');
@@ -21,6 +24,7 @@ const showPassword = ref(false);
 watch(inputValue, value => {
   emit('update:modelValue', value);
   errorMessage.value = props.validate ? props.validate(value) : '';
+  emit('update:error', errorMessage.value);
 });
 watch(
   () => props.modelValue,

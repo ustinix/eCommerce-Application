@@ -9,19 +9,20 @@ import type { CustomerSignInResult } from '@commercetools/platform-sdk';
 import { type Address } from '../../types/address';
 import {
   countryCityList,
-  Errors,
   userData,
   shippingAddress,
   billingAddress,
-} from '../../assets/constants';
-import { loginCustomer } from '../../services/auth-service';
+} from '../../constants/constants';
+import { Errors } from '../../enums/errors';
 import { validateName } from '../../utils/validate-name';
 import { validateSurame } from '../../utils/validate-surname';
 import { usePostalCodeValidation } from '../../utils/validate-postal-code';
 import { validateDate } from '../../utils/validate-date';
 import { validateEmail } from '../../utils/validate-email';
 import { validatePassword } from '../../utils/validate-password';
-import { SetAddress, Labels, Placeholders } from '../../assets/constants';
+import { Placeholders } from '../../enums/placeholders';
+import { Labels } from '../../enums/labels';
+import { SetAddress } from '../../enums/set-address';
 
 const disabled = defineModel<boolean>('disabled', { default: false });
 const { validateCode } = usePostalCodeValidation(disabled);
@@ -46,10 +47,10 @@ function addSameAddress(): void {
     ? {
         country: shippingAddress.value.country,
         city: shippingAddress.value.city,
-        street: shippingAddress.value.street,
-        code: shippingAddress.value.code,
+        streetName: shippingAddress.value.streetName,
+        postalCode: shippingAddress.value.postalCode,
       }
-    : { country: '', city: '', street: '', code: '' };
+    : { country: '', city: '', streetName: '', postalCode: '' };
 }
 
 watch(useSameAddress, sameAddress => {
@@ -70,7 +71,12 @@ watch(
 
 function isButtonDisabled(): boolean {
   const { firstName, surname, email, password, date } = userData.value;
-  const { country: sCountry, city: sCity, street: sStreet, code: sCode } = shippingAddress.value;
+  const {
+    country: sCountry,
+    city: sCity,
+    streetName: sStreet,
+    postalCode: sCode,
+  } = shippingAddress.value;
 
   const requiredFields = [
     firstName,
@@ -85,7 +91,12 @@ function isButtonDisabled(): boolean {
   ];
 
   if (!useSameAddress.value) {
-    const { country: bCountry, city: bCity, street: bStreet, code: bCode } = billingAddress.value;
+    const {
+      country: bCountry,
+      city: bCity,
+      streetName: bStreet,
+      postalCode: bCode,
+    } = billingAddress.value;
     requiredFields.push(bCountry, bCity, bStreet, bCode);
   }
 
@@ -103,7 +114,6 @@ async function registration(event: Event): Promise<void> {
     if (!useSameAddress.value) {
       addresses.push(createAddress(billingAddress.value));
     }
-
     const result = await createCustomer(
       userData.value.firstName,
       userData.value.surname,
@@ -130,8 +140,8 @@ function createAddress(address: typeof shippingAddress.value): Address {
   return {
     country: countryCode,
     city: address.city,
-    street: address.street,
-    code: address.code,
+    streetName: address.streetName,
+    postalCode: address.postalCode,
   };
 }
 
@@ -140,23 +150,9 @@ function getDefaultBillingAddress(isDefault: boolean, isSameAddress: boolean): n
 }
 
 async function handleAutoLogin(): Promise<void> {
-  try {
-    await loginCustomer(
-      userData.value.email,
-      userData.value.password,
-      () => {
-        authStore.setUser(userData.value.email);
-        authStore.setAuth(true);
-        router.push('/');
-      },
-      () => {
-        authStore.setError(Errors.AutoLogin);
-        router.push('/login');
-      },
-    );
-  } catch {
-    authStore.setError(Errors.AutoLogin);
-    router.push('/login');
+  await authStore.logIn(userData.value.email, userData.value.password);
+  if (authStore.isAuthenticated) {
+    router.push('/');
   }
 }
 
@@ -241,13 +237,13 @@ function handleRegistrationError(error: unknown): void {
         <AddressForm
           label="Street"
           placeholder="Street"
-          v-model="shippingAddress.street"
+          v-model="shippingAddress.streetName"
           fieldType="street"
           :disabled="false"
         />
         <BaseInput
           data-test="PostalCode-input"
-          v-model="shippingAddress.code"
+          v-model="shippingAddress.postalCode"
           :label="Labels.labelCode"
           :placeholder="Placeholders.placeholderCode"
           required
@@ -285,13 +281,13 @@ function handleRegistrationError(error: unknown): void {
         <AddressForm
           label="Street"
           placeholder="Street"
-          v-model="billingAddress.street"
+          v-model="billingAddress.streetName"
           fieldType="street"
           :disabled="useSameAddress"
         />
         <BaseInput
           data-test="billingPostalCode-input"
-          v-model="billingAddress.code"
+          v-model="billingAddress.postalCode"
           :label="Labels.labelCode"
           :placeholder="Placeholders.placeholderCode"
           required

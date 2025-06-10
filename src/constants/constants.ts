@@ -1,6 +1,82 @@
 import { ref } from 'vue';
 import type { UserData } from '../types/user-data';
 import { type Address } from '../types/address';
+import type { CountryCityData } from '../types/country-data';
+import { AppNames } from '../enums/app-names';
+import type { SocialLink } from '../types/social-links';
+import type { RS } from '../types/social-links';
+
+export const COLORS = {
+  ACTIVE: 'primary',
+  INACTIVE: 'grey-lighten-2',
+};
+
+export const ksuData = {
+  backgroundImage: '/avatarBg.jpg',
+  avatarImage: '/KsuPhoto.jpg',
+  title: 'Arsenteva Ksenia',
+  subtitle: 'Developer',
+  aboutText:
+    'I have been studying Frontend for a year and a half. My goal is to learn as much as possible about front-end development. I have completed several free courses and want to continue developing my skills. I really enjoy learning new things.',
+  contributionTitle: AppNames.Contribution,
+  items: [
+    { text: 'Repository setup', icon: 'mdi-clock' },
+    { text: 'Development environment configuration and scripts', icon: 'mdi-paperclip' },
+    { text: 'Registration pages (cliet side + server-side)', icon: 'mdi-book' },
+    { text: 'Make product lis with all data;', icon: 'mdi-checkbox-marked' },
+    { text: 'Catalog page (cliet side + server-side)', icon: 'mdi-flag' },
+    { text: 'Navigation and Header, Footer implementation', icon: 'mdi-menu' },
+    { text: 'Routing implementation', icon: 'mdi-radiobox-marked' },
+    { text: 'About page implementation', icon: 'mdi-heart' },
+  ],
+  github: 'https://github.com/ustinix',
+  githubLabel: 'GitHub',
+};
+
+export const olgaData = {
+  backgroundImage: '/avatarBg.jpg',
+  avatarImage: '/OlgaPhoto.jpg',
+  title: 'Alexandrova Olga',
+  subtitle: 'Developer',
+  aboutText:
+    'First and foremost, I want to gain new knowledge, skills, and experience. I am confident that they will be useful to me in the future. A good achievement would be to successfully complete all stages of training and get a new job. ',
+  contributionTitle: AppNames.Contribution,
+  items: [
+    { text: 'Task board setup', icon: 'mdi-calendar' },
+    { text: 'CommerceTools project and api client setup;', icon: 'mdi-paperclip' },
+    { text: 'Login pages (cliet side + server-side)', icon: 'mdi-checkbox-marked' },
+    { text: 'User page (cliet side + server-side);', icon: 'mdi-account' },
+    { text: 'Edit user profile information;', icon: 'mdi-pencil' },
+    { text: 'Detailed product page (cliet side + server-side);', icon: 'mdi-star' },
+    { text: 'Enlarged image modal with slider', icon: 'mdi-checkbox-blank-outline' },
+    { text: 'Shopping cart integration', icon: 'mdi-cart' },
+  ],
+  github: 'https://github.com/AlexOlga',
+  githubLabel: 'GitHub',
+};
+const SocialLinksTitles = {
+  Ksenia: 'Ksenia GitHub',
+  Olga: 'Olga GitHub',
+  RS: 'RS School',
+};
+
+export const rs: RS = {
+  url: 'https://rs.school/courses/javascript-ru',
+  title: SocialLinksTitles.RS,
+};
+
+export const socialLinks: SocialLink[] = [
+  {
+    icon: 'mdi-github',
+    url: 'https://github.com/ustinix',
+    title: SocialLinksTitles.Ksenia,
+  },
+  {
+    icon: 'mdi-github',
+    url: 'https://github.com/AlexOlga',
+    title: SocialLinksTitles.Olga,
+  },
+];
 
 export const userData = ref<UserData>({
   firstName: '',
@@ -13,83 +89,61 @@ export const userData = ref<UserData>({
 export const shippingAddress = ref<Address>({
   country: '',
   city: '',
-  street: '',
-  code: '',
+  streetName: '',
+  postalCode: '',
 });
 
 export const billingAddress = ref<Address>({
   country: '',
   city: '',
-  street: '',
-  code: '',
+  streetName: '',
+  postalCode: '',
 });
 
-export enum AppNames {
-  Shop = 'BEST SHOP',
-  AppName = 'Ecommerce-app',
-}
+export const categoriesId = [
+  {
+    name: 'kids',
+    id: '26afa04e-6808-4105-936e-17bd35349eac',
+    sizes: ['29', '30', '31', '32', '33', '34', '35'],
+  },
+  {
+    name: 'men',
+    id: 'd265d4e2-da90-48af-ab26-700d36660c3a',
+    sizes: ['42', '43', '44', '45', '46', '47', '48'],
+  },
+  {
+    name: 'women',
+    id: '113f3bd3-16dc-4786-bc24-1630856e00aa',
+    sizes: ['36', '37', '38', '39', '40', '41'],
+  },
+];
 
-export enum Pages {
-  Home = 'Home',
-  Catalog = 'Catalog',
-  About = 'About us',
-  Login = 'Login',
-  Registration = 'Registration',
-  Logout = 'Logout',
-}
+export const dollarSing = '$';
 
-export enum Errors {
-  Common = 'This field must not contain leading or trailing whitespace',
-  Street = 'Street cannot be empty',
-  AutoLogin = 'Auto-login failed. Please log in manually.',
-  AccountExist = 'An account with this email already exists. Please log in.',
-  Registration = 'Registration failed. Please try again.',
-  DateFormat = 'The date must be in the YYYY-MM-DD format.',
-  AgeError = 'You must be at least 13 years old.',
-  NameSpace = 'Name must not contain leading or trailing whitespace',
-  NameFormat = 'The name must contain at least one character and no special characters or numbers.',
-  SurnameSpace = 'Surname must not contain leading or trailing whitespace.',
-  SurnameFormat = 'The surname must contain at least one character and no special characters or numbers.',
-  EmailSpace = 'Email address must not contain leading or trailing whitespace',
-  EmailFormat = 'Email address must contain an "@" symbol, local part and domain name.',
-  EmailSymbol = 'must contain an "@" symbol',
-  PasswordFormat = 'Password must contain at least 8 characters, uppercase and lowercase letter, number and special character',
-  PostalCodeFormat = 'The code must follow the format for the country (e.g., 12345 or A1B 2C3 for the U.S. and Canada, respectively).',
-}
+export const BreakpointsItemsPerPage = {
+  xs: 4,
+  sm: 6,
+  md: 6,
+  lg: 6,
+  xl: 8,
+  xxl: 8,
+};
 
-export enum SetAddress {
-  Same = 'Use the same address for billing',
-  DefaultShipping = 'Set as default shipping address',
-  DefaultBilling = 'Set as default billing address',
-}
+export const sortOptions = [
+  { title: 'Name (А-Z)', value: 'name.en-US asc' },
+  { title: 'Name (Z-А)', value: 'name.en-US desc' },
+  { title: 'Price: Low to High', value: 'price asc' },
+  { title: 'Price: High to Low', value: 'price desc' },
+];
 
-export enum Labels {
-  labelName = 'First Name',
-  labelSurname = 'Surname',
-  labelEmail = 'Email address',
-  labelPassword = 'Password',
-  labelDate = 'Date',
-  labelCode = 'Postal code',
-}
+export const availableBrands = ['New Balance', 'Reebok', 'Adidas', 'Puma', 'Nike'];
+export const availableSportTypes = ['football', 'fitness', 'basketball', 'casual', 'running'];
 
-export enum Placeholders {
-  placeholderName = 'First Name',
-  placeholderSurname = 'Surname',
-  placeholderEmail = 'Enter your email',
-  placeholderPassword = 'Password',
-  placeholderCode = 'Postal code',
-}
+export const DefaultItemsPerPage = 8;
 
 export const InputStar = '*';
 export const DropSign = '▼';
 export const FooterText = 'The application is written as part of the RS School training course.';
-
-type CountryData = {
-  isoCode: string;
-  cities: string[];
-};
-
-type CountryCityData = Record<string, CountryData>;
 
 export const countryCityList: CountryCityData = {
   Russia: {
