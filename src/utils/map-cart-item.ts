@@ -16,7 +16,7 @@ export function mapCartItem(cartData: LineItem): cartItem {
     name: cartData.name?.[prefix] ?? '',
     price: cartData.price.value.centAmount || null,
     quantity: cartData.quantity,
-    image: cartData.variant.images?.[0] ?? placeholderImage,
+    imageUrl: cartData.variant.images?.[0]?.url ?? placeholderImage.url,
     sizes: sizeAttribute?.value ?? '',
   };
 }

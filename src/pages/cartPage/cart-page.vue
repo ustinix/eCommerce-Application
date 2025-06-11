@@ -20,6 +20,7 @@ onMounted(async () => {
   try {
     await getCart(authStore, cartStore);
     lineItems.value = cartStore.cart?.lineItems ?? [];
+    console.log(lineItems.value);
   } catch {
     snackbarStore.error(Errors.LoadingCart);
   }
