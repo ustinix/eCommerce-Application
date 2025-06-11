@@ -20,7 +20,7 @@ const finalPrice = (): number => {
 };
 </script>
 <template>
-  <v-card flat class="py-2 px-4 border-b border-red">
+  <v-card flat class="py-2 border-b border-red">
     <v-row align="center" no-gutters>
       <v-col cols="1" class="photo">
         <v-img
@@ -72,6 +72,6 @@ const finalPrice = (): number => {
 <style lang="scss" scoped>
 @use '../../assets/styles/variables.scss' as v;
 .border-red {
-  border-bottom: 2px solid #f44336;
+  border-bottom: 2px solid v.$color-red;
 }
 </style>

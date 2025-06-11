@@ -20,4 +20,5 @@ export enum Errors {
   ProductNotAdd = 'There was an error adding the item to the cart',
   UnknownError = 'Unknown error',
   LoadingCart = 'Error loading cart. Try again later',
+  PromoFormat = 'The promo must contain at least one character and no special characters or numbers.',
 }

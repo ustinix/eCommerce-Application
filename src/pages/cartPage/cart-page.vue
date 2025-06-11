@@ -10,6 +10,12 @@ import { getCart } from '../../services/cart-service';
 import { Errors } from '../../enums/errors';
 import CartMessage from '../../components/layout/cart-message.vue';
 import CartItem from '../../components/layout/cart-item.vue';
+import BaseInput from '../../components/layout/base-input.vue';
+import { Placeholders } from '../../enums/placeholders';
+import { Labels } from '../../enums/labels';
+import { validatePromo } from '../../utils/validate-promo';
+
+const promoCode = ref<string>('');
 
 const authStore = useAuthStore();
 const cartStore = useCartStore();
@@ -36,6 +42,35 @@ const isCartEmpty = computed(() => {
     </div>
     <CartMessage v-if="isCartEmpty" />
     <CartItem v-else v-for="item in lineItems" :key="item.id" :line-item="item" />
+    <v-card flat class="py-2 border-b border-red">
+      <v-row align="center" no-gutters>
+        <v-col cols="5" class="text-end summ">
+          <BaseInput
+            data-test="name-input"
+            v-model="promoCode"
+            :label="Labels.promoCode"
+            :placeholder="Placeholders.placeholderPromo"
+            required
+            type="text"
+            :validate="validatePromo"
+          />
+        </v-col>
+      </v-row>
+    </v-card>
+    <v-card flat class="py-2 border-b border-red">
+      <v-row align="center" no-gutters>
+        <v-col cols="10" class="text-end summ">Скидка:</v-col>
+        <v-col cols="1" class="text-end summ">12345</v-col>
+        <v-col cols="1" class="text-end summ"></v-col>
+      </v-row>
+    </v-card>
+    <v-card flat class="py-2 border-b border-red">
+      <v-row align="center" no-gutters>
+        <v-col cols="10" class="text-end summ">Total:</v-col>
+        <v-col cols="1" class="text-end summ">12345</v-col>
+        <v-col cols="1" class="text-end summ"></v-col>
+      </v-row>
+    </v-card>
   </v-container>
 
   <Snackbar />
