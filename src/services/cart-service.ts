@@ -1,5 +1,5 @@
-import type { useAuthStore } from '../stores/auth';
-import type { useCartStore } from '../stores/cart';
+import { useAuthStore } from '../stores/auth';
+import { useCartStore } from '../stores/cart';
 import type { Cart } from '@commercetools/platform-sdk';
 
 async function createAnonymousCart(
@@ -17,7 +17,6 @@ async function createAnonymousCart(
       },
     })
     .execute();
-  console.log('new anonym', cartResponse.body);
   cartStore.cartId = cartResponse.body.id;
   cartStore.anonymousId = cartResponse.body.anonymousId ?? undefined;
   return cartResponse.body;
@@ -57,7 +56,6 @@ export async function addProductToCart(
   };
   console.log('d', d);
   if (cartStore.cart === null) {
-    console.log('нет корзины');
     return;
   }
   const apiRoot = await authStore.currentApiRoot;
@@ -124,4 +122,29 @@ async function getUserCart(authStore: ReturnType<typeof useAuthStore>): Promise<
       ? await createUserCart(authStore)
       : cartResponse.body.results[0];
   return cart;
+}
+export async function removeProduct(id: string, quantity: number): Promise<void> {
+  const authStore = useAuthStore();
+  const cartStore = useCartStore();
+  if (cartStore.cart === null) return;
+  const apiRoot = await authStore.currentApiRoot;
+  const response = await apiRoot
+    .me()
+    .carts()
+    .withId({ ID: cartStore.cart.id })
+    .post({
+      body: {
+        version: cartStore.cart.version,
+        actions: [
+          {
+            action: 'removeLineItem',
+            lineItemId: id,
+            quantity,
+          },
+        ],
+      },
+    })
+    .execute();
+  console.log('newcar', response.body);
+  cartStore.cart = response.body;
 }
