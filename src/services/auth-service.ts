@@ -29,6 +29,7 @@ export async function loginCustomer(
       .me()
       .login()
       .post({
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         body: {
           email,
           password,

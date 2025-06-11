@@ -21,10 +21,10 @@ export function getOrCreateAnonymousId(): string {
   }
   return anonymousId;
 }
-//localStorage.removeItem('ct-anonymous-id');
 
 export async function createAnonymClient(): Promise<ByProjectKeyRequestBuilder> {
   const anonymousId = getOrCreateAnonymousId();
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   const authOptions: AuthMiddlewareOptions = {
     host: AUTH_URL,
     projectKey,

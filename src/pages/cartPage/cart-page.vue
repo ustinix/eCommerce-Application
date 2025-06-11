@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, computed, ref } from 'vue';
-import type { LineItem } from '@commercetools/platform-sdk';
+
 import Snackbar from '../../components/layout/snack-bar.vue';
 import { useSnackbarStore } from '../../stores/snackbar';
 import { useAuthStore } from '../../stores/auth';
@@ -9,7 +9,7 @@ import { Pages } from '../../enums/pages';
 import { getCart } from '../../services/cart-service';
 import { Errors } from '../../enums/errors';
 import CartMessage from '../../components/layout/cart-message.vue';
-import CartItem from '../../components/layout/cart-item.vue';
+import CartList from '../../components/layout/cart-list.vue';
 import BaseInput from '../../components/layout/base-input.vue';
 import { Placeholders } from '../../enums/placeholders';
 import { Labels } from '../../enums/labels';
@@ -20,19 +20,16 @@ const promoCode = ref<string>('');
 const authStore = useAuthStore();
 const cartStore = useCartStore();
 const snackbarStore = useSnackbarStore();
-let lineItems = ref<LineItem[]>([]);
 
 onMounted(async () => {
   try {
     await getCart(authStore, cartStore);
-    lineItems.value = cartStore.cart?.lineItems ?? [];
-    console.log(lineItems.value);
   } catch {
     snackbarStore.error(Errors.LoadingCart);
   }
 });
 const isCartEmpty = computed(() => {
-  return lineItems.value.length === 0;
+  return cartStore.cart === null || cartStore.cart?.lineItems.length === 0;
 });
 </script>
 <template>
@@ -41,7 +38,7 @@ const isCartEmpty = computed(() => {
       <h2 class="hero_title">{{ Pages.Cart }}</h2>
     </div>
     <CartMessage v-if="isCartEmpty" />
-    <CartItem v-else v-for="item in lineItems" :key="item.id" :line-item="item" />
+    <CartList v-else />
     <v-card flat class="py-2 border-b border-red">
       <v-row align="center" no-gutters>
         <v-col cols="5" class="text-end summ">
