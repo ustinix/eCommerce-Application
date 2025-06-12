@@ -52,7 +52,7 @@ const isDecreaseDisabled = (): boolean => dataItem.value.quantity < 1 && isDisab
 <template>
   <v-card flat class="py-2 border-b cart-item">
     <v-row align="center" no-gutters>
-      <v-col cols="1">
+      <v-col cols="2">
         <v-img
           :src="dataItem.imageUrl"
           height="64"
@@ -61,12 +61,9 @@ const isDecreaseDisabled = (): boolean => dataItem.value.quantity < 1 && isDisab
           style="object-fit: cover; min-width: 64px"
         ></v-img>
       </v-col>
-      <v-col cols="3">
-        <div class="text-subtitle-1 font-weight-medium">{{ dataItem.name }}</div>
-      </v-col>
-      <v-col cols="1" class="size">
+      <v-col cols="2">
         <div class="text-subtitle-1 font-weight-medium">
-          {{ dataItem.sizes }}
+          {{ `${dataItem.name}(${dataItem.sizes})` }}
         </div>
       </v-col>
       <v-col cols="2">
@@ -84,7 +81,7 @@ const isDecreaseDisabled = (): boolean => dataItem.value.quantity < 1 && isDisab
       <v-col cols="2">
         <div class="text-subtitle-1 font-weight-bold">{{ totalPrice }}</div>
       </v-col>
-      <v-col cols="1" class="text-end">
+      <v-col cols="2" class="text-end">
         <v-btn icon color="red" @click="removeItem">
           <v-icon>mdi-delete-outline</v-icon>
         </v-btn>
