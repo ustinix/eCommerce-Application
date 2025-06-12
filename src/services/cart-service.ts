@@ -42,7 +42,7 @@ export async function addProductToCart(
   cartStore: ReturnType<typeof useCartStore>,
   productId: string,
   variantId: number,
-  quantity: number,
+  quantity = 1,
 ): Promise<void> {
   if (cartStore.cart === null) {
     await getCart(authStore, cartStore);
