@@ -7,13 +7,16 @@ const placeholderImage = {
 
 export function mapCartItem(cartData: LineItem): cartItem {
   const prefix = 'en-US';
-  const sizeAttribute = cartData.variant.attributes?.find(attribute => attribute.name === 'size');
+  const sizeAttribute = cartData.variant.attributes?.find(
+    attribute => attribute.name === 'shoeSize',
+  );
+  const sizes = sizeAttribute?.value?.[0]?.label ?? '';
   return {
     id: cartData.id,
     name: cartData.name?.[prefix] ?? '',
     price: cartData.price.value.centAmount || 0,
     quantity: cartData.quantity || 1,
     imageUrl: cartData.variant.images?.[0]?.url ?? placeholderImage.url,
-    sizes: sizeAttribute?.value ?? '',
+    sizes,
   };
 }

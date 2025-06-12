@@ -21158,3 +21158,5 @@ export const countryCityList: CountryCityData = {
     ],
   },
 };
+
+export const sizeAttribute = 'shoeSize';
