@@ -20,4 +20,7 @@ export enum Errors {
   ProductNotAdd = 'There was an error adding the item to the cart',
   UnknownError = 'Unknown error',
   LoadingCart = 'Error loading cart. Try again later',
+  DeleteProduct = 'Failed to delete product from cart',
+  DecreaseQty = 'Failed to decrease product quantity',
+  IncreaseQty = 'Failed to increase product quantity',
 }

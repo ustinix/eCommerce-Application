@@ -6,7 +6,7 @@ import { useSnackbarStore } from '../../stores/snackbar';
 import { useAuthStore } from '../../stores/auth';
 import { useCartStore } from '../../stores/cart';
 import { Pages } from '../../enums/pages';
-import { getCart } from '../../services/cart-service';
+import { getCart, clearCart } from '../../services/cart-service';
 import { Errors } from '../../enums/errors';
 import CartMessage from '../../components/layout/cart-message.vue';
 import CartList from '../../components/layout/cart-list.vue';
@@ -14,6 +14,7 @@ import CartList from '../../components/layout/cart-list.vue';
 const authStore = useAuthStore();
 const cartStore = useCartStore();
 const snackbarStore = useSnackbarStore();
+const textPage = { clearButton: 'CLEAR SHOPPING CART' };
 
 onMounted(async () => {
   try {
@@ -33,6 +34,9 @@ const isCartEmpty = computed(() => {
     </div>
     <CartMessage v-if="isCartEmpty" />
     <CartList v-else />
+    <button class="button button-left" @click="clearCart" v-if="!isCartEmpty">
+      {{ textPage.clearButton }}
+    </button>
   </v-container>
 
   <Snackbar />
@@ -43,5 +47,9 @@ const isCartEmpty = computed(() => {
 
 .hero-cart {
   @include hero-section('../../assets/images/cart.png');
+}
+.button-left {
+  display: block;
+  margin-left: 0;
 }
 </style>
