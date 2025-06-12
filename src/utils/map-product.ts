@@ -40,8 +40,8 @@ function getSizes(productData: ProductData): variantSize[] {
     const id = variant.id;
     const sizeAttributes = variant.attributes?.find(attribute => attribute.name === sizeAttribute);
     const value = sizeAttributes ? sizeAttributes.value[0].key : '';
-
-    return { id, value: `${value}` };
+    const sku = variant.sku ?? '';
+    return { id, value: `${value}`, sku };
   });
   return sizes;
 }

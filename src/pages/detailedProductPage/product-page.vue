@@ -11,7 +11,7 @@ import { mapProductDataToProductView } from '../../utils/map-product';
 import CategoryButtons from '../../components/layout/category-buttons.vue';
 import Carousel from '../../components/layout/carousel.vue';
 import Modal from '../../components/layout/modal.vue';
-import { addProductToCart } from '../../services/cart-service';
+import { addProductToCart, removeProduct } from '../../services/cart-service';
 import { Errors } from '../../enums/errors';
 import { AppNames } from '../../enums/app-names';
 
@@ -21,7 +21,9 @@ const cartStore = useCartStore();
 
 const errorMessage = 'Failed to fetch product';
 const backButtonText = 'Back to catalog';
-const successMessage = 'Item added to cart';
+const successMessageAdd = 'Item added to cart';
+const successMessageDelete = 'Item successfully removed';
+const buttonTextRemove = 'Remove from cart';
 
 const { id } = defineProps<{ id: string }>();
 let product = ref<ProductView | null>(null);
@@ -42,6 +44,12 @@ onMounted(async () => {
     snackbarStore.error(errorMessage);
   }
 });
+const inCart = computed(() => {
+  if (cartStore.cart === null || selectedSize.value === null || product.value === null)
+    return false;
+  const sku = product.value.sizes.find(item => item.id === selectedSize.value)?.sku;
+  return cartStore.cart?.lineItems.some(product => product.variant.sku === sku);
+});
 function openModal(): void {
   if (product.value !== null) {
     modalComponent.value = Carousel;
@@ -53,12 +61,30 @@ function addInCart(): void {
   if (selectedSize.value === null) return;
   try {
     addProductToCart(authStore, cartStore, id, selectedSize.value);
-    snackbarStore.success(successMessage);
+    snackbarStore.success(successMessageAdd);
   } catch {
     snackbarStore.error(Errors.ProductNotAdd);
   }
 }
-
+function removeInCart(): void {
+  console.log('remove');
+  if (product.value === null) {
+    snackbarStore.error(Errors.DeleteProduct);
+    return;
+  }
+  const sku = product.value.sizes.find(item => item.id === selectedSize.value)?.sku;
+  const cartItem = cartStore.cart?.lineItems.find(product => product.variant.sku === sku);
+  if (cartItem === undefined) {
+    snackbarStore.error(Errors.DeleteProduct);
+    snackbarStore.success(successMessageDelete);
+    return;
+  }
+  try {
+    removeProduct(cartItem.id, cartItem.quantity);
+  } catch {
+    snackbarStore.error(Errors.DeleteProduct);
+  }
+}
 const currentCategory = computed(() => {
   return product.value?.categories?.[0]?.id || null;
 });
@@ -118,10 +144,14 @@ const currentCategory = computed(() => {
               color="primary"
               variant="flat"
               block
+              v-if="!inCart"
               @click="addInCart"
               :disabled="!selectedSize"
             >
               {{ buttonTextAdd }}
+            </v-btn>
+            <v-btn color="primary" variant="flat" block v-else @click="removeInCart">
+              {{ buttonTextRemove }}
             </v-btn>
           </v-card-actions>
         </v-card>
