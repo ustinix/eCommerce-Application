@@ -21,4 +21,6 @@ export enum Errors {
   UnknownError = 'Unknown error',
   LoadingCart = 'Error loading cart. Try again later',
   PromoFormat = 'The promo must contain at least one character and no special characters or numbers.',
+  PromoNotFound = 'Promo code ID not found',
+  ApplyPromo = 'Failed to apply promo code',
 }

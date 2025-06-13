@@ -1,6 +1,20 @@
 <script setup lang="ts">
 import { AppNames } from '../../enums/app-names';
-import { promoCodes } from '../../constants/constants';
+import { singPerсent } from '../../constants/constants';
+import { getDiscountCodes } from '../../services/cart-service';
+import { onMounted, ref } from 'vue';
+import { useAuthStore } from '../../stores/auth';
+import type { PromoCode } from '../../types/promo-code';
+
+const promoCodes = ref<PromoCode[]>([]);
+onMounted(async () => {
+  try {
+    const authStore = useAuthStore();
+    promoCodes.value = await getDiscountCodes(authStore);
+  } catch (error) {
+    console.error(error);
+  }
+});
 </script>
 
 <template>
@@ -20,9 +34,7 @@ import { promoCodes } from '../../constants/constants';
 
       <template v-slot:append>
         <div class="d-flex flex-column align-end">
-          <v-chip :color="promo.active ? 'green' : 'grey'" size="small" class="mb-1">
-            {{ promo.discount }}%
-          </v-chip>
+          <v-chip size="small" class="mb-1"> {{ promo.discount }}{{ singPerсent }}</v-chip>
           <span class="text-caption text-grey"> before {{ promo.expires }} </span>
         </div>
       </template>

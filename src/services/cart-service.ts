@@ -1,6 +1,7 @@
 import { useAuthStore } from '../stores/auth';
 import { useCartStore } from '../stores/cart';
 import type { Cart } from '@commercetools/platform-sdk';
+import type { PromoCode } from '../types/promo-code';
 
 async function createAnonymousCart(
   authStore: ReturnType<typeof useAuthStore>,
@@ -147,4 +148,135 @@ export async function removeProduct(id: string, quantity: number): Promise<void>
     .execute();
   console.log('newcar', response.body);
   cartStore.cart = response.body;
+}
+export async function applyPromoCode(
+  authStore: ReturnType<typeof useAuthStore>,
+  cartStore: ReturnType<typeof useCartStore>,
+  promoCode: string,
+): Promise<void> {
+  if (cartStore.cart === null) {
+    await getCart(authStore, cartStore);
+  }
+  if (cartStore.cart === null) return;
+  const apiRoot = await authStore.currentApiRoot;
+  try {
+    const updatedCartResponse = await apiRoot
+      .carts()
+      .withId({ ID: cartStore.cart.id })
+      .post({
+        body: {
+          version: cartStore.cart.version,
+          actions: [
+            {
+              action: 'addDiscountCode',
+              code: promoCode,
+            },
+          ],
+        },
+      })
+      .execute();
+
+    cartStore.cart = updatedCartResponse.body;
+  } catch (error) {
+    console.error('Failed to apply promo code:', error);
+    throw new Error('Invalid or expired promo code');
+  }
+}
+
+export async function removePromoCode(
+  authStore: ReturnType<typeof useAuthStore>,
+  cartStore: ReturnType<typeof useCartStore>,
+  promoCodeId: string,
+): Promise<void> {
+  if (cartStore.cart === null) {
+    await getCart(authStore, cartStore);
+  }
+
+  if (cartStore.cart === null) {
+    throw new Error('Cart not found');
+  }
+
+  const apiRoot = await authStore.currentApiRoot;
+
+  try {
+    const updatedCartResponse = await apiRoot
+      .carts()
+      .withId({ ID: cartStore.cart.id })
+      .post({
+        body: {
+          version: cartStore.cart.version,
+          actions: [
+            {
+              action: 'removeDiscountCode',
+              discountCode: {
+                typeId: 'discount-code',
+                id: promoCodeId,
+              },
+            },
+          ],
+        },
+      })
+      .execute();
+
+    cartStore.cart = updatedCartResponse.body;
+  } catch (error) {
+    console.error('Failed to remove promo code:', error);
+    throw new Error('Failed to remove promo code');
+  }
+}
+
+export async function getDiscountCodeById(
+  authStore: ReturnType<typeof useAuthStore>,
+  discountCodeId: string,
+): Promise<string> {
+  try {
+    const apiRoot = await authStore.currentApiRoot;
+
+    const response = await apiRoot.discountCodes().withId({ ID: discountCodeId }).get().execute();
+
+    return response.body.code;
+  } catch (error) {
+    console.error('Failed to fetch discount code details:', error);
+    return '';
+  }
+}
+
+export async function getDiscountCodes(
+  authStore: ReturnType<typeof useAuthStore>,
+): Promise<PromoCode[]> {
+  try {
+    const apiRoot = await authStore.currentApiRoot;
+
+    const response = await apiRoot
+      .discountCodes()
+      .get({
+        queryArgs: {
+          expand: ['cartDiscounts[*].target', 'cartDiscounts[*].value'],
+        },
+      })
+      .execute();
+    return response.body.results.map(discountCode => {
+      const mainDiscount = discountCode.cartDiscounts?.[0]?.obj;
+      const discountValue = mainDiscount?.value;
+
+      let discount = 0;
+      if (discountValue?.type === 'relative') {
+        discount = Math.round(discountValue.permyriad / 100);
+      } else if (discountValue?.type === 'absolute') {
+        discount = discountValue.money[0].centAmount / 100;
+      }
+
+      return {
+        code: discountCode.code.trim(),
+        discount,
+        expires: discountCode.validUntil
+          ? new Date(discountCode.validUntil).toLocaleDateString('ru-RU')
+          : '31.12.2099',
+        description: discountCode.description?.['en-US'] || 'No description',
+      };
+    });
+  } catch (error) {
+    console.error('Failed to fetch discount code details:', error);
+    return [];
+  }
 }

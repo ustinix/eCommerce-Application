@@ -35,7 +35,6 @@ const buttonTextAdd = 'Add to Cart';
 onMounted(async () => {
   try {
     const productData = await getProductById(id);
-    console.log(' productData', productData);
     variantsId.value = productData.variants[0].id;
 
     product.value = mapProductDataToProductView(productData);
@@ -74,13 +73,6 @@ watch(
   },
   { immediate: true },
 );
-
-/*const addToCart = (): void => {
-  if (!selectedSize.value || !product.value) return;
-  console.log('Adding to cart:', {
-    size: selectedSize.value,
-  });
-};*/
 </script>
 <template>
   <v-container class="py-6" v-if="product">

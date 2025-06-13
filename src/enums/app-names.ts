@@ -6,4 +6,6 @@ export enum AppNames {
   Contribution = 'Contribution to the project:',
   aboutTitle = 'About Us',
   promoTitle = 'Get discount',
+  promoSubtotal = 'Subtotal:',
+  promoDiscount = 'Discount:',
 }

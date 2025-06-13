@@ -6,32 +6,7 @@ import { AppNames } from '../enums/app-names';
 import type { SocialLink } from '../types/social-links';
 import type { RS } from '../types/social-links';
 
-export const promoCodes = ref([
-  {
-    code: 'SUMMER25',
-    discount: 15,
-    expires: '31.08.2025',
-    description: 'Discount on the summer collection',
-    category: 'all',
-    active: true,
-  },
-  {
-    code: 'SPORTKIDS',
-    discount: 20,
-    expires: '15.09.2025',
-    description: "Discount on all children's shoes",
-    category: 'kids',
-    active: true,
-  },
-  {
-    code: 'PUMA5',
-    discount: 5,
-    expires: '30.11.2025',
-    description: 'Discount on Puma brand shoes',
-    category: 'brand',
-    active: true,
-  },
-]);
+export const singPerсent = '%';
 
 export const COLORS = {
   ACTIVE: 'primary',
