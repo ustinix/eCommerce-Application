@@ -14,6 +14,7 @@ import Modal from '../../components/layout/modal.vue';
 import { addProductToCart, removeProduct } from '../../services/cart-service';
 import { Errors } from '../../enums/errors';
 import { AppNames } from '../../enums/app-names';
+import SizeSelector from '../../components/layout/size-selector.vue';
 
 const snackbarStore = useSnackbarStore();
 const authStore = useAuthStore();
@@ -44,11 +45,13 @@ onMounted(async () => {
     snackbarStore.error(errorMessage);
   }
 });
+const selectedSku = computed(
+  () => product.value?.sizes.find(item => item.id === selectedSize.value)?.sku,
+);
 const inCart = computed(() => {
   if (cartStore.cart === null || selectedSize.value === null || product.value === null)
     return false;
-  const sku = product.value.sizes.find(item => item.id === selectedSize.value)?.sku;
-  return cartStore.cart?.lineItems.some(product => product.variant.sku === sku);
+  return cartStore.cart?.lineItems.some(product => product.variant.sku === selectedSku.value);
 });
 function openModal(): void {
   if (product.value !== null) {
@@ -66,21 +69,21 @@ function addInCart(): void {
     snackbarStore.error(Errors.ProductNotAdd);
   }
 }
-function removeInCart(): void {
-  console.log('remove');
+function removeFromCart(): void {
   if (product.value === null) {
     snackbarStore.error(Errors.DeleteProduct);
     return;
   }
-  const sku = product.value.sizes.find(item => item.id === selectedSize.value)?.sku;
-  const cartItem = cartStore.cart?.lineItems.find(product => product.variant.sku === sku);
+  const cartItem = cartStore.cart?.lineItems.find(
+    product => product.variant.sku === selectedSku.value,
+  );
   if (cartItem === undefined) {
     snackbarStore.error(Errors.DeleteProduct);
-    snackbarStore.success(successMessageDelete);
     return;
   }
   try {
     removeProduct(cartItem.id, cartItem.quantity);
+    snackbarStore.success(successMessageDelete);
   } catch {
     snackbarStore.error(Errors.DeleteProduct);
   }
@@ -123,21 +126,7 @@ const currentCategory = computed(() => {
           </div>
           <v-card-text class="px-4 py-2">
             <span class="subheading">{{ AppNames.selectText }}</span>
-            <v-chip-group
-              v-model="selectedSize"
-              selected-class="text-primary"
-              mandatory
-              class="mt-2 justify-center"
-            >
-              <v-chip
-                v-for="size in product.sizes"
-                :key="size.id"
-                :value="size.id"
-                variant="outlined"
-                size="small"
-                >{{ size.value }}</v-chip
-              >
-            </v-chip-group>
+            <SizeSelector v-model="selectedSize" :sizes="product.sizes" />
           </v-card-text>
           <v-card-actions class="addBtn pb-4">
             <v-btn
@@ -150,7 +139,7 @@ const currentCategory = computed(() => {
             >
               {{ buttonTextAdd }}
             </v-btn>
-            <v-btn color="primary" variant="flat" block v-else @click="removeInCart">
+            <v-btn color="primary" variant="flat" block v-else @click="removeFromCart">
               {{ buttonTextRemove }}
             </v-btn>
           </v-card-actions>

@@ -1,5 +1,5 @@
 import type { ProductProjection } from '@commercetools/platform-sdk';
-import { getAllSizes } from '../utils/get-sizes';
+import { getSizes } from '../utils/get-sizes';
 
 const placeholderImage = {
   url: 'https://via.placeholder.com/296x400',
@@ -18,6 +18,7 @@ export function mapProductProjection(product: ProductProjection) {
     price: masterVariant.prices?.[0]?.value?.centAmount,
     discountedPrice: masterVariant.prices?.[0]?.discounted?.value.centAmount,
     hasDiscount: !!masterVariant.prices?.[0]?.discounted,
-    sizes: getAllSizes(product),
+    // sizes: getAllSizes(product),
+    sizes: getSizes(product),
   };
 }
