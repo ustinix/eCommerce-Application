@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { LineItem } from '@commercetools/platform-sdk';
+import { computed, ref } from 'vue';
 import { mapCartItem } from '../../utils/map-cart-item';
 import { formatPrice } from '../../utils/format-price';
-import { computed, ref } from 'vue';
+import { Errors } from '../../enums/errors';
 import type { cartItem } from '../../types/cart';
-import { removeProduct } from '../../services/cart-service';
+import { removeProduct, increaseQuantityProduct } from '../../services/cart-service';
 import { useSnackbarStore } from '../../stores/snackbar';
 import Snackbar from './snack-bar.vue';
 
@@ -14,31 +15,39 @@ const snackbarStore = useSnackbarStore();
 const isDisable = ref<boolean>(false);
 
 const successDelete = 'The product has been permanently removed.';
-const errorDeleteProduct = 'Error removed.';
 
 function removeItem(): void {
   try {
     removeProduct(dataItem.value.id, dataItem.value.quantity);
     snackbarStore.success(successDelete);
   } catch {
-    snackbarStore.error(errorDeleteProduct);
+    snackbarStore.error(Errors.DeleteProduct);
   }
 }
-function decreaseQty(): void {
+async function decreaseQty(): Promise<void> {
   isDisable.value = true;
   if (dataItem.value.quantity <= 1) return;
   const quantity = dataItem.value.quantity - 1;
   try {
-    removeProduct(dataItem.value.id, quantity);
+    await removeProduct(dataItem.value.id, quantity);
     dataItem.value.quantity = quantity;
   } catch {
-    snackbarStore.error(errorDeleteProduct);
+    snackbarStore.error(Errors.DecreaseQty);
   } finally {
     isDisable.value = false;
   }
 }
-function increaseQty(): void {
-  console.log('increase');
+async function increaseQty(): Promise<void> {
+  isDisable.value = true;
+  const newQuantity = dataItem.value.quantity + 1;
+  try {
+    await increaseQuantityProduct(dataItem.value.id, newQuantity);
+    dataItem.value.quantity = newQuantity;
+  } catch {
+    snackbarStore.error(Errors.IncreaseQty);
+  } finally {
+    isDisable.value = false;
+  }
 }
 
 const price = computed(() => formatPrice(dataItem.value.price));
@@ -52,7 +61,7 @@ const isDecreaseDisabled = (): boolean => dataItem.value.quantity < 1 && isDisab
 <template>
   <v-card flat class="py-2 border-b cart-item">
     <v-row align="center" no-gutters>
-      <v-col cols="2">
+      <v-col cols="1" class="d-flex align-center justify-center">
         <v-img
           :src="dataItem.imageUrl"
           height="64"
@@ -61,15 +70,18 @@ const isDecreaseDisabled = (): boolean => dataItem.value.quantity < 1 && isDisab
           style="object-fit: cover; min-width: 64px"
         ></v-img>
       </v-col>
-      <v-col cols="2">
+      <v-col cols="3" class="d-flex align-center justify-center">
+        <div class="text-subtitle-1 font-weight-medium">{{ dataItem.name }}</div>
+      </v-col>
+      <v-col cols="1" class="d-flex align-center justify-center">
         <div class="text-subtitle-1 font-weight-medium">
           {{ `${dataItem.name}(${dataItem.sizes})` }}
         </div>
       </v-col>
-      <v-col cols="2">
+      <v-col cols="1" class="d-flex align-center justify-center">
         <div class="text-subtitle-1 font-weight-bold">{{ price }}</div>
       </v-col>
-      <v-col cols="2" class="d-flex align-center">
+      <v-col cols="2" class="d-flex align-center justify-center">
         <v-btn icon size="small" @click="decreaseQty" :disabled="isDecreaseDisabled()">
           <v-icon>mdi-minus</v-icon>
         </v-btn>
@@ -78,10 +90,10 @@ const isDecreaseDisabled = (): boolean => dataItem.value.quantity < 1 && isDisab
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-col>
-      <v-col cols="2">
+      <v-col cols="2" class="d-flex align-center justify-center">
         <div class="text-subtitle-1 font-weight-bold">{{ totalPrice }}</div>
       </v-col>
-      <v-col cols="2" class="text-end">
+      <v-col cols="2" class="d-flex align-center" style="justify-content: center">
         <v-btn icon color="red" @click="removeItem">
           <v-icon>mdi-delete-outline</v-icon>
         </v-btn>

@@ -7,6 +7,7 @@ import { useCartStore } from '../../stores/cart';
 import { Pages } from '../../enums/pages';
 import {
   getCart,
+  clearCart,
   removePromoCode,
   applyPromoCode,
   getDiscountCodeById,
@@ -26,6 +27,7 @@ const isLoading = ref(false);
 const authStore = useAuthStore();
 const cartStore = useCartStore();
 const snackbarStore = useSnackbarStore();
+const textPage = { clearButton: 'CLEAR SHOPPING CART' };
 
 const loadPromoCodeDetails = async () => {
   if (cartStore.cart?.discountCodes?.length) {
@@ -147,6 +149,9 @@ const currentPromoCode = computed(() => {
         </v-col>
       </v-row>
     </v-card>
+    <button class="button button-left" @click="clearCart" v-if="!isCartEmpty">
+      {{ textPage.clearButton }}
+    </button>
   </v-container>
 
   <Snackbar />
@@ -158,11 +163,15 @@ const currentPromoCode = computed(() => {
 .hero-cart {
   @include hero-section('../../assets/images/cart.png');
 }
+
 .v-row {
   border-bottom: 1px solid v.$color-red !important;
   padding: 5px 0;
   .text-end {
     text-align: end;
   }
+.button-left {
+  display: block;
+  margin-left: 0;
 }
 </style>

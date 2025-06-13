@@ -1,6 +1,7 @@
 import type { ProductData, Image } from '@commercetools/platform-sdk';
 import type { ProductView } from '../types/product';
-import { getAllSizes } from '../utils/get-sizes';
+import type { variantSize } from '../types/variant-size';
+import { sizeAttribute } from '../constants/constants';
 
 const placeholderImage = {
   url: 'http://dummyimage.com/400x400/99cccc.gif&text=the+image+disappeared!',
@@ -19,7 +20,7 @@ export function mapProductDataToProductView(productData: ProductData): ProductVi
     priceDiscounted: productData.masterVariant.prices?.[0]?.discounted?.value.centAmount || null,
     images: getImages(productData),
     categories: productData.categories,
-    sizes: getAllSizes(productData),
+    sizes: getSizes(productData),
   };
 }
 function getImages(productData: ProductData): Image[] {
@@ -32,4 +33,15 @@ function getImages(productData: ProductData): Image[] {
     images.push(placeholderImage);
   }
   return images;
+}
+
+function getSizes(productData: ProductData): variantSize[] {
+  const sizes: variantSize[] = productData.variants.map(variant => {
+    const id = variant.id;
+    const sizeAttributes = variant.attributes?.find(attribute => attribute.name === sizeAttribute);
+    const value = sizeAttributes ? sizeAttributes.value[0].key : '';
+
+    return { id, value: `${value}` };
+  });
+  return sizes;
 }

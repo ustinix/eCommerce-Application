@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, shallowRef, watch } from 'vue';
+import { computed, onMounted, ref, shallowRef } from 'vue';
 import { getProductById } from '../../services/product-service';
 import Snackbar from '../../components/layout/snack-bar.vue';
 import { useSnackbarStore } from '../../stores/snackbar';
@@ -25,7 +25,7 @@ const successMessage = 'Item added to cart';
 
 const { id } = defineProps<{ id: string }>();
 let product = ref<ProductView | null>(null);
-let variantsId = ref<number>(0);
+const selectedSize = ref<number | null>(null);
 
 const isModalOpen = ref(false);
 const modalComponent = shallowRef();
@@ -36,7 +36,8 @@ onMounted(async () => {
   try {
     const productData = await getProductById(id);
     variantsId.value = productData.variants[0].id;
-
+    console.log(' productData', productData);
+    selectedSize.value = productData.variants[0].id;
     product.value = mapProductDataToProductView(productData);
   } catch {
     snackbarStore.error(errorMessage);
@@ -50,8 +51,9 @@ function openModal(): void {
   }
 }
 function addInCart(): void {
+  if (selectedSize.value === null) return;
   try {
-    addProductToCart(authStore, cartStore, id, variantsId.value, 1);
+    addProductToCart(authStore, cartStore, id, selectedSize.value);
     snackbarStore.success(successMessage);
   } catch {
     snackbarStore.error(Errors.ProductNotAdd);
@@ -61,6 +63,7 @@ function addInCart(): void {
 const currentCategory = computed(() => {
   return product.value?.categories?.[0]?.id || null;
 });
+
 const productSizes = computed(() => product.value?.sizes || []);
 const selectedSize = ref<string | null>(null);
 
@@ -115,12 +118,12 @@ watch(
               class="mt-2 justify-center"
             >
               <v-chip
-                v-for="size in productSizes"
-                :key="size"
-                :value="size"
+                v-for="size in product.sizes"
+                :key="size.id"
+                :value="size.id"
                 variant="outlined"
                 size="small"
-                >{{ size }}</v-chip
+                >{{ size.value }}</v-chip
               >
             </v-chip-group>
           </v-card-text>

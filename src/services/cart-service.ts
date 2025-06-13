@@ -1,7 +1,7 @@
 import { useAuthStore } from '../stores/auth';
 import { useCartStore } from '../stores/cart';
-import type { Cart } from '@commercetools/platform-sdk';
 import type { PromoCode } from '../types/promo-code';
+import type { Cart, MyCartUpdateAction } from '@commercetools/platform-sdk';
 
 async function createAnonymousCart(
   authStore: ReturnType<typeof useAuthStore>,
@@ -43,7 +43,7 @@ export async function addProductToCart(
   cartStore: ReturnType<typeof useCartStore>,
   productId: string,
   variantId: number,
-  quantity: number,
+  quantity = 1,
 ): Promise<void> {
   if (cartStore.cart === null) {
     await getCart(authStore, cartStore);
@@ -124,7 +124,7 @@ async function getUserCart(authStore: ReturnType<typeof useAuthStore>): Promise<
       : cartResponse.body.results[0];
   return cart;
 }
-export async function removeProduct(id: string, quantity: number): Promise<void> {
+async function changeCart(actions: MyCartUpdateAction[]): Promise<void> {
   const authStore = useAuthStore();
   const cartStore = useCartStore();
   if (cartStore.cart === null) return;
@@ -136,19 +136,14 @@ export async function removeProduct(id: string, quantity: number): Promise<void>
     .post({
       body: {
         version: cartStore.cart.version,
-        actions: [
-          {
-            action: 'removeLineItem',
-            lineItemId: id,
-            quantity,
-          },
-        ],
+        actions,
       },
     })
     .execute();
   console.log('newcar', response.body);
   cartStore.cart = response.body;
 }
+
 export async function applyPromoCode(
   authStore: ReturnType<typeof useAuthStore>,
   cartStore: ReturnType<typeof useCartStore>,
@@ -279,4 +274,33 @@ export async function getDiscountCodes(
     console.error('Failed to fetch discount code details:', error);
     return [];
   }
+
+export async function removeProduct(id: string, quantity: number): Promise<void> {
+  const actions: MyCartUpdateAction[] = [
+    {
+      action: 'removeLineItem',
+      lineItemId: id,
+      quantity,
+    },
+  ];
+  changeCart(actions);
+}
+export async function increaseQuantityProduct(id: string, newQuantity: number): Promise<void> {
+  const actions: MyCartUpdateAction[] = [
+    {
+      action: 'changeLineItemQuantity',
+      lineItemId: id,
+      quantity: newQuantity,
+    },
+  ];
+  changeCart(actions);
+}
+
+export async function clearCart(): Promise<void> {
+  const cartStore = useCartStore();
+  if (cartStore.cart === null) return;
+  const actions: MyCartUpdateAction[] = cartStore.cart.lineItems.map(item => {
+    return { action: 'removeLineItem', lineItemId: item.id };
+  });
+  changeCart(actions);
 }
