@@ -274,6 +274,7 @@ export async function getDiscountCodes(
     console.error('Failed to fetch discount code details:', error);
     return [];
   }
+}
 
 export async function removeProduct(id: string, quantity: number): Promise<void> {
   const actions: MyCartUpdateAction[] = [

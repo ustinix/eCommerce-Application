@@ -170,6 +170,7 @@ const currentPromoCode = computed(() => {
   .text-end {
     text-align: end;
   }
+}
 .button-left {
   display: block;
   margin-left: 0;

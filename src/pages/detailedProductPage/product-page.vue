@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, shallowRef } from 'vue';
+import { computed, onMounted, ref, shallowRef, watch } from 'vue';
 import { getProductById } from '../../services/product-service';
 import Snackbar from '../../components/layout/snack-bar.vue';
 import { useSnackbarStore } from '../../stores/snackbar';
@@ -25,16 +25,18 @@ const backButtonText = 'Back to catalog';
 const successMessageAdd = 'Item added to cart';
 const successMessageDelete = 'Item successfully removed';
 const buttonTextRemove = 'Remove from cart';
+const buttonTextAdd = 'Add to Cart';
 
 const { id } = defineProps<{ id: string }>();
 let product = ref<ProductView | null>(null);
 const selectedSize = ref<number | null>(null);
+const variantsId = ref<number>();
 
 const isModalOpen = ref(false);
 const modalComponent = shallowRef();
 const modalProps = ref();
 const widthModal = 1200;
-const buttonTextAdd = 'Add to Cart';
+
 onMounted(async () => {
   try {
     const productData = await getProductById(id);
@@ -93,14 +95,11 @@ const currentCategory = computed(() => {
   return product.value?.categories?.[0]?.id || null;
 });
 
-const productSizes = computed(() => product.value?.sizes || []);
-const selectedSize = ref<string | null>(null);
-
 watch(
   product,
   newProduct => {
     if (newProduct?.sizes?.length) {
-      selectedSize.value = newProduct.sizes[0];
+      selectedSize.value = newProduct.sizes[0].id;
     }
   },
   { immediate: true },
