@@ -4,4 +4,5 @@ export enum Placeholders {
   placeholderEmail = 'Enter your email',
   placeholderPassword = 'Password',
   placeholderCode = 'Postal code',
+  placeholderPromo = 'Your promo code',
 }

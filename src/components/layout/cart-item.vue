@@ -75,7 +75,7 @@ const isDecreaseDisabled = (): boolean => dataItem.value.quantity < 1 && isDisab
       </v-col>
       <v-col cols="1" class="d-flex align-center justify-center">
         <div class="text-subtitle-1 font-weight-medium">
-          {{ dataItem.sizes }}
+          {{ `${dataItem.name}(${dataItem.sizes})` }}
         </div>
       </v-col>
       <v-col cols="1" class="d-flex align-center justify-center">

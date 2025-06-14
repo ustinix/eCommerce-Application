@@ -6,6 +6,8 @@ import { AppNames } from '../enums/app-names';
 import type { SocialLink } from '../types/social-links';
 import type { RS } from '../types/social-links';
 
+export const singPerсent = '%';
+
 export const COLORS = {
   ACTIVE: 'primary',
   INACTIVE: 'grey-lighten-2',

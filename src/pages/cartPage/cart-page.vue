@@ -1,39 +1,154 @@
 <script setup lang="ts">
-import { onMounted, computed } from 'vue';
-
+import { onMounted, computed, ref } from 'vue';
 import Snackbar from '../../components/layout/snack-bar.vue';
 import { useSnackbarStore } from '../../stores/snackbar';
 import { useAuthStore } from '../../stores/auth';
 import { useCartStore } from '../../stores/cart';
 import { Pages } from '../../enums/pages';
-import { getCart, clearCart } from '../../services/cart-service';
+import {
+  getCart,
+  clearCart,
+  removePromoCode,
+  applyPromoCode,
+  getDiscountCodeById,
+} from '../../services/cart-service';
 import { Errors } from '../../enums/errors';
+import { Success } from '../../enums/success';
+import { AppNames } from '../../enums/app-names';
 import CartMessage from '../../components/layout/cart-message.vue';
 import CartList from '../../components/layout/cart-list.vue';
+import { Placeholders } from '../../enums/placeholders';
+
+const promoCode = ref<string>('');
+const isPromoApplied = ref(false);
+const butttonColor = computed(() => (isPromoApplied.value ? 'green' : 'gray'));
+const isLoading = ref(false);
 
 const authStore = useAuthStore();
 const cartStore = useCartStore();
 const snackbarStore = useSnackbarStore();
 const textPage = { clearButton: 'CLEAR SHOPPING CART' };
 
+const loadPromoCodeDetails = async () => {
+  if (cartStore.cart?.discountCodes?.length) {
+    const discountCodeId = cartStore.cart.discountCodes[0].discountCode.id;
+    promoCode.value = await getDiscountCodeById(authStore, discountCodeId);
+  }
+};
+
 onMounted(async () => {
   try {
     await getCart(authStore, cartStore);
+    if (cartStore.cart?.discountCodes?.length) {
+      isPromoApplied.value = true;
+      await loadPromoCodeDetails();
+    }
   } catch {
     snackbarStore.error(Errors.LoadingCart);
   }
 });
+
 const isCartEmpty = computed(() => {
   return cartStore.cart === null || cartStore.cart?.lineItems.length === 0;
 });
+
+const totalPrice = computed(() => {
+  return cartStore.cart?.totalPrice?.centAmount ? cartStore.cart.totalPrice.centAmount / 100 : 0;
+});
+
+const finalPrice = computed(() => Math.max(0, totalPrice.value - (discountAmount.value ?? 0)));
+
+const discountAmount = computed(() => {
+  if (!cartStore.cart) return 0;
+
+  const totalDiscount = cartStore.cart.lineItems.reduce((sum, item) => {
+    const discountedPrice =
+      item.discountedPricePerQuantity?.[0]?.discountedPrice?.value?.centAmount;
+    return discountedPrice
+      ? sum + (item.price.value.centAmount - discountedPrice) * (item.quantity || 1)
+      : sum;
+  }, 0);
+
+  return totalDiscount / 100;
+});
+
+const applyPromo = async (): Promise<void> => {
+  if (!promoCode.value.trim()) return;
+
+  isLoading.value = true;
+  try {
+    if (isPromoApplied.value) {
+      const discountCodeId = cartStore.cart?.discountCodes?.[0]?.discountCode?.id;
+      if (!discountCodeId) throw new Error(Errors.PromoNotFound);
+      await removePromoCode(authStore, cartStore, discountCodeId);
+      snackbarStore.success(Success.PromoRemove);
+      promoCode.value = '';
+      isPromoApplied.value = false;
+    } else {
+      await applyPromoCode(authStore, cartStore, promoCode.value);
+      snackbarStore.success(Success.PromoApply);
+      isPromoApplied.value = true;
+    }
+  } catch (error) {
+    snackbarStore.error(error instanceof Error ? error.message : Errors.ApplyPromo);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const currentPromoCode = computed(() => {
+  return promoCode.value;
+});
 </script>
 <template>
-  <v-container class="py-6">
+  <v-container class="py-6 cart-container">
     <div class="hero-cart">
       <h2 class="hero_title">{{ Pages.Cart }}</h2>
     </div>
     <CartMessage v-if="isCartEmpty" />
     <CartList v-else />
+    <v-card flat class="py-2 px-10">
+      <v-row no-gutters>
+        <v-col cols="10" class="text-end summ">
+          <v-text-field
+            v-model="promoCode"
+            :label="Placeholders.placeholderPromo"
+            :disabled="isPromoApplied"
+            :hint="isPromoApplied ? `Applied: ${currentPromoCode}` : ''"
+            persistent-hint
+          />
+        </v-col>
+        <v-col cols="2" class="text-end">
+          <v-btn
+            icon
+            :color="butttonColor"
+            :disabled="!promoCode.trim() || isLoading"
+            :loading="isLoading"
+            @click="applyPromo"
+          >
+            <v-icon>mdi-check-circle</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-card>
+    <v-card flat class="py-2 px-10" v-if="discountAmount > 0">
+      <v-row no-gutters>
+        <v-col cols="8" class="text-end summ">{{ AppNames.promoSubtotal }}</v-col>
+        <v-col cols="4" class="text-end summ">{{ (totalPrice || 0).toFixed(2) }}</v-col>
+      </v-row>
+      <v-row no-gutters>
+        <v-col cols="8" class="text-end summ">{{ AppNames.promoDiscount }}</v-col>
+        <v-col cols="4" class="text-end summ">-{{ (discountAmount || 0).toFixed(2) }}</v-col>
+      </v-row>
+    </v-card>
+    <v-card flat class="py-2 px-10">
+      <v-row no-gutters>
+        <v-col cols="8" class="text-end summ">Total:</v-col>
+        <v-col cols="4" class="text-end summ">
+          {{ finalPrice.toFixed(2) }}
+        </v-col>
+      </v-row>
+    </v-card>
     <button class="button button-left" @click="clearCart" v-if="!isCartEmpty">
       {{ textPage.clearButton }}
     </button>
@@ -48,6 +163,13 @@ const isCartEmpty = computed(() => {
 .hero-cart {
   @include hero-section('../../assets/images/cart.png');
 }
+
+.v-row {
+  border-bottom: 1px solid v.$color-red !important;
+  padding: 5px 0;
+  .text-end {
+    text-align: end;
+  }
 .button-left {
   display: block;
   margin-left: 0;

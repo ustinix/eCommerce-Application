@@ -7,4 +7,11 @@ export const enum TextEditComponent {
   aboutPart2 = 'A team of two developers worked on the project, with each responsible for key areas. The competent distribution of tasks allowed us to implement everything we had planned on time.',
   aboutPart3 = 'The store was created as part of the',
   aboutPart4 = 'educational program as a graduation project, demonstrating all the skills acquired.',
+  mainTitleText = 'Step Into Style – Shoes That Speak for You',
+  mainIntroText = "Discover the perfect pair for every step. Whether you're hitting the gym or the streets, we've got the style and comfort you need.",
+  advertButtonText = 'SHOP NOW',
+  discountTitle = 'Exclusive Discounts Just for You!',
+  discountText = "We've prepared special promo codes tailored just for you! Explore personalized deals, unlock amazing savings, and find the perfect offer. Click below to browse all available discounts and claim yours today!",
+  discountText2 = '5%-25% Discount',
+  discountButton = 'Get Discount',
 }

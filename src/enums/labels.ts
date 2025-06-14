@@ -8,4 +8,5 @@ export enum Labels {
   currentPassword = 'Current Password: ',
   newPassword = 'New Password: ',
   confirmNewPassword = 'Confirm New Password: ',
+  promoCode = 'Promo code:',
 }

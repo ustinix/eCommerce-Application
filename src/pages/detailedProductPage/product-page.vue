@@ -38,6 +38,7 @@ const buttonTextAdd = 'Add to Cart';
 onMounted(async () => {
   try {
     const productData = await getProductById(id);
+    variantsId.value = productData.variants[0].id;
     console.log(' productData', productData);
     selectedSize.value = productData.variants[0].id;
     product.value = mapProductDataToProductView(productData);
@@ -91,6 +92,19 @@ function removeFromCart(): void {
 const currentCategory = computed(() => {
   return product.value?.categories?.[0]?.id || null;
 });
+
+const productSizes = computed(() => product.value?.sizes || []);
+const selectedSize = ref<string | null>(null);
+
+watch(
+  product,
+  newProduct => {
+    if (newProduct?.sizes?.length) {
+      selectedSize.value = newProduct.sizes[0];
+    }
+  },
+  { immediate: true },
+);
 </script>
 <template>
   <v-container class="py-6" v-if="product">
