@@ -10,3 +10,14 @@ export type ProductView = {
   categories?: Array<{ id: string }>;
   sizes: variantSize[];
 };
+
+export type ProductProjectoinView = {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  price: number | undefined;
+  discountedPrice: number | undefined;
+  hasDiscount: boolean;
+  sizes: variantSize[];
+};

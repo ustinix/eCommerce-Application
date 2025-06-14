@@ -29,7 +29,7 @@ const cartStore = useCartStore();
 const snackbarStore = useSnackbarStore();
 const textPage = { clearButton: 'CLEAR SHOPPING CART' };
 
-const loadPromoCodeDetails = async () => {
+const loadPromoCodeDetails = async (): Promise<void> => {
   if (cartStore.cart?.discountCodes?.length) {
     const discountCodeId = cartStore.cart.discountCodes[0].discountCode.id;
     promoCode.value = await getDiscountCodeById(authStore, discountCodeId);

@@ -3,7 +3,7 @@ import { useRouter } from 'vue-router';
 import { TextEditComponent } from '../../enums/text-edit-component';
 
 const router = useRouter();
-const goToPromo = () => {
+const goToPromo = (): void => {
   router.push('/promo');
 };
 </script>
