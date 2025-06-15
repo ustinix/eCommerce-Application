@@ -29,7 +29,7 @@ const cartStore = useCartStore();
 const snackbarStore = useSnackbarStore();
 const textPage = { clearButton: 'CLEAR SHOPPING CART' };
 
-const loadPromoCodeDetails = async () => {
+const loadPromoCodeDetails = async (): Promise<void> => {
   if (cartStore.cart?.discountCodes?.length) {
     const discountCodeId = cartStore.cart.discountCodes[0].discountCode.id;
     promoCode.value = await getDiscountCodeById(authStore, discountCodeId);
@@ -59,17 +59,9 @@ const totalPrice = computed(() => {
 const finalPrice = computed(() => Math.max(0, totalPrice.value - (discountAmount.value ?? 0)));
 
 const discountAmount = computed(() => {
-  if (!cartStore.cart) return 0;
+  if (!cartStore.cart?.discountOnTotalPrice) return 0;
 
-  const totalDiscount = cartStore.cart.lineItems.reduce((sum, item) => {
-    const discountedPrice =
-      item.discountedPricePerQuantity?.[0]?.discountedPrice?.value?.centAmount;
-    return discountedPrice
-      ? sum + (item.price.value.centAmount - discountedPrice) * (item.quantity || 1)
-      : sum;
-  }, 0);
-
-  return totalDiscount / 100;
+  return cartStore.cart.discountOnTotalPrice.discountedAmount.centAmount / 100;
 });
 
 const applyPromo = async (): Promise<void> => {
@@ -106,52 +98,65 @@ const currentPromoCode = computed(() => {
       <h2 class="hero_title">{{ Pages.Cart }}</h2>
     </div>
     <CartMessage v-if="isCartEmpty" />
-    <CartList v-else />
-    <v-card flat class="py-2 px-10">
-      <v-row no-gutters>
-        <v-col cols="10" class="text-end summ">
-          <v-text-field
-            v-model="promoCode"
-            :label="Placeholders.placeholderPromo"
-            :disabled="isPromoApplied"
-            :hint="isPromoApplied ? `Applied: ${currentPromoCode}` : ''"
-            persistent-hint
-          />
-        </v-col>
-        <v-col cols="2" class="text-end">
-          <v-btn
-            icon
-            :color="butttonColor"
-            :disabled="!promoCode.trim() || isLoading"
-            :loading="isLoading"
-            @click="applyPromo"
+    <template v-else>
+      <CartList />
+      <v-card flat>
+        <v-row no-gutters>
+          <v-col cols="5" class="text-end"></v-col>
+          <v-col cols="5" class="text-end">
+            <v-text-field
+              v-model="promoCode"
+              :label="Placeholders.placeholderPromo"
+              :disabled="isPromoApplied"
+              :hint="isPromoApplied ? `Applied: ${currentPromoCode}` : ''"
+              persistent-hint
+            />
+          </v-col>
+          <v-col cols="2" class="d-flex align-center justify-center">
+            <v-btn
+              icon
+              :color="butttonColor"
+              :disabled="!promoCode.trim() || isLoading"
+              :loading="isLoading"
+              @click="applyPromo"
+            >
+              <v-icon>mdi-check-circle</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-card>
+      <v-card flat v-if="discountAmount > 0">
+        <v-row no-gutters>
+          <v-col cols="10" class="text-end text-subtitle-1 font-weight-bold">{{
+            AppNames.promoSubtotal
+          }}</v-col>
+          <v-col cols="2" class="d-flex align-center justify-center">{{
+            (totalPrice || 0).toFixed(2)
+          }}</v-col>
+        </v-row>
+        <v-row no-gutters>
+          <v-col cols="10" class="text-end text-subtitle-1 font-weight-bold">{{
+            AppNames.promoDiscount
+          }}</v-col>
+          <v-col cols="2" class="d-flex align-center justify-center font-weight-bold discountAmount"
+            >-{{ discountAmount }}</v-col
           >
-            <v-icon>mdi-check-circle</v-icon>
-          </v-btn>
-        </v-col>
-      </v-row>
-    </v-card>
-    <v-card flat class="py-2 px-10" v-if="discountAmount > 0">
-      <v-row no-gutters>
-        <v-col cols="8" class="text-end summ">{{ AppNames.promoSubtotal }}</v-col>
-        <v-col cols="4" class="text-end summ">{{ (totalPrice || 0).toFixed(2) }}</v-col>
-      </v-row>
-      <v-row no-gutters>
-        <v-col cols="8" class="text-end summ">{{ AppNames.promoDiscount }}</v-col>
-        <v-col cols="4" class="text-end summ">-{{ (discountAmount || 0).toFixed(2) }}</v-col>
-      </v-row>
-    </v-card>
-    <v-card flat class="py-2 px-10">
-      <v-row no-gutters>
-        <v-col cols="8" class="text-end summ">Total:</v-col>
-        <v-col cols="4" class="text-end summ">
-          {{ finalPrice.toFixed(2) }}
-        </v-col>
-      </v-row>
-    </v-card>
-    <button class="button button-left" @click="clearCart" v-if="!isCartEmpty">
-      {{ textPage.clearButton }}
-    </button>
+        </v-row>
+      </v-card>
+      <v-card flat>
+        <v-row no-gutters>
+          <v-col cols="10" class="text-end text-subtitle-1 font-weight-bold">{{
+            AppNames.promoTotal
+          }}</v-col>
+          <v-col cols="2" class="d-flex align-center justify-center font-weight-bold">
+            {{ finalPrice.toFixed(2) }}
+          </v-col>
+        </v-row>
+      </v-card>
+      <button class="button button-left" @click="clearCart" v-if="!isCartEmpty">
+        {{ textPage.clearButton }}
+      </button>
+    </template>
   </v-container>
 
   <Snackbar />
@@ -166,9 +171,13 @@ const currentPromoCode = computed(() => {
 
 .v-row {
   border-bottom: 1px solid v.$color-red !important;
-  padding: 5px 0;
+  min-height: 48px;
+  align-items: center;
   .text-end {
     text-align: end;
+  }
+  .discountAmount {
+    color: v.$color-red;
   }
 }
 .button-left {

@@ -9,4 +9,5 @@ export enum AppNames {
   promoTitle = 'Get discount',
   promoSubtotal = 'Subtotal:',
   promoDiscount = 'Discount:',
+  promoTotal = 'Total:',
 }
