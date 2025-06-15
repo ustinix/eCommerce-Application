@@ -87,10 +87,6 @@ const applyPromo = async (): Promise<void> => {
     isLoading.value = false;
   }
 };
-
-const currentPromoCode = computed(() => {
-  return promoCode.value;
-});
 </script>
 <template>
   <v-container class="py-6 cart-container">
@@ -108,8 +104,6 @@ const currentPromoCode = computed(() => {
               v-model="promoCode"
               :label="Placeholders.placeholderPromo"
               :disabled="isPromoApplied"
-              :hint="isPromoApplied ? `Applied: ${currentPromoCode}` : ''"
-              persistent-hint
             />
           </v-col>
           <v-col cols="2" class="d-flex align-center justify-center">
