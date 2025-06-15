@@ -106,7 +106,7 @@ function logout(): void {
           top: -8px;
           right: -8px;
           background: v.$color-red;
-          color: white;
+          color: v.$color-white;
           border-radius: 50%;
           width: 18px;
           height: 18px;
