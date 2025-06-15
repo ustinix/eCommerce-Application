@@ -18,6 +18,8 @@ import { AppNames } from '../../enums/app-names';
 import CartMessage from '../../components/layout/cart-message.vue';
 import CartList from '../../components/layout/cart-list.vue';
 import { Placeholders } from '../../enums/placeholders';
+import { formatPrice } from '../../utils/format-price';
+import { dollarSing } from '../../constants/constants';
 
 const promoCode = ref<string>('');
 const isPromoApplied = ref(false);
@@ -53,10 +55,16 @@ const isCartEmpty = computed(() => {
 });
 
 const totalPrice = computed(() => {
-  return cartStore.cart?.totalPrice?.centAmount ? cartStore.cart.totalPrice.centAmount / 100 : 0;
+  return cartStore.cart?.totalPrice?.centAmount
+    ? formatPrice(cartStore.cart.totalPrice.centAmount)
+    : formatPrice(0);
 });
 
-const finalPrice = computed(() => Math.max(0, totalPrice.value - (discountAmount.value ?? 0)));
+const finalPrice = computed(() => {
+  const total = cartStore.cart?.totalPrice?.centAmount || 0;
+  const discount = cartStore.cart?.discountOnTotalPrice?.discountedAmount.centAmount || 0;
+  return formatPrice(Math.max(0, total - discount));
+});
 
 const discountAmount = computed(() => {
   if (!cartStore.cart?.discountOnTotalPrice) return 0;
@@ -124,16 +132,14 @@ const applyPromo = async (): Promise<void> => {
           <v-col cols="10" class="text-end text-subtitle-1 font-weight-bold">{{
             AppNames.promoSubtotal
           }}</v-col>
-          <v-col cols="2" class="d-flex align-center justify-center">{{
-            (totalPrice || 0).toFixed(2)
-          }}</v-col>
+          <v-col cols="2" class="d-flex align-center justify-center">{{ totalPrice || 0 }}</v-col>
         </v-row>
         <v-row no-gutters>
           <v-col cols="10" class="text-end text-subtitle-1 font-weight-bold">{{
             AppNames.promoDiscount
           }}</v-col>
           <v-col cols="2" class="d-flex align-center justify-center font-weight-bold discountAmount"
-            >-{{ discountAmount }}</v-col
+            >-{{ dollarSing }}{{ discountAmount }}</v-col
           >
         </v-row>
       </v-card>
@@ -143,7 +149,7 @@ const applyPromo = async (): Promise<void> => {
             AppNames.promoTotal
           }}</v-col>
           <v-col cols="2" class="d-flex align-center justify-center font-weight-bold">
-            {{ finalPrice.toFixed(2) }}
+            {{ finalPrice }}
           </v-col>
         </v-row>
       </v-card>
