@@ -5,24 +5,37 @@ import Header from '../src/components/layout/header.vue';
 import { RouterLinkStub } from '@vue/test-utils';
 
 let isAuthenticated = false;
-const setAuthMock = vi.fn();
+const logOutMock = vi.fn();
 
 vi.mock('../src/stores/auth', () => ({
   useAuthStore: (): {
     isAuthenticated: boolean;
-    setAuth: Mock;
     setApiRoot: Mock;
     setUser: Mock;
+    logOut: Mock;
   } => ({
     isAuthenticated,
-    setAuth: setAuthMock,
+    logOut: logOutMock,
     setApiRoot: vi.fn(),
     setUser: vi.fn(),
   }),
 }));
+
+vi.mock('../src/stores/user', () => ({
+  useUserStore: () => ({
+    setUserProfile: vi.fn(),
+  }),
+}));
+
+vi.mock('../src/stores/cart', () => ({
+  useCartStore: () => ({
+    cart: null,
+    cartId: '',
+  }),
+}));
 beforeEach(() => {
   isAuthenticated = false;
-  setAuthMock.mockClear();
+  logOutMock.mockClear();
 });
 describe('Header.vue', () => {
   it('shows Login and Registration links when not authenticated', () => {
@@ -57,6 +70,6 @@ describe('Header.vue', () => {
       },
     });
     await wrapper.find('button').trigger('click');
-    expect(setAuthMock).toHaveBeenCalledWith(false);
+    expect(logOutMock).toHaveBeenCalled();
   });
 });

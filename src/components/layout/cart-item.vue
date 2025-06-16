@@ -56,7 +56,7 @@ const totalPrice = computed(() => {
   const total = dataItem.value.price * dataItem.value.quantity;
   return formatPrice(total);
 });
-const isDecreaseDisabled = (): boolean => dataItem.value.quantity < 1 && isDisable.value;
+const isDecreaseDisabled = (): boolean => dataItem.value.quantity <= 1 || isDisable.value;
 </script>
 <template>
   <v-card flat class="py-2 border-b cart-item">
@@ -75,7 +75,7 @@ const isDecreaseDisabled = (): boolean => dataItem.value.quantity < 1 && isDisab
       </v-col>
       <v-col cols="1" class="d-flex align-center justify-center">
         <div class="text-subtitle-1 font-weight-medium">
-          {{ `${dataItem.name}(${dataItem.sizes})` }}
+          {{ dataItem.sizes }}
         </div>
       </v-col>
       <v-col cols="1" class="d-flex align-center justify-center">
