@@ -11,7 +11,7 @@ import { computed } from 'vue';
 const authStore = useAuthStore();
 const userStore = useUserStore();
 const cartStore = useCartStore();
-const cartCount = computed(() => cartStore.cart?.lineItems.length || 0);
+const cartCount = computed(() => cartStore.totalItems);
 
 const navLinks = computed(() => [
   { to: '/', text: Pages.Home, show: true },
