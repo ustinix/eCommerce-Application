@@ -11,6 +11,8 @@ import { computed } from 'vue';
 const authStore = useAuthStore();
 const userStore = useUserStore();
 const cartStore = useCartStore();
+const cartCount = computed(() => cartStore.cart?.lineItems.length || 0);
+console.log(cartCount);
 
 const navLinks = computed(() => [
   { to: '/', text: Pages.Home, show: true },
@@ -42,13 +44,17 @@ function logout(): void {
         <RouterLink to="/user" v-if="authStore.isAuthenticated" title="User profile">
           <img src="../../assets/images/user.png" alt="user" width="15" height="15" />
         </RouterLink>
-        <RouterLink to="/cart" title="Cart">
+        <RouterLink to="/cart" title="Cart" class="cart-link">
           <img
             src="../../assets/images/shopping-cart.png"
             alt="shopping-cart"
             width="15"
             height="15"
+            class="cart-img"
           />
+          <span class="cart-count" v-if="(cartCount ? cartCount : 0) > 0">
+            {{ cartCount }}
+          </span>
         </RouterLink>
       </div>
     </div>
@@ -91,6 +97,25 @@ function logout(): void {
       justify-content: center;
       align-items: end;
       gap: 15px;
+      .cart-link {
+        position: relative;
+        display: inline-block;
+
+        .cart-count {
+          position: absolute;
+          top: -8px;
+          right: -8px;
+          background: v.$color-red;
+          color: v.$color-white;
+          border-radius: 50%;
+          width: 18px;
+          height: 18px;
+          font-size: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
     }
 
     .app-logo {

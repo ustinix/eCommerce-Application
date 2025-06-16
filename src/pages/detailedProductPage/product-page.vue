@@ -41,7 +41,6 @@ onMounted(async () => {
   try {
     const productData = await getProductById(id);
     variantsId.value = productData.variants[0].id;
-    console.log(' productData', productData);
     selectedSize.value = productData.variants[0].id;
     product.value = mapProductDataToProductView(productData);
   } catch {
