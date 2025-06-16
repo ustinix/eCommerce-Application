@@ -61,39 +61,53 @@ const isDecreaseDisabled = (): boolean => dataItem.value.quantity <= 1 || isDisa
 <template>
   <v-card flat class="py-2 border-b cart-item">
     <v-row align="center" no-gutters>
-      <v-col cols="1" class="d-flex align-center justify-center">
+      <v-col cols="12" md="1" class="d-flex align-center justify-center">
         <v-img
           :src="dataItem.imageUrl"
           height="64"
           width="64"
           cover
-          style="object-fit: cover; min-width: 64px"
+          class="min-w-img no-grow-img"
         ></v-img>
       </v-col>
-      <v-col cols="3" class="d-flex align-center justify-center">
-        <div class="text-subtitle-1 font-weight-medium">{{ dataItem.name }}</div>
+
+      <v-col cols="12" md="3" class="d-flex align-center justify-center">
+        <div class="text-subtitle-4 text-sm-subtitle-1 font-weight-medium pa-4 pa-md-2">
+          {{ dataItem.name }}
+        </div>
       </v-col>
-      <v-col cols="1" class="d-flex align-center justify-center">
-        <div class="text-subtitle-1 font-weight-medium">
+
+      <v-col cols="6" md="1" class="d-flex align-center justify-center">
+        <div class="text-body-2 text-sm-subtitle-1 font-weight-medium">
           {{ dataItem.sizes }}
         </div>
       </v-col>
-      <v-col cols="1" class="d-flex align-center justify-center">
-        <div class="text-subtitle-1 font-weight-bold">{{ price }}</div>
+
+      <v-col cols="6" md="1" class="d-flex align-center justify-center">
+        <div class="text-body-2 text-md-subtitle-1 font-weight-bold">
+          {{ price }}
+        </div>
       </v-col>
-      <v-col cols="2" class="d-flex align-center justify-center">
+
+      <v-col cols="12" md="2" class="d-flex align-center justify-center mt-1 mt-md-0">
         <v-btn icon size="small" @click="decreaseQty" :disabled="isDecreaseDisabled()">
           <v-icon>mdi-minus</v-icon>
         </v-btn>
-        <div class="mx-2 text-body-1 font-weight-medium">{{ dataItem.quantity }}</div>
+        <div class="mx-2 text-body-2 text-md-body-1 font-weight-medium">
+          {{ dataItem.quantity }}
+        </div>
         <v-btn icon size="small" @click="increaseQty" :disabled="isDisable">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-col>
-      <v-col cols="2" class="d-flex align-center justify-center">
-        <div class="text-subtitle-1 font-weight-bold">{{ totalPrice }}</div>
+
+      <v-col cols="6" md="2" class="d-flex align-center justify-center mt-1 mt-md-0">
+        <div class="text-body-2 text-sm-subtitle-1 font-weight-bold">
+          {{ totalPrice }}
+        </div>
       </v-col>
-      <v-col cols="2" class="d-flex align-center" style="justify-content: center">
+
+      <v-col cols="6" md="2" class="d-flex align-center justify-center mt-1 mt-md-0">
         <v-btn icon color="red" @click="removeItem">
           <v-icon>mdi-delete-outline</v-icon>
         </v-btn>
@@ -107,5 +121,14 @@ const isDecreaseDisabled = (): boolean => dataItem.value.quantity <= 1 || isDisa
 .cart-item {
   border-bottom: 1px solid v.$color-red !important;
   margin-bottom: 10px;
+}
+.min-w-img {
+  min-width: 100px;
+  max-width: 100px;
+}
+
+.no-grow-img {
+  flex-shrink: 0;
+  flex-grow: 0;
 }
 </style>

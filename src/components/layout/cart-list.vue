@@ -18,7 +18,7 @@ const tableHeader = [
 </script>
 <template>
   <v-card flat class="py-2">
-    <v-row align="center" no-gutters class="table-header">
+    <v-row align="center" no-gutters class="table-header d-none d-md-flex">
       <v-col :cols="item.size" v-for="item of tableHeader">
         <div class="text-subtitle-1 font-weight-medium">{{ item.text }}</div>
       </v-col>
