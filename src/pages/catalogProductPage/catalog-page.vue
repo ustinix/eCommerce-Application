@@ -3,7 +3,12 @@ import { computed, onMounted, ref, watch } from 'vue';
 import productApi from '../../services/product-service';
 import type { ProductProjection } from '@commercetools/platform-sdk';
 import ProductCard from '../../components/product/product-card.vue';
-import { BreakpointsItemsPerPage, DefaultItemsPerPage } from '../../constants/constants';
+import {
+  BreakpointsItemsPerPage,
+  DefaultItemsPerPage,
+  gridSign,
+  slashSign,
+} from '../../constants/constants';
 import { useDisplay } from 'vuetify';
 import CategoryButtons from '../../components/layout/category-buttons.vue';
 import { useRoute } from 'vue-router';
@@ -123,7 +128,7 @@ const breadcrumbs = computed(() => {
     {
       title: 'Home',
       disabled: false,
-      href: '/',
+      href: slashSign,
     },
     {
       title: 'Catalog',
@@ -150,7 +155,7 @@ const breadcrumbs = computed(() => {
     crumbs.push({
       title: `Brands: ${brands.value.join(', ')}`,
       disabled: true,
-      href: '#',
+      href: gridSign,
     });
   }
 
@@ -158,7 +163,7 @@ const breadcrumbs = computed(() => {
     crumbs.push({
       title: `Sports: ${sportTypes.value.join(', ')}`,
       disabled: true,
-      href: '#',
+      href: gridSign,
     });
   }
 
@@ -166,7 +171,7 @@ const breadcrumbs = computed(() => {
     crumbs.push({
       title: `Search: "${search.value}"`,
       disabled: true,
-      href: '#',
+      href: gridSign,
     });
   }
 
@@ -334,6 +339,7 @@ const breadcrumbs = computed(() => {
       }
     }
     .cards-container {
+      width: 100% !important;
       margin: 0 auto;
     }
   }

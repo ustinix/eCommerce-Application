@@ -7,6 +7,8 @@ import type { SocialLink } from '../types/social-links';
 import type { RS } from '../types/social-links';
 
 export const singPerсent = '%';
+export const gridSign = '#';
+export const slashSign = '/';
 
 export const COLORS = {
   ACTIVE: 'primary',

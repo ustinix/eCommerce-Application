@@ -17,8 +17,6 @@ const props = defineProps<{
   product: ProductProjection;
 }>();
 
-// const emit = defineEmits(['add-to-cart']);
-
 const productData = computed(() => mapProductProjection(props.product));
 
 const firstSize = productData.value.sizes.at(0);

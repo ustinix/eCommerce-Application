@@ -49,13 +49,6 @@ export async function addProductToCart(
     await getCart(authStore, cartStore);
   }
 
-  const d = {
-    action: 'addLineItem',
-    productId,
-    variantId,
-    quantity,
-  };
-  console.log('d', d);
   if (cartStore.cart === null) {
     return;
   }
@@ -79,8 +72,6 @@ export async function addProductToCart(
     })
     .execute();
 
-  console.log('Товар добавлен в корзину:');
-  console.log(updatedCartResponse.body.lineItems);
   cartStore.cart = updatedCartResponse.body;
 }
 export async function getCart(
@@ -140,7 +131,6 @@ async function changeCart(actions: MyCartUpdateAction[]): Promise<void> {
       },
     })
     .execute();
-  console.log('newcar', response.body);
   cartStore.cart = response.body;
 }
 
