@@ -51,7 +51,7 @@ function logout(): void {
             height="15"
             class="cart-img"
           />
-          <span class="cart-count" v-if="(cartCount ? cartCount : 0) > 0">
+          <span class="cart-count" data-test="cart-counter" v-if="(cartCount ? cartCount : 0) > 0">
             {{ cartCount }}
           </span>
         </RouterLink>
