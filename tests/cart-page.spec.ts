@@ -113,4 +113,42 @@ describe('CartPage.vue', () => {
     await input.setValue('PROMO2024');
     expect(button.attributes('disabled')).toBeUndefined();
   });
+  it('show subtotal and discount when promoCode is applied', async () => {
+    const wrapper = mount(CartPage, {
+      global: {
+        plugins: [
+          vuetify,
+          createTestingPinia({
+            createSpy: vi.fn,
+            initialState: {
+              cart: {
+                cart: {
+                  lineItems: [lineItem],
+                  discountCodes: [{ discountCode: { id: 'test-discount' } }],
+                  discountOnTotalPrice: {
+                    discountedAmount: { centAmount: 1000 },
+                  },
+                  totalPrice: { centAmount: 5000 },
+                },
+              },
+              auth: {},
+              snackbar: {},
+            },
+          }),
+        ],
+        stubs: {
+          Snackbar: true,
+          CartList: true,
+          CartMessage: true,
+        },
+      },
+    });
+    await wrapper.vm.$nextTick();
+    const discountCard = wrapper.find('[data-test="discount-card"]');
+    expect(discountCard.exists()).toBe(true);
+    expect(discountCard.text()).toContain('Subtotal:');
+    expect(discountCard.text()).toContain('$50.00');
+    expect(discountCard.text()).toContain('Discount');
+    expect(discountCard.text()).toContain('-$10.00');
+  });
 });

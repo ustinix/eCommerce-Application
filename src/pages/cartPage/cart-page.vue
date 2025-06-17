@@ -127,7 +127,7 @@ const applyPromo = async (): Promise<void> => {
           </v-col>
         </v-row>
       </v-card>
-      <v-card flat v-if="discountAmount > 0">
+      <v-card flat v-if="discountAmount > 0" data-test="discount-card">
         <v-row no-gutters>
           <v-col cols="10" class="text-end text-subtitle-1 font-weight-bold">{{
             AppNames.promoSubtotal
@@ -139,7 +139,7 @@ const applyPromo = async (): Promise<void> => {
             AppNames.promoDiscount
           }}</v-col>
           <v-col cols="2" class="d-flex align-center justify-center font-weight-bold discountAmount"
-            >-{{ dollarSing }}{{ discountAmount }}</v-col
+            >-{{ dollarSing }}{{ discountAmount.toFixed(2) }}</v-col
           >
         </v-row>
       </v-card>
