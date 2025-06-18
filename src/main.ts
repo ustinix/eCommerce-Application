@@ -15,7 +15,12 @@ const appContainer = document.createElement('div');
 const vuetify = createVuetify({
   components,
   directives,
-  theme,
+  theme: {
+    ...theme,
+    defaultTheme: globalThis.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'appThemeDark'
+      : 'appTheme',
+  },
 });
 
 appContainer.id = 'app';

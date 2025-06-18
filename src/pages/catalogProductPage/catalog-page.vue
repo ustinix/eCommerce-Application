@@ -288,9 +288,6 @@ const breadcrumbs = computed(() => {
   .error-message {
     color: v.$color-red;
   }
-  h3 {
-    color: if(v.$theme-is-dark, v.$color-white, v.$color-black);
-  }
   .tools {
     padding: 50px 0 25px 0;
     display: flex;
@@ -322,17 +319,33 @@ const breadcrumbs = computed(() => {
       align-self: flex-start;
       max-height: calc(100vh - 40px);
       overflow-y: auto;
+      .v-theme--dark & {
+        background: v.$color-background-dark;
+
+        .filter-section {
+          h4 {
+            color: v.$color-white;
+          }
+          :deep(.v-selection-control__input) {
+            color: v.$color-white;
+          }
+
+          :deep(.v-label) {
+            color: v.$color-white;
+          }
+        }
+      }
 
       .filter-section {
         margin-bottom: 10px;
 
         h4 {
-          color: if(v.$theme-is-dark, v.$color-black, v.$color-white);
           margin-bottom: 10px;
           font-weight: 500;
+          color: v.$color-black;
         }
         .v-input {
-          color: if(v.$theme-is-dark, v.$color-black, v.$color-white);
+          color: v.$color-black;
           height: 36.2px;
         }
       }

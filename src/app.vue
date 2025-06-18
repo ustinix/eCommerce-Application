@@ -2,6 +2,17 @@
 import { RouterView } from 'vue-router';
 import Header from './components/layout/header.vue';
 import Footer from './components/layout/footer.vue';
+import { useTheme } from 'vuetify';
+import { onMounted } from 'vue';
+
+const theme = useTheme();
+
+onMounted(() => {
+  const mediaQuery = globalThis.matchMedia('(prefers-color-scheme: dark)');
+  mediaQuery.addEventListener('change', event => {
+    theme.global.name.value = event.matches ? 'appThemeDark' : 'appTheme';
+  });
+});
 </script>
 
 <template>
