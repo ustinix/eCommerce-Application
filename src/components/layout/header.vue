@@ -85,17 +85,15 @@ function logout(): void {
     justify-content: space-between;
     align-items: center;
 
-    .icons {
-      display: flex;
-      justify-content: center;
-      align-items: end;
-      gap: 15px;
-    }
     .tools {
       display: flex;
       justify-content: center;
       align-items: end;
       gap: 15px;
+      img {
+        filter: if(v.$theme-is-dark, invert(1), invert(0));
+        transition: filter 0.3s ease;
+      }
       .cart-link {
         position: relative;
         display: inline-block;
@@ -136,7 +134,7 @@ function logout(): void {
     padding: 1rem;
 
     a {
-      color: v.$color-black;
+      color: if(v.$theme-is-dark, v.$color-white, v.$color-black);
       text-decoration: none;
 
       &:hover {
@@ -148,6 +146,14 @@ function logout(): void {
         color: v.$color-red;
       }
     }
+  }
+  .header_button {
+    color: if(v.$theme-is-dark, v.$color-white, v.$color-black);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font: inherit;
   }
 }
 @media (max-width: 500px) {
