@@ -20,6 +20,10 @@ import CartList from '../../components/layout/cart-list.vue';
 import { Placeholders } from '../../enums/placeholders';
 import { formatPrice } from '../../utils/format-price';
 import { dollarSing } from '../../constants/constants';
+import { useTheme } from 'vuetify';
+
+const theme = useTheme();
+const isDark = computed(() => theme.global.current.value.dark);
 
 const promoCode = ref<string>('');
 const isPromoApplied = ref(false);
@@ -55,21 +59,31 @@ const isCartEmpty = computed(() => {
 });
 
 const totalPrice = computed(() => {
-  return cartStore.cart?.totalPrice?.centAmount
-    ? formatPrice(cartStore.cart.totalPrice.centAmount)
-    : formatPrice(0);
+  if (!cartStore.cart) return formatPrice(0);
+
+  const originalTotal = cartStore.cart.lineItems.reduce(
+    (sum, item) => sum + item.price.value.centAmount * item.quantity,
+    0,
+  );
+
+  return formatPrice(originalTotal);
 });
 
-const finalPrice = computed(() => {
-  const total = cartStore.cart?.totalPrice?.centAmount || 0;
-  const discount = cartStore.cart?.discountOnTotalPrice?.discountedAmount.centAmount || 0;
-  return formatPrice(Math.max(0, total - discount));
+const discountedPrice = computed(() => {
+  if (!cartStore.cart) return formatPrice(0);
+
+  return formatPrice(cartStore.cart.totalPrice.centAmount);
 });
 
 const discountAmount = computed(() => {
-  if (!cartStore.cart?.discountOnTotalPrice) return 0;
+  if (!cartStore.cart) return 0;
 
-  return cartStore.cart.discountOnTotalPrice.discountedAmount.centAmount / 100;
+  const originalTotal = cartStore.cart.lineItems.reduce(
+    (sum, item) => sum + item.price.value.centAmount * item.quantity,
+    0,
+  );
+
+  return (originalTotal - cartStore.cart.totalPrice.centAmount) / 100;
 });
 
 const applyPromo = async (): Promise<void> => {
@@ -97,14 +111,14 @@ const applyPromo = async (): Promise<void> => {
 };
 </script>
 <template>
-  <v-container class="py-6 cart-container">
-    <div class="hero-cart">
+  <v-container class="py-6 cart-container" :class="{ 'theme-dark': isDark }">
+    <div class="hero-cart" :class="{ 'theme-dark': isDark }">
       <h2 class="hero_title">{{ Pages.Cart }}</h2>
     </div>
-    <CartMessage v-if="isCartEmpty" />
+    <CartMessage v-if="isCartEmpty" :class="{ 'theme-dark': isDark }" />
     <template v-else>
-      <CartList />
-      <v-card flat>
+      <CartList :class="{ 'theme-dark': isDark }" />
+      <v-card flat :class="{ 'theme-dark': isDark }">
         <v-row no-gutters>
           <v-col cols="5" class="text-end"></v-col>
           <v-col cols="5" class="text-end">
@@ -112,6 +126,7 @@ const applyPromo = async (): Promise<void> => {
               v-model="promoCode"
               :label="Placeholders.placeholderPromo"
               :disabled="isPromoApplied"
+              :class="{ 'text-field-dark': isDark }"
             />
           </v-col>
           <v-col cols="2" class="d-flex align-center justify-center">
@@ -127,29 +142,39 @@ const applyPromo = async (): Promise<void> => {
           </v-col>
         </v-row>
       </v-card>
-      <v-card flat v-if="discountAmount > 0" data-test="discount-card">
+      <v-card
+        flat
+        v-if="discountAmount > 0"
+        data-test="discount-card"
+        :class="{ 'theme-dark': isDark }"
+      >
         <v-row no-gutters>
-          <v-col cols="10" class="text-end text-subtitle-1 font-weight-bold">{{
-            AppNames.promoSubtotal
-          }}</v-col>
-          <v-col cols="2" class="d-flex align-center justify-center">{{ totalPrice || 0 }}</v-col>
+          <v-col cols="10" class="text-end text-subtitle-1 font-weight-bold">
+            {{ AppNames.promoSubtotal }}
+          </v-col>
+          <v-col cols="2" class="d-flex align-center justify-center">
+            {{ totalPrice }}
+          </v-col>
         </v-row>
         <v-row no-gutters>
-          <v-col cols="10" class="text-end text-subtitle-1 font-weight-bold">{{
-            AppNames.promoDiscount
-          }}</v-col>
-          <v-col cols="2" class="d-flex align-center justify-center font-weight-bold discountAmount"
-            >-{{ dollarSing }}{{ discountAmount.toFixed(2) }}</v-col
+          <v-col cols="10" class="text-end text-subtitle-1 font-weight-bold">
+            {{ AppNames.promoDiscount }}
+          </v-col>
+          <v-col
+            cols="2"
+            class="d-flex align-center justify-center font-weight-bold discountAmount"
           >
+            -{{ dollarSing }}{{ discountAmount.toFixed(2) }}
+          </v-col>
         </v-row>
       </v-card>
-      <v-card flat>
+      <v-card flat :class="{ 'theme-dark': isDark }">
         <v-row no-gutters>
-          <v-col cols="10" class="text-end text-subtitle-1 font-weight-bold">{{
-            AppNames.promoTotal
-          }}</v-col>
+          <v-col cols="10" class="text-end text-subtitle-1 font-weight-bold">
+            {{ AppNames.promoTotal }}
+          </v-col>
           <v-col cols="2" class="d-flex align-center justify-center font-weight-bold">
-            {{ finalPrice }}
+            {{ discountedPrice }}
           </v-col>
         </v-row>
       </v-card>
@@ -165,23 +190,109 @@ const applyPromo = async (): Promise<void> => {
 @use '../../assets/styles/hero.scss' as *;
 @use '../../assets/styles/variables.scss' as v;
 
-.hero-cart {
-  @include hero-section('../../assets/images/cart.png');
+.cart-container {
+  background-color: v.$color-white;
+  color: v.$color-black;
+
+  &.theme-dark {
+    background-color: v.$color-background-dark;
+  }
 }
 
-.v-row {
-  border-bottom: 1px solid v.$color-red !important;
-  min-height: 48px;
-  align-items: center;
-  .text-end {
-    text-align: end;
-  }
-  .discountAmount {
-    color: v.$color-red;
+.hero-cart {
+  @include hero-section('../../assets/images/cart.png');
+
+  &.theme-dark {
+    background-color: rgba(0, 0, 0, 0.7);
+
+    .hero_title {
+      color: v.$color-white;
+    }
   }
 }
+
+.v-card {
+  background-color: inherit;
+  color: inherit;
+
+  .v-row {
+    color: inherit;
+    border-bottom: 1px solid v.$color-red !important;
+    min-height: 48px;
+    align-items: center;
+
+    .text-end {
+      text-align: end;
+    }
+
+    .discountAmount {
+      color: v.$color-red;
+    }
+  }
+}
+
 .button-left {
   display: block;
   margin-left: 0;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: v.$color-red;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: v.$color-hover;
+  }
+}
+.text-field-dark {
+  :deep(.v-field) {
+    background-color: #2d2d2d !important;
+    color: v.$color-white !important;
+
+    .v-field__input {
+      color: v.$color-white !important;
+    }
+
+    .v-label {
+      color: rgba(v.$color-white, 0.7) !important;
+    }
+  }
+}
+.v-btn {
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &[color='gray'] {
+    color: #757575;
+
+    .theme-dark & {
+      color: #9e9e9e;
+    }
+  }
+
+  &[color='green'] {
+    color: v.$color-green;
+
+    .theme-dark & {
+      color: v.$color-green-light;
+    }
+  }
+}
+.theme-dark {
+  .text-subtitle-1,
+  .font-weight-bold {
+    color: v.$color-white !important;
+  }
+
+  .v-chip {
+    background-color: #2d2d2d;
+    color: v.$color-white;
+  }
 }
 </style>

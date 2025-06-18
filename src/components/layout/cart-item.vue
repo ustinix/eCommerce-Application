@@ -8,6 +8,10 @@ import type { cartItem } from '../../types/cart';
 import { removeProduct, increaseQuantityProduct } from '../../services/cart-service';
 import { useSnackbarStore } from '../../stores/snackbar';
 import Snackbar from './snack-bar.vue';
+import { useTheme } from 'vuetify';
+
+const theme = useTheme();
+const isDark = computed(() => theme.global.current.value.dark);
 
 const props = defineProps<{ lineItem: LineItem }>();
 const dataItem = ref<cartItem>(mapCartItem(props.lineItem));
@@ -59,7 +63,7 @@ const totalPrice = computed(() => {
 const isDecreaseDisabled = (): boolean => dataItem.value.quantity <= 1 || isDisable.value;
 </script>
 <template>
-  <v-card flat class="py-2 border-b cart-item">
+  <v-card flat class="py-2 border-b cart-item" :class="{ 'theme-dark': isDark }">
     <v-row align="center" no-gutters>
       <v-col cols="12" md="1" class="d-flex align-center justify-center">
         <v-img
@@ -90,13 +94,19 @@ const isDecreaseDisabled = (): boolean => dataItem.value.quantity <= 1 || isDisa
       </v-col>
 
       <v-col cols="12" md="2" class="d-flex align-center justify-center mt-1 mt-md-0">
-        <v-btn icon size="small" @click="decreaseQty" :disabled="isDecreaseDisabled()">
+        <v-btn
+          class="btnPlusMinus"
+          icon
+          size="small"
+          @click="decreaseQty"
+          :disabled="isDecreaseDisabled()"
+        >
           <v-icon>mdi-minus</v-icon>
         </v-btn>
         <div class="mx-2 text-body-2 text-md-body-1 font-weight-medium">
           {{ dataItem.quantity }}
         </div>
-        <v-btn icon size="small" @click="increaseQty" :disabled="isDisable">
+        <v-btn class="btnPlusMinus" icon size="small" @click="increaseQty" :disabled="isDisable">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-col>
@@ -118,10 +128,6 @@ const isDecreaseDisabled = (): boolean => dataItem.value.quantity <= 1 || isDisa
 </template>
 <style lang="scss" scoped>
 @use '../../assets/styles/variables.scss' as v;
-.cart-item {
-  border-bottom: 1px solid v.$color-red !important;
-  margin-bottom: 10px;
-}
 .min-w-img {
   min-width: 100px;
   max-width: 100px;
@@ -130,5 +136,29 @@ const isDecreaseDisabled = (): boolean => dataItem.value.quantity <= 1 || isDisa
 .no-grow-img {
   flex-shrink: 0;
   flex-grow: 0;
+}
+.theme-dark {
+  .btnPlusMinus {
+    background-color: v.$color-background-dark !important;
+    color: v.$color-white !important;
+
+    &:hover:not(.v-btn--disabled) {
+      background-color: v.$color-background-dark !important;
+    }
+
+    &.v-btn--disabled {
+      background-color: v.$color-background-dark !important;
+      color: rgba(v.$color-white, 0.5) !important;
+    }
+  }
+}
+.cart-item {
+  border-bottom: 1px solid v.$color-red !important;
+  margin-bottom: 10px;
+  &.theme-dark {
+    background-color: v.$color-background-dark;
+    color: v.$color-white;
+    border-bottom: 1px solid rgba(v.$color-red, 0.7);
+  }
 }
 </style>
