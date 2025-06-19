@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, computed, ref } from 'vue';
+import { onMounted, computed, ref, shallowRef } from 'vue';
 import Snackbar from '../../components/layout/snack-bar.vue';
 import { useSnackbarStore } from '../../stores/snackbar';
 import { useAuthStore } from '../../stores/auth';
@@ -7,7 +7,6 @@ import { useCartStore } from '../../stores/cart';
 import { Pages } from '../../enums/pages';
 import {
   getCart,
-  clearCart,
   removePromoCode,
   applyPromoCode,
   getDiscountCodeById,
@@ -20,15 +19,18 @@ import CartList from '../../components/layout/cart-list.vue';
 import { Placeholders } from '../../enums/placeholders';
 import { formatPrice } from '../../utils/format-price';
 import { dollarSing } from '../../constants/constants';
+import Modal from '../../components/layout/modal.vue';
+import ConfirmClearCart from '../../components/layout/confirm-clear-cart.vue';
 import { useTheme } from 'vuetify';
 
 const theme = useTheme();
 const isDark = computed(() => theme.global.current.value.dark);
-
 const promoCode = ref<string>('');
 const isPromoApplied = ref(false);
-const butttonColor = computed(() => (isPromoApplied.value ? 'green' : 'gray'));
+const buttonColor = computed(() => (isPromoApplied.value ? 'green' : 'gray'));
 const isLoading = ref(false);
+const isModalOpen = ref(false);
+const modalComponent = shallowRef();
 
 const authStore = useAuthStore();
 const cartStore = useCartStore();
@@ -109,6 +111,15 @@ const applyPromo = async (): Promise<void> => {
     isLoading.value = false;
   }
 };
+function handelClearCart(): void {
+  modalComponent.value = ConfirmClearCart;
+  isModalOpen.value = true;
+}
+const modalProps = {
+  close: (): void => {
+    isModalOpen.value = false;
+  },
+};
 </script>
 <template>
   <v-container class="py-6 cart-container" :class="{ 'theme-dark': isDark }">
@@ -132,7 +143,7 @@ const applyPromo = async (): Promise<void> => {
           <v-col cols="2" class="d-flex align-center justify-center">
             <v-btn
               icon
-              :color="butttonColor"
+              :color="buttonColor"
               :disabled="!promoCode.trim() || isLoading"
               :loading="isLoading"
               @click="applyPromo"
@@ -178,11 +189,12 @@ const applyPromo = async (): Promise<void> => {
           </v-col>
         </v-row>
       </v-card>
-      <button class="button button-left" @click="clearCart" v-if="!isCartEmpty">
+      <button class="button button-left" @click="handelClearCart" v-if="!isCartEmpty">
         {{ textPage.clearButton }}
       </button>
     </template>
   </v-container>
+  <Modal v-model="isModalOpen" :component="modalComponent" :componentProps="modalProps" />
 
   <Snackbar />
 </template>
