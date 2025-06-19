@@ -3,6 +3,14 @@ import type { Mock } from 'vitest';
 import { mount } from '@vue/test-utils';
 import Header from '../src/components/layout/header.vue';
 import { RouterLinkStub } from '@vue/test-utils';
+import { createVuetify } from 'vuetify';
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
+
+const vuetify = createVuetify({
+  components,
+  directives,
+});
 
 let isAuthenticated = false;
 const logOutMock = vi.fn();
@@ -41,6 +49,7 @@ describe('Header.vue', () => {
   it('shows Login and Registration links when not authenticated', () => {
     const wrapper = mount(Header, {
       global: {
+        plugins: [vuetify],
         stubs: {
           RouterLink: RouterLinkStub,
         },
@@ -53,6 +62,7 @@ describe('Header.vue', () => {
     isAuthenticated = true;
     const wrapper = mount(Header, {
       global: {
+        plugins: [vuetify],
         stubs: {
           RouterLink: RouterLinkStub,
         },
@@ -64,6 +74,7 @@ describe('Header.vue', () => {
     isAuthenticated = true;
     const wrapper = mount(Header, {
       global: {
+        plugins: [vuetify],
         stubs: {
           RouterLink: RouterLinkStub,
         },
