@@ -319,6 +319,22 @@ const breadcrumbs = computed(() => {
       align-self: flex-start;
       max-height: calc(100vh - 40px);
       overflow-y: auto;
+      .v-theme--dark & {
+        background: v.$color-background-dark;
+
+        .filter-section {
+          h4 {
+            color: v.$color-white;
+          }
+          :deep(.v-selection-control__input) {
+            color: v.$color-white;
+          }
+
+          :deep(.v-label) {
+            color: v.$color-white;
+          }
+        }
+      }
 
       .filter-section {
         margin-bottom: 10px;
@@ -326,8 +342,10 @@ const breadcrumbs = computed(() => {
         h4 {
           margin-bottom: 10px;
           font-weight: 500;
+          color: v.$color-black;
         }
         .v-input {
+          color: v.$color-black;
           height: 36.2px;
         }
       }

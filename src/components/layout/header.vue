@@ -7,6 +7,9 @@ import { useCartStore } from '../../stores/cart';
 import { AppNames } from '../../enums/app-names';
 import { Pages } from '../../enums/pages';
 import { computed } from 'vue';
+import { useTheme } from 'vuetify';
+const theme = useTheme();
+const isDark = computed(() => theme.global.current.value.dark);
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
@@ -30,7 +33,7 @@ function logout(): void {
 </script>
 
 <template>
-  <div class="header">
+  <div class="header" :class="{ 'theme-dark': isDark }">
     <div class="header-title">
       <div class="app-logo">
         <Logo />
@@ -85,17 +88,19 @@ function logout(): void {
     justify-content: space-between;
     align-items: center;
 
-    .icons {
-      display: flex;
-      justify-content: center;
-      align-items: end;
-      gap: 15px;
-    }
     .tools {
       display: flex;
       justify-content: center;
       align-items: end;
       gap: 15px;
+      img {
+        filter: brightness(0);
+        opacity: 0.8;
+        transition: filter 0.3s ease;
+      }
+      .theme-dark & img {
+        filter: invert(1) brightness(1.5);
+      }
       .cart-link {
         position: relative;
         display: inline-block;
@@ -136,7 +141,7 @@ function logout(): void {
     padding: 1rem;
 
     a {
-      color: v.$color-black;
+      color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity));
       text-decoration: none;
 
       &:hover {
@@ -145,9 +150,17 @@ function logout(): void {
 
       &.router-link-active {
         font-weight: bold;
-        color: v.$color-red;
+        color: rgb(var(--v-theme-primary));
       }
     }
+  }
+  .header_button {
+    color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity));
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font: inherit;
   }
 }
 @media (max-width: 500px) {

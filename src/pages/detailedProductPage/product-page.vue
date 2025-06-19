@@ -15,6 +15,10 @@ import { addProductToCart, removeProduct } from '../../services/cart-service';
 import { Errors } from '../../enums/errors';
 import { AppNames } from '../../enums/app-names';
 import SizeSelector from '../../components/layout/size-selector.vue';
+import { useTheme } from 'vuetify';
+
+const theme = useTheme();
+const isDark = computed(() => theme.global.current.value.dark);
 
 const snackbarStore = useSnackbarStore();
 const authStore = useAuthStore();
@@ -105,12 +109,16 @@ watch(
 );
 </script>
 <template>
-  <v-container class="py-6" v-if="product">
+  <v-container class="py-6" v-if="product" :class="{ 'theme-dark': isDark }">
     <v-row class="justify-center align-center ga-16">
       <v-btn to="/catalog" color="primary" variant="flat" prepend-icon="mdi-arrow-left">
         {{ backButtonText }}
       </v-btn>
-      <CategoryButtons with-routing :current-category="currentCategory" />
+      <CategoryButtons
+        with-routing
+        :current-category="currentCategory"
+        :class="{ 'theme-dark': isDark }"
+      />
     </v-row>
 
     <v-row justify="center" class="ga-5">
@@ -184,6 +192,9 @@ watch(
 .original-price {
   color: v.$color-black;
   font-size: 1rem;
+  .theme-dark & {
+    color: v.$color-white;
+  }
 }
 
 .discounted-price {
@@ -199,5 +210,20 @@ watch(
 .addBtn {
   width: 50%;
   color: v.$color-red;
+}
+.theme-dark {
+  .price-container,
+  .card {
+    background-color: v.$color-background-dark;
+    color: v.$color-white;
+  }
+
+  .v-card {
+    background-color: v.$color-background-dark;
+  }
+
+  .v-btn {
+    color: v.$color-white;
+  }
 }
 </style>
