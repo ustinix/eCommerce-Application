@@ -18,7 +18,7 @@ import CartMessage from '../../components/layout/cart-message.vue';
 import CartList from '../../components/layout/cart-list.vue';
 import { Placeholders } from '../../enums/placeholders';
 import { formatPrice } from '../../utils/format-price';
-import { dollarSing } from '../../constants/constants';
+import { dollarSign } from '../../constants/constants';
 import Modal from '../../components/layout/modal.vue';
 import ConfirmClearCart from '../../components/layout/confirm-clear-cart.vue';
 import { useTheme } from 'vuetify';
@@ -85,7 +85,7 @@ const discountAmount = computed(() => {
     0,
   );
 
-  return (originalTotal - cartStore.cart.totalPrice.centAmount) / 100;
+  return +((originalTotal - cartStore.cart.totalPrice.centAmount) / 100).toFixed(2);
 });
 
 const applyPromo = async (): Promise<void> => {
@@ -175,7 +175,7 @@ const modalProps = {
             cols="2"
             class="d-flex align-center justify-center font-weight-bold discountAmount"
           >
-            -{{ dollarSing }}{{ discountAmount.toFixed(2) }}
+            -{{ dollarSign }}{{ discountAmount }}
           </v-col>
         </v-row>
       </v-card>

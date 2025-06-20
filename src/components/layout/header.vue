@@ -36,8 +36,10 @@ function logout(): void {
   <div class="header" :class="{ 'theme-dark': isDark }">
     <div class="header-title">
       <div class="app-logo">
-        <Logo />
-        <h2>{{ AppNames.Shop }}</h2>
+        <RouterLink to="/" title="Main" class="main-link">
+          <Logo />
+          <h2>{{ AppNames.Shop }}</h2>
+        </RouterLink>
       </div>
       <div class="tools">
         <a href="#" target="_blank">
@@ -121,7 +123,12 @@ function logout(): void {
         }
       }
     }
-
+    .main-link {
+      display: flex;
+      justify-content: center;
+      gap: 1vh;
+      cursor: pointer;
+    }
     .app-logo {
       display: flex;
       justify-content: center;
