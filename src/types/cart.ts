@@ -1,8 +1,8 @@
-import type { Image } from '@commercetools/platform-sdk';
 export type cartItem = {
+  id: string;
   name: string;
-  image: Image;
-  price: number | null;
+  imageUrl: string;
+  price: number;
   quantity: number;
   sizes: string;
 };

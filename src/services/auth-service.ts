@@ -23,12 +23,13 @@ export async function loginCustomer(
   const authStore = useAuthStore();
   const apiRoot = await authStore.currentApiRoot;
   const anonymousId = localStorage.getItem('ct-anonymous-id');
-  if (cartStore.cart !== null) {
+  if (cartStore.cart !== null && apiRoot !== null) {
     const cartId = cartStore.cart.id;
     await apiRoot
       .me()
       .login()
       .post({
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         body: {
           email,
           password,

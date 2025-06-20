@@ -8,13 +8,20 @@ import { isToken } from '../utils/is-token';
 import { isCorrectError } from '../utils/is-error';
 import { decodeToken } from '../utils/token-decoder';
 
-const anonymClient = await createAnonymClient();
+const initializeAnonymClient = async (): Promise<ByProjectKeyRequestBuilder> => {
+  return createAnonymClient();
+};
+const anonymClientPromise: Promise<ByProjectKeyRequestBuilder> = initializeAnonymClient();
 
 export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = ref<boolean>(false);
   const errorAuth = ref<string | null>(null);
-  const currentApiRoot = ref<ByProjectKeyRequestBuilder>(anonymClient);
-  console.log('start', currentApiRoot.value);
+  const currentApiRoot = ref<ByProjectKeyRequestBuilder | null>(null);
+
+  anonymClientPromise.then(client => {
+    currentApiRoot.value = client;
+  });
+
   const saved = localStorage.getItem('authStore');
   if (saved) {
     const parsed = JSON.parse(saved);
@@ -29,6 +36,7 @@ export const useAuthStore = defineStore('auth', () => {
       currentApiRoot.value = createExistingTokenClient(existingToken);
     }
   }
+
   watch(
     [isAuthenticated],
     () => {

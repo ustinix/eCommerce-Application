@@ -5,24 +5,44 @@ import type { ProductProjection } from '@commercetools/platform-sdk';
 import { formatPrice } from '../../utils/format-price';
 import { AppNames } from '../../enums/app-names';
 import { mapProductProjection } from '../../utils/map-product-projection';
+import { useCartStore } from '../../stores/cart';
+import { useAuthStore } from '../../stores/auth';
+import { addProductToCart, removeProduct } from '../../services/cart-service';
+import SizeSelector from '../layout/size-selector.vue';
+
+const cartStore = useCartStore();
+const authStore = useAuthStore();
 
 const props = defineProps<{
   product: ProductProjection;
 }>();
 
-const emit = defineEmits(['add-to-cart']);
-
 const productData = computed(() => mapProductProjection(props.product));
 
-const selectedSize = ref(productData.value.sizes[0]);
+const firstSize = productData.value.sizes.at(0);
+const selectedSize = ref(firstSize ? firstSize.id : null);
+
+const selectedSku = computed(
+  () => productData.value.sizes.find(item => item.id === selectedSize.value)?.sku,
+);
 
 const addToCart = (): void => {
-  if (!selectedSize.value) return;
-  emit('add-to-cart', {
-    productId: props.product.id,
-    size: selectedSize.value,
-  });
+  if (selectedSize.value === null) return;
+  addProductToCart(authStore, cartStore, productData.value.id, selectedSize.value);
 };
+
+const removeFromCart = (): void => {
+  const cartItem = cartStore.cart?.lineItems.find(
+    product => product.variant.sku === selectedSku.value,
+  );
+  if (cartItem !== undefined) {
+    removeProduct(cartItem.id, cartItem.quantity);
+  }
+};
+const inCart = computed(() => {
+  if (cartStore.cart === null || selectedSize.value === null) return false;
+  return cartStore.cart?.lineItems.some(product => product.variant.sku === selectedSku.value);
+});
 </script>
 <template>
   <v-card class="product-card">
@@ -49,27 +69,22 @@ const addToCart = (): void => {
     </RouterLink>
     <v-card-text class="px-4 py-2">
       <span class="subheading">{{ AppNames.selectText }}</span>
-      <v-chip-group
-        v-model="selectedSize"
-        selected-class="text-primary"
-        mandatory
-        class="mt-2 justify-center"
-      >
-        <v-chip
-          v-for="size in productData.sizes"
-          :key="size"
-          :value="size"
-          variant="outlined"
-          size="small"
-        >
-          {{ size }}
-        </v-chip>
-      </v-chip-group>
+      <SizeSelector v-model="selectedSize" :sizes="productData.sizes" />
     </v-card-text>
 
     <v-card-actions class="px-4 pb-4">
-      <v-btn color="primary" variant="flat" block @click="addToCart" :disabled="!selectedSize">
+      <v-btn
+        color="primary"
+        variant="flat"
+        block
+        @click="addToCart"
+        :disabled="!selectedSize"
+        v-if="!inCart"
+      >
         {{ AppNames.buttonTextAdd }}
+      </v-btn>
+      <v-btn color="primary" variant="flat" block v-else @click="removeFromCart">
+        {{ AppNames.buttonRemove }}
       </v-btn>
     </v-card-actions>
   </v-card>

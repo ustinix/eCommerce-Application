@@ -9,6 +9,7 @@ import AboutPage from '../pages/aboutUsPage/about-page.vue';
 import UserPage from '../pages/userPage/user-page.vue';
 import ProductPage from '../pages/detailedProductPage/product-page.vue';
 import CartPage from '../pages/cartPage/cart-page.vue';
+import PromoPage from '../pages/promoPage/promo-page.vue';
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', component: MainPage },
@@ -18,6 +19,7 @@ const routes: Array<RouteRecordRaw> = [
   { path: '/register', component: RegistrationPage },
   { path: '/user', component: UserPage },
   { path: '/cart', component: CartPage },
+  { path: '/promo', component: PromoPage },
   { path: '/product/:id', component: ProductPage, props: true },
   { path: '/:pathMatch(.*)*', component: ErrorPage },
 ];

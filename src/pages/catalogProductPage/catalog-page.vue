@@ -3,7 +3,12 @@ import { computed, onMounted, ref, watch } from 'vue';
 import productApi from '../../services/product-service';
 import type { ProductProjection } from '@commercetools/platform-sdk';
 import ProductCard from '../../components/product/product-card.vue';
-import { BreakpointsItemsPerPage, DefaultItemsPerPage } from '../../constants/constants';
+import {
+  BreakpointsItemsPerPage,
+  DefaultItemsPerPage,
+  gridSign,
+  slashSign,
+} from '../../constants/constants';
 import { useDisplay } from 'vuetify';
 import CategoryButtons from '../../components/layout/category-buttons.vue';
 import { useRoute } from 'vue-router';
@@ -123,7 +128,7 @@ const breadcrumbs = computed(() => {
     {
       title: 'Home',
       disabled: false,
-      href: '/',
+      href: slashSign,
     },
     {
       title: 'Catalog',
@@ -150,7 +155,7 @@ const breadcrumbs = computed(() => {
     crumbs.push({
       title: `Brands: ${brands.value.join(', ')}`,
       disabled: true,
-      href: '#',
+      href: gridSign,
     });
   }
 
@@ -158,7 +163,7 @@ const breadcrumbs = computed(() => {
     crumbs.push({
       title: `Sports: ${sportTypes.value.join(', ')}`,
       disabled: true,
-      href: '#',
+      href: gridSign,
     });
   }
 
@@ -166,7 +171,7 @@ const breadcrumbs = computed(() => {
     crumbs.push({
       title: `Search: "${search.value}"`,
       disabled: true,
-      href: '#',
+      href: gridSign,
     });
   }
 
@@ -314,6 +319,22 @@ const breadcrumbs = computed(() => {
       align-self: flex-start;
       max-height: calc(100vh - 40px);
       overflow-y: auto;
+      .v-theme--dark & {
+        background: v.$color-background-dark;
+
+        .filter-section {
+          h4 {
+            color: v.$color-white;
+          }
+          :deep(.v-selection-control__input) {
+            color: v.$color-white;
+          }
+
+          :deep(.v-label) {
+            color: v.$color-white;
+          }
+        }
+      }
 
       .filter-section {
         margin-bottom: 10px;
@@ -321,8 +342,10 @@ const breadcrumbs = computed(() => {
         h4 {
           margin-bottom: 10px;
           font-weight: 500;
+          color: v.$color-black;
         }
         .v-input {
+          color: v.$color-black;
           height: 36.2px;
         }
       }
@@ -334,6 +357,7 @@ const breadcrumbs = computed(() => {
       }
     }
     .cards-container {
+      width: 100% !important;
       margin: 0 auto;
     }
   }

@@ -6,6 +6,10 @@ import { AppNames } from '../enums/app-names';
 import type { SocialLink } from '../types/social-links';
 import type { RS } from '../types/social-links';
 
+export const singPerсent = '%';
+export const gridSign = '#';
+export const slashSign = '/';
+
 export const COLORS = {
   ACTIVE: 'primary',
   INACTIVE: 'grey-lighten-2',
@@ -22,9 +26,9 @@ export const ksuData = {
   items: [
     { text: 'Repository setup', icon: 'mdi-clock' },
     { text: 'Development environment configuration and scripts', icon: 'mdi-paperclip' },
-    { text: 'Registration pages (cliet side + server-side)', icon: 'mdi-book' },
-    { text: 'Make product lis with all data;', icon: 'mdi-checkbox-marked' },
-    { text: 'Catalog page (cliet side + server-side)', icon: 'mdi-flag' },
+    { text: 'Registration pages (client side + server-side)', icon: 'mdi-book' },
+    { text: 'Make product list with all data;', icon: 'mdi-checkbox-marked' },
+    { text: 'Catalog page (client side + server-side)', icon: 'mdi-flag' },
     { text: 'Navigation and Header, Footer implementation', icon: 'mdi-menu' },
     { text: 'Routing implementation', icon: 'mdi-radiobox-marked' },
     { text: 'About page implementation', icon: 'mdi-heart' },
@@ -44,10 +48,10 @@ export const olgaData = {
   items: [
     { text: 'Task board setup', icon: 'mdi-calendar' },
     { text: 'CommerceTools project and api client setup;', icon: 'mdi-paperclip' },
-    { text: 'Login pages (cliet side + server-side)', icon: 'mdi-checkbox-marked' },
-    { text: 'User page (cliet side + server-side);', icon: 'mdi-account' },
+    { text: 'Login pages (client side + server-side)', icon: 'mdi-checkbox-marked' },
+    { text: 'User page (client side + server-side);', icon: 'mdi-account' },
     { text: 'Edit user profile information;', icon: 'mdi-pencil' },
-    { text: 'Detailed product page (cliet side + server-side);', icon: 'mdi-star' },
+    { text: 'Detailed product page (client side + server-side);', icon: 'mdi-star' },
     { text: 'Enlarged image modal with slider', icon: 'mdi-checkbox-blank-outline' },
     { text: 'Shopping cart integration', icon: 'mdi-cart' },
   ],
@@ -118,7 +122,7 @@ export const categoriesId = [
   },
 ];
 
-export const dollarSing = '$';
+export const dollarSign = '$';
 
 export const BreakpointsItemsPerPage = {
   xs: 4,
@@ -21158,3 +21162,5 @@ export const countryCityList: CountryCityData = {
     ],
   },
 };
+
+export const sizeAttribute = 'shoeSize';

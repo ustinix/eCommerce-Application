@@ -7,10 +7,14 @@ import { useCartStore } from '../../stores/cart';
 import { AppNames } from '../../enums/app-names';
 import { Pages } from '../../enums/pages';
 import { computed } from 'vue';
+import { useTheme } from 'vuetify';
+const theme = useTheme();
+const isDark = computed(() => theme.global.current.value.dark);
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
 const cartStore = useCartStore();
+const cartCount = computed(() => cartStore.totalItems);
 
 const navLinks = computed(() => [
   { to: '/', text: Pages.Home, show: true },
@@ -29,11 +33,13 @@ function logout(): void {
 </script>
 
 <template>
-  <div class="header">
+  <div class="header" :class="{ 'theme-dark': isDark }">
     <div class="header-title">
       <div class="app-logo">
-        <Logo />
-        <h2>{{ AppNames.Shop }}</h2>
+        <RouterLink to="/" title="Main" class="main-link">
+          <Logo />
+          <h2>{{ AppNames.Shop }}</h2>
+        </RouterLink>
       </div>
       <div class="tools">
         <a href="#" target="_blank">
@@ -42,13 +48,17 @@ function logout(): void {
         <RouterLink to="/user" v-if="authStore.isAuthenticated" title="User profile">
           <img src="../../assets/images/user.png" alt="user" width="15" height="15" />
         </RouterLink>
-        <RouterLink to="/cart" title="Cart">
+        <RouterLink to="/cart" title="Cart" class="cart-link">
           <img
             src="../../assets/images/shopping-cart.png"
             alt="shopping-cart"
             width="15"
             height="15"
+            class="cart-img"
           />
+          <span class="cart-count" data-test="cart-counter" v-if="(cartCount ? cartCount : 0) > 0">
+            {{ cartCount }}
+          </span>
         </RouterLink>
       </div>
     </div>
@@ -80,19 +90,45 @@ function logout(): void {
     justify-content: space-between;
     align-items: center;
 
-    .icons {
-      display: flex;
-      justify-content: center;
-      align-items: end;
-      gap: 15px;
-    }
     .tools {
       display: flex;
       justify-content: center;
       align-items: end;
       gap: 15px;
-    }
+      img {
+        filter: brightness(0);
+        opacity: 0.8;
+        transition: filter 0.3s ease;
+      }
+      .theme-dark & img {
+        filter: invert(1) brightness(1.5);
+      }
+      .cart-link {
+        position: relative;
+        display: inline-block;
 
+        .cart-count {
+          position: absolute;
+          top: -8px;
+          right: -8px;
+          background: v.$color-red;
+          color: v.$color-white;
+          border-radius: 50%;
+          width: 18px;
+          height: 18px;
+          font-size: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
+    .main-link {
+      display: flex;
+      justify-content: center;
+      gap: 1vh;
+      cursor: pointer;
+    }
     .app-logo {
       display: flex;
       justify-content: center;
@@ -112,7 +148,7 @@ function logout(): void {
     padding: 1rem;
 
     a {
-      color: v.$color-black;
+      color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity));
       text-decoration: none;
 
       &:hover {
@@ -121,9 +157,17 @@ function logout(): void {
 
       &.router-link-active {
         font-weight: bold;
-        color: v.$color-red;
+        color: rgb(var(--v-theme-primary));
       }
     }
+  }
+  .header_button {
+    color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity));
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font: inherit;
   }
 }
 @media (max-width: 500px) {

@@ -20,4 +20,11 @@ export enum Errors {
   ProductNotAdd = 'There was an error adding the item to the cart',
   UnknownError = 'Unknown error',
   LoadingCart = 'Error loading cart. Try again later',
+  PromoFormat = 'The promo must contain at least one character and no special characters or numbers.',
+  PromoNotFound = 'Promo code ID not found',
+  ApplyPromo = 'Failed to apply promo code',
+  DeleteProduct = 'Failed to delete product from cart',
+  DecreaseQty = 'Failed to decrease product quantity',
+  IncreaseQty = 'Failed to increase product quantity',
+  ClearCart = 'Failed to clear the cart. Please try again later',
 }

@@ -1,6 +1,6 @@
 import type { ProductData, Image } from '@commercetools/platform-sdk';
 import type { ProductView } from '../types/product';
-import { getAllSizes } from '../utils/get-sizes';
+import { getSizes } from '../utils/get-sizes';
 
 const placeholderImage = {
   url: 'http://dummyimage.com/400x400/99cccc.gif&text=the+image+disappeared!',
@@ -19,7 +19,7 @@ export function mapProductDataToProductView(productData: ProductData): ProductVi
     priceDiscounted: productData.masterVariant.prices?.[0]?.discounted?.value.centAmount || null,
     images: getImages(productData),
     categories: productData.categories,
-    sizes: getAllSizes(productData),
+    sizes: getSizes(productData),
   };
 }
 function getImages(productData: ProductData): Image[] {

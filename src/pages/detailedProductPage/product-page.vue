@@ -11,9 +11,14 @@ import { mapProductDataToProductView } from '../../utils/map-product';
 import CategoryButtons from '../../components/layout/category-buttons.vue';
 import Carousel from '../../components/layout/carousel.vue';
 import Modal from '../../components/layout/modal.vue';
-import { addProductToCart } from '../../services/cart-service';
+import { addProductToCart, removeProduct } from '../../services/cart-service';
 import { Errors } from '../../enums/errors';
 import { AppNames } from '../../enums/app-names';
+import SizeSelector from '../../components/layout/size-selector.vue';
+import { useTheme } from 'vuetify';
+
+const theme = useTheme();
+const isDark = computed(() => theme.global.current.value.dark);
 
 const snackbarStore = useSnackbarStore();
 const authStore = useAuthStore();
@@ -21,27 +26,38 @@ const cartStore = useCartStore();
 
 const errorMessage = 'Failed to fetch product';
 const backButtonText = 'Back to catalog';
-const successMessage = 'Item added to cart';
+const successMessageAdd = 'Item added to cart';
+const successMessageDelete = 'Item successfully removed';
+const buttonTextRemove = 'Remove from cart';
+const buttonTextAdd = 'Add to Cart';
 
 const { id } = defineProps<{ id: string }>();
 let product = ref<ProductView | null>(null);
-let variantsId = ref<number>(0);
+const selectedSize = ref<number | null>(null);
+const variantsId = ref<number>();
 
 const isModalOpen = ref(false);
 const modalComponent = shallowRef();
 const modalProps = ref();
 const widthModal = 1200;
-const buttonTextAdd = 'Add to Cart';
+
 onMounted(async () => {
   try {
     const productData = await getProductById(id);
-    console.log(' productData', productData);
     variantsId.value = productData.variants[0].id;
-
+    selectedSize.value = productData.variants[0].id;
     product.value = mapProductDataToProductView(productData);
   } catch {
     snackbarStore.error(errorMessage);
   }
+});
+const selectedSku = computed(
+  () => product.value?.sizes.find(item => item.id === selectedSize.value)?.sku,
+);
+const inCart = computed(() => {
+  if (cartStore.cart === null || selectedSize.value === null || product.value === null)
+    return false;
+  return cartStore.cart?.lineItems.some(product => product.variant.sku === selectedSku.value);
 });
 function openModal(): void {
   if (product.value !== null) {
@@ -51,44 +67,58 @@ function openModal(): void {
   }
 }
 function addInCart(): void {
+  if (selectedSize.value === null) return;
   try {
-    addProductToCart(authStore, cartStore, id, variantsId.value, 1);
-    snackbarStore.success(successMessage);
+    addProductToCart(authStore, cartStore, id, selectedSize.value);
+    snackbarStore.success(successMessageAdd);
   } catch {
     snackbarStore.error(Errors.ProductNotAdd);
   }
 }
-
+async function removeFromCart(): Promise<void> {
+  if (product.value === null) {
+    snackbarStore.error(Errors.DeleteProduct);
+    return;
+  }
+  const cartItem = cartStore.cart?.lineItems.find(
+    product => product.variant.sku === selectedSku.value,
+  );
+  if (cartItem === undefined) {
+    snackbarStore.error(Errors.DeleteProduct);
+    return;
+  }
+  try {
+    await removeProduct(cartItem.id, cartItem.quantity);
+    snackbarStore.success(successMessageDelete);
+  } catch {
+    snackbarStore.error(Errors.DeleteProduct);
+  }
+}
 const currentCategory = computed(() => {
   return product.value?.categories?.[0]?.id || null;
 });
-const productSizes = computed(() => product.value?.sizes || []);
-const selectedSize = ref<string | null>(null);
 
 watch(
   product,
   newProduct => {
     if (newProduct?.sizes?.length) {
-      selectedSize.value = newProduct.sizes[0];
+      selectedSize.value = newProduct.sizes[0].id;
     }
   },
   { immediate: true },
 );
-
-/*const addToCart = (): void => {
-  if (!selectedSize.value || !product.value) return;
-  console.log('Adding to cart:', {
-    size: selectedSize.value,
-  });
-};*/
 </script>
 <template>
-  <v-container class="py-6" v-if="product">
+  <v-container class="py-6" v-if="product" :class="{ 'theme-dark': isDark }">
     <v-row class="justify-center align-center ga-16">
       <v-btn to="/catalog" color="primary" variant="flat" prepend-icon="mdi-arrow-left">
         {{ backButtonText }}
       </v-btn>
-      <CategoryButtons with-routing :current-category="currentCategory" />
+      <CategoryButtons
+        with-routing
+        :current-category="currentCategory"
+        :class="{ 'theme-dark': isDark }"
+      />
     </v-row>
 
     <v-row justify="center" class="ga-5">
@@ -116,31 +146,21 @@ watch(
           </div>
           <v-card-text class="px-4 py-2">
             <span class="subheading">{{ AppNames.selectText }}</span>
-            <v-chip-group
-              v-model="selectedSize"
-              selected-class="text-primary"
-              mandatory
-              class="mt-2 justify-center"
-            >
-              <v-chip
-                v-for="size in productSizes"
-                :key="size"
-                :value="size"
-                variant="outlined"
-                size="small"
-                >{{ size }}</v-chip
-              >
-            </v-chip-group>
+            <SizeSelector v-model="selectedSize" :sizes="product.sizes" />
           </v-card-text>
           <v-card-actions class="addBtn pb-4">
             <v-btn
               color="primary"
               variant="flat"
               block
+              v-if="!inCart"
               @click="addInCart"
               :disabled="!selectedSize"
             >
               {{ buttonTextAdd }}
+            </v-btn>
+            <v-btn color="primary" variant="flat" block v-else @click="removeFromCart">
+              {{ buttonTextRemove }}
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -172,6 +192,9 @@ watch(
 .original-price {
   color: v.$color-black;
   font-size: 1rem;
+  .theme-dark & {
+    color: v.$color-white;
+  }
 }
 
 .discounted-price {
@@ -187,5 +210,20 @@ watch(
 .addBtn {
   width: 50%;
   color: v.$color-red;
+}
+.theme-dark {
+  .price-container,
+  .card {
+    background-color: v.$color-background-dark;
+    color: v.$color-white;
+  }
+
+  .v-card {
+    background-color: v.$color-background-dark;
+  }
+
+  .v-btn {
+    color: v.$color-white;
+  }
 }
 </style>
