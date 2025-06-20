@@ -26,4 +26,5 @@ export enum Errors {
   DeleteProduct = 'Failed to delete product from cart',
   DecreaseQty = 'Failed to decrease product quantity',
   IncreaseQty = 'Failed to increase product quantity',
+  ClearCart = 'Failed to clear the cart. Please try again later',
 }

@@ -75,7 +75,7 @@ function addInCart(): void {
     snackbarStore.error(Errors.ProductNotAdd);
   }
 }
-function removeFromCart(): void {
+async function removeFromCart(): Promise<void> {
   if (product.value === null) {
     snackbarStore.error(Errors.DeleteProduct);
     return;
@@ -88,7 +88,7 @@ function removeFromCart(): void {
     return;
   }
   try {
-    removeProduct(cartItem.id, cartItem.quantity);
+    await removeProduct(cartItem.id, cartItem.quantity);
     snackbarStore.success(successMessageDelete);
   } catch {
     snackbarStore.error(Errors.DeleteProduct);

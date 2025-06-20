@@ -16,7 +16,7 @@ const isDark = computed(() => theme.global.current.value.dark);
 const props = defineProps<{ lineItem: LineItem }>();
 const dataItem = ref<cartItem>(mapCartItem(props.lineItem));
 const snackbarStore = useSnackbarStore();
-const isDisable = ref<boolean>(false);
+const isDisabled = ref<boolean>(false);
 
 const successDelete = 'The product has been permanently removed.';
 
@@ -29,8 +29,8 @@ function removeItem(): void {
   }
 }
 async function decreaseQty(): Promise<void> {
-  isDisable.value = true;
   if (dataItem.value.quantity <= 1) return;
+  isDisabled.value = true;
   const quantity = dataItem.value.quantity - 1;
   try {
     await removeProduct(dataItem.value.id, quantity);
@@ -38,11 +38,11 @@ async function decreaseQty(): Promise<void> {
   } catch {
     snackbarStore.error(Errors.DecreaseQty);
   } finally {
-    isDisable.value = false;
+    isDisabled.value = false;
   }
 }
 async function increaseQty(): Promise<void> {
-  isDisable.value = true;
+  isDisabled.value = true;
   const newQuantity = dataItem.value.quantity + 1;
   try {
     await increaseQuantityProduct(dataItem.value.id, newQuantity);
@@ -50,7 +50,7 @@ async function increaseQty(): Promise<void> {
   } catch {
     snackbarStore.error(Errors.IncreaseQty);
   } finally {
-    isDisable.value = false;
+    isDisabled.value = false;
   }
 }
 
@@ -60,7 +60,7 @@ const totalPrice = computed(() => {
   const total = dataItem.value.price * dataItem.value.quantity;
   return formatPrice(total);
 });
-const isDecreaseDisabled = (): boolean => dataItem.value.quantity <= 1 || isDisable.value;
+const isDecreaseDisabled = (): boolean => dataItem.value.quantity <= 1 || isDisabled.value;
 </script>
 <template>
   <v-card flat class="py-2 border-b cart-item" :class="{ 'theme-dark': isDark }">
@@ -106,7 +106,7 @@ const isDecreaseDisabled = (): boolean => dataItem.value.quantity <= 1 || isDisa
         <div class="mx-2 text-body-2 text-md-body-1 font-weight-medium">
           {{ dataItem.quantity }}
         </div>
-        <v-btn class="btnPlusMinus" icon size="small" @click="increaseQty" :disabled="isDisable">
+        <v-btn class="btnPlusMinus" icon size="small" @click="increaseQty" :disabled="isDisabled">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-col>

@@ -16,7 +16,7 @@ const anonymClientPromise: Promise<ByProjectKeyRequestBuilder> = initializeAnony
 export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = ref<boolean>(false);
   const errorAuth = ref<string | null>(null);
-  const currentApiRoot = ref<ByProjectKeyRequestBuilder>(null!);
+  const currentApiRoot = ref<ByProjectKeyRequestBuilder | null>(null);
 
   anonymClientPromise.then(client => {
     currentApiRoot.value = client;

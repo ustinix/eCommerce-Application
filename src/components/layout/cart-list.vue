@@ -7,19 +7,19 @@ const cartStore = useCartStore();
 const listItems = computed(() => cartStore.cart?.lineItems ?? []);
 
 const tableHeader = [
-  { text: 'IMAGE', size: 1 },
-  { text: 'PRODUCT NAME', size: 3 },
-  { text: 'SIZE', size: 1 },
-  { text: 'PRICE', size: 1 },
-  { text: 'QUANTITY', size: 2 },
-  { text: 'TOTAL', size: 2 },
-  { text: 'DELETE', size: 2 },
+  { id: 'image', text: 'IMAGE', size: 1 },
+  { id: 'name', text: 'PRODUCT NAME', size: 3 },
+  { id: 'size', text: 'SIZE', size: 1 },
+  { id: 'price', text: 'PRICE', size: 1 },
+  { id: 'quantity', text: 'QUANTITY', size: 2 },
+  { id: 'total', text: 'TOTAL', size: 2 },
+  { id: 'delete', text: 'DELETE', size: 2 },
 ];
 </script>
 <template>
   <v-card flat class="py-2">
     <v-row align="center" no-gutters class="table-header d-none d-md-flex">
-      <v-col :cols="item.size" v-for="item of tableHeader">
+      <v-col :cols="item.size" v-for="item of tableHeader" :key="item.id">
         <div class="text-subtitle-1 font-weight-medium">{{ item.text }}</div>
       </v-col>
     </v-row>

@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import { clearCart } from '../../services/cart-service';
+import { Errors } from '../../enums/errors';
+import { Success } from '../../enums/success';
+import { useSnackbarStore } from '../../stores/snackbar';
+
+const snackbarStore = useSnackbarStore();
 const props = defineProps<{ close: () => void }>();
 const textComponent = {
   text: 'Are you sure you want to clear the shopping cart?',
@@ -7,8 +12,14 @@ const textComponent = {
   confirmButton: 'Clear',
 };
 async function confirm(): Promise<void> {
-  await clearCart();
-  props.close();
+  try {
+    await clearCart();
+    snackbarStore.success(Success.ClearCart);
+  } catch {
+    snackbarStore.error(Errors.ClearCart);
+  } finally {
+    props.close();
+  }
 }
 </script>
 
