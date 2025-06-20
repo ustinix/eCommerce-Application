@@ -2,8 +2,8 @@
 import { computed } from 'vue';
 
 const props = defineProps<{
-  modelValue: string | number | null;
-  sizes: { id: string | number; value: string }[];
+  modelValue: number;
+  sizes: { id: number; value: string }[];
 }>();
 
 const emit = defineEmits<(event: 'update:modelValue', value: string | number | null) => void>();

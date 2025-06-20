@@ -2,12 +2,16 @@ import { useAuthStore } from '../stores/auth';
 import { useCartStore } from '../stores/cart';
 import type { PromoCode } from '../types/promo-code';
 import type { Cart, MyCartUpdateAction } from '@commercetools/platform-sdk';
+import { Errors } from '../enums/errors';
 
 async function createAnonymousCart(
   authStore: ReturnType<typeof useAuthStore>,
   cartStore: ReturnType<typeof useCartStore>,
 ): Promise<Cart> {
   const apiRoot = await authStore.currentApiRoot;
+  if (apiRoot === null) {
+    throw new Error(Errors.UnknownError);
+  }
   const cartResponse = await apiRoot
     .me()
     .carts()
@@ -24,6 +28,9 @@ async function createAnonymousCart(
 }
 async function createUserCart(authStore: ReturnType<typeof useAuthStore>): Promise<Cart> {
   const apiRoot = await authStore.currentApiRoot;
+  if (apiRoot === null) {
+    throw new Error(Errors.UnknownError);
+  }
   const newCartResponse = await apiRoot
     .me()
     .carts()
@@ -49,11 +56,10 @@ export async function addProductToCart(
     await getCart(authStore, cartStore);
   }
 
-  if (cartStore.cart === null) {
-    return;
-  }
   const apiRoot = await authStore.currentApiRoot;
-
+  if (apiRoot === null || cartStore.cart === null) {
+    throw new Error(Errors.UnknownError);
+  }
   const updatedCartResponse = await apiRoot
     .carts()
     .withId({ ID: cartStore.cart.id })
@@ -88,7 +94,9 @@ async function getAnonymCart(
   cartStore: ReturnType<typeof useCartStore>,
 ): Promise<Cart> {
   if (cartStore.cartId === '') return createAnonymousCart(authStore, cartStore);
-
+  if (authStore.currentApiRoot === null) {
+    throw new Error(Errors.UnknownError);
+  }
   const cartResponse = await authStore.currentApiRoot
     .carts()
     .withId({ ID: cartStore.cartId })
@@ -98,6 +106,9 @@ async function getAnonymCart(
 }
 async function getUserCart(authStore: ReturnType<typeof useAuthStore>): Promise<Cart> {
   const apiRoot = await authStore.currentApiRoot;
+  if (apiRoot === null) {
+    throw new Error(Errors.UnknownError);
+  }
   const cartResponse = await apiRoot
     .me()
     .carts()
@@ -120,6 +131,9 @@ async function changeCart(actions: MyCartUpdateAction[]): Promise<void> {
   const cartStore = useCartStore();
   if (cartStore.cart === null) return;
   const apiRoot = await authStore.currentApiRoot;
+  if (apiRoot === null) {
+    throw new Error(Errors.UnknownError);
+  }
   const response = await apiRoot
     .me()
     .carts()
@@ -144,6 +158,9 @@ export async function applyPromoCode(
   }
   if (cartStore.cart === null) return;
   const apiRoot = await authStore.currentApiRoot;
+  if (apiRoot === null) {
+    throw new Error(Errors.UnknownError);
+  }
   try {
     const updatedCartResponse = await apiRoot
       .carts()
@@ -182,7 +199,9 @@ export async function removePromoCode(
   }
 
   const apiRoot = await authStore.currentApiRoot;
-
+  if (apiRoot === null) {
+    throw new Error(Errors.UnknownError);
+  }
   try {
     const updatedCartResponse = await apiRoot
       .carts()
@@ -216,7 +235,9 @@ export async function getDiscountCodeById(
 ): Promise<string> {
   try {
     const apiRoot = await authStore.currentApiRoot;
-
+    if (apiRoot === null) {
+      throw new Error(Errors.UnknownError);
+    }
     const response = await apiRoot.discountCodes().withId({ ID: discountCodeId }).get().execute();
 
     return response.body.code;
@@ -229,9 +250,11 @@ export async function getDiscountCodeById(
 export async function getDiscountCodes(
   authStore: ReturnType<typeof useAuthStore>,
 ): Promise<PromoCode[]> {
+  const apiRoot = await authStore.currentApiRoot;
+  if (apiRoot === null) {
+    throw new Error(Errors.UnknownError);
+  }
   try {
-    const apiRoot = await authStore.currentApiRoot;
-
     const response = await apiRoot
       .discountCodes()
       .get({
@@ -274,7 +297,7 @@ export async function removeProduct(id: string, quantity: number): Promise<void>
       quantity,
     },
   ];
-  changeCart(actions);
+  await changeCart(actions);
 }
 export async function increaseQuantityProduct(id: string, newQuantity: number): Promise<void> {
   const actions: MyCartUpdateAction[] = [
