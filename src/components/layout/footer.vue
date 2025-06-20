@@ -1,3 +1,14 @@
+<script setup lang="ts">
+import rsIcon from '../../assets/images/rs_school_js.svg';
+import { AppNames } from '../../enums/app-names';
+import { FooterText, socialLinks, rs } from '../../constants/constants';
+import { getDate } from '../../utils/get-date';
+import { useTheme } from 'vuetify';
+import { computed } from 'vue';
+
+const theme = useTheme();
+const isDark = computed(() => theme.global.current.value.dark);
+</script>
 <template>
   <v-footer class="text-center d-flex flex-column ga-2 py-4" :class="{ 'theme-dark': isDark }">
     <v-divider
@@ -44,18 +55,6 @@
     </div>
   </v-footer>
 </template>
-
-<script setup lang="ts">
-import rsIcon from '../../assets/images/rs_school_js.svg';
-import { AppNames } from '../../enums/app-names';
-import { FooterText, socialLinks, rs } from '../../constants/constants';
-import { getDate } from '../../utils/get-date';
-import { useTheme } from 'vuetify';
-import { computed } from 'vue';
-
-const theme = useTheme();
-const isDark = computed(() => theme.global.current.value.dark);
-</script>
 <style lang="scss" scoped>
 @use '../../assets/styles/variables.scss' as v;
 
